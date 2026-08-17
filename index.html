@@ -335,11 +335,11 @@
         <div class="field">
           <label>Relation til sagen</label>
           <select id="frole" onchange="toggleHjemmelHint()">
-            <option>Klient</option>
-            <option selected>Modpart</option>
+            <option selected>Klient</option>
+            <option>Modpart</option>
             <option>Øvrig / tredjemand</option>
           </select>
-          <div id="hjemmelHint" style="font-size:12px; color:var(--amber); background:var(--amber-bg); border:1px solid #e8c98a; border-radius:6px; padding:6px 10px; margin-top:6px;">
+          <div id="hjemmelHint" style="display:none; font-size:12px; color:var(--amber); background:var(--amber-bg); border:1px solid #e8c98a; border-radius:6px; padding:6px 10px; margin-top:6px;">
             Hjemlen til at søge på modparter/tredjemænd er endnu ikke juridisk afklaret, se §5 i kildelisten.
           </div>
         </div>
