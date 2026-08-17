@@ -321,11 +321,14 @@
       <div class="row">
         <div class="field">
           <label>Relation til sagen</label>
-          <select id="frole">
+          <select id="frole" onchange="toggleHjemmelHint()">
             <option>Klient</option>
             <option selected>Modpart</option>
             <option>Øvrig / tredjemand</option>
           </select>
+          <div id="hjemmelHint" style="font-size:12px; color:var(--amber); background:var(--amber-bg); border:1px solid #e8c98a; border-radius:6px; padding:6px 10px; margin-top:6px;">
+            Hjemlen til at søge på modparter/tredjemænd er endnu ikke juridisk afklaret, se §5 i kildelisten.
+          </div>
         </div>
       </div>
 
@@ -345,7 +348,7 @@
         </div>
         <div class="check-row">
           <input type="checkbox" id="c4" checked>
-          <div><div class="ctext">Baggrundstjek</div><div class="cdesc">Presse, ejendom, kontaktoplysninger, SoMe</div></div>
+          <div><div class="ctext">Baggrundstjek</div><div class="cdesc">Presse, ejendom, kontaktoplysninger, SoMe, kundeanmeldelser (kun virksomheder)</div></div>
         </div>
         <div class="check-row">
           <input type="checkbox" id="c5" checked>
@@ -439,9 +442,9 @@
           <span class="unverified-label">Ubekræftet — presseomtale</span>
           Navnet "Bjørn Kjeldsen" optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke
           bindes entydigt til denne person, da artiklen ikke oplyser fødselsdato.
-          <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a> (link, ikke automatisk sammenfattet)</div>
+          <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
         </div>
-        <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata.</div>
+        <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata. Infomedia er ikke søgt, kræver institutionsabonnement, se §3 i kildelisten.</div>
       </div>
 
       <div class="section">
@@ -545,9 +548,10 @@
       <div class="section">
         <div class="section-title">Kontaktoplysninger <span class="badge verified">Verificeret</span></div>
         <div class="verified-block">
-          <span class="verified-label">Telefon, adresse og hjemmeside</span>
-          Telefon: 87 XX XX XX. Adresse: Industrivej 8, 8210 Aarhus V. Hjemmeside: nordvangbyg-eksempel.dk
-          <div class="src">Kilde: CVR, virksomhedens hjemmeside, hentet 17-08-2026.</div>
+          <span class="verified-label">Telefon, mail, adresse og hjemmeside</span>
+          Telefon: 87 XX XX XX. Mail: kontakt@nordvangbyg-eksempel.dk. Adresse: Industrivej 8, 8210 Aarhus V.
+          Hjemmeside: nordvangbyg-eksempel.dk
+          <div class="src">Kilde: CVR, virksomhedens hjemmeside, hentet 17-08-2026. Mail findes for virksomheder, ikke for privatpersoner.</div>
         </div>
       </div>
 
@@ -557,9 +561,9 @@
           <span class="unverified-label">Ubekræftet — presseomtale</span>
           Selskabsnavnet optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke bindes
           entydigt uden yderligere kontekst.
-          <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a> (link, ikke automatisk sammenfattet)</div>
+          <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
         </div>
-        <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata.</div>
+        <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata. Infomedia er ikke søgt, kræver institutionsabonnement, se §3 i kildelisten.</div>
       </div>
 
       <div class="section">
@@ -629,6 +633,11 @@
     "Henter seneste regnskaber...",
     "Samler kladde..."
   ];
+
+  function toggleHjemmelHint() {
+    const role = document.getElementById('frole').value;
+    document.getElementById('hjemmelHint').style.display = (role === 'Klient') ? 'none' : 'block';
+  }
 
   function setType(type) {
     currentType = type;
