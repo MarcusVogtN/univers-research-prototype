@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Univers Advokater — Research (prototype)</title>
+<style>
+  :root {
+    --navy: #0f2438;
+    --navy-light: #1c3a58;
+    --gold: #b08d3e;
+    --bg: #f4f5f3;
+    --card: #ffffff;
+    --border: #dfe2e6;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --green: #1e7d3c;
+    --green-bg: #e9f6ee;
+    --amber: #92620a;
+    --amber-bg: #fdf3e0;
+    --red: #a41c1c;
+    --red-bg: #fbeaea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header .brand {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  header .brand span {
+    color: var(--gold);
+  }
+  header .tag {
+    font-size: 12px;
+    color: #c7d0da;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+  .demo-banner {
+    background: #fff3cd;
+    border: 1px solid #e6c46a;
+    color: #6b5205;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 17px; margin: 0 0 16px; color: var(--navy); }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  .field { margin-bottom: 18px; }
+  .row { display: flex; gap: 16px; }
+  .row .field { flex: 1; }
+  input[type=text], input[type=date], select {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  input:focus, select:focus { outline: 2px solid var(--navy-light); border-color: var(--navy-light); }
+  fieldset {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px 6px;
+    margin-bottom: 18px;
+  }
+  legend { font-size: 13px; font-weight: 600; padding: 0 6px; color: #333; }
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .check-row:last-child { border-bottom: none; }
+  .check-row input { margin-top: 3px; }
+  .check-row .ctext { font-size: 14px; }
+  .check-row .cdesc { font-size: 12px; color: var(--muted); }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  button.primary {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    padding: 12px 26px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary:hover { background: var(--navy-light); }
+  button.secondary {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  #loadingView { display: none; text-align: center; padding: 60px 0; }
+  #loadingView .spinner {
+    width: 40px; height: 40px;
+    border: 4px solid #e0e0e0;
+    border-top-color: var(--navy);
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loadingView .step {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 4px 0;
+  }
+  #reportViewPerson, #reportViewCompany { display: none; }
+  .kladde-banner {
+    background: var(--red-bg);
+    border: 1px solid #e5b3b3;
+    color: var(--red);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .report-header .meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge.verified { background: var(--green-bg); color: var(--green); }
+  .badge.unverified { background: var(--amber-bg); color: var(--amber); }
+  .badge.flag { background: var(--red-bg); color: var(--red); }
+  .section { margin-bottom: 28px; }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .verified-block {
+    border-left: 4px solid var(--green);
+    background: var(--green-bg);
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .verified-block .src { font-size: 12px; color: #3a6b4c; margin-top: 4px; }
+  .unverified-block {
+    border-left: 4px dashed var(--amber);
+    background: var(--amber-bg);
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .unverified-block .src { font-size: 12px; color: #7a5305; margin-top: 4px; }
+  .unverified-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .verified-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--green);
+    display: block;
+    margin-bottom: 4px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; }
+  .empty-note {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    padding: 10px 0;
+  }
+  .footer-note {
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 20px;
+  }
+  a { color: var(--navy-light); }
+  .type-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .type-btn {
+    padding: 7px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    background: #fafafa;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+  }
+  .type-btn .ttitle { font-size: 13px; font-weight: 700; color: #333; }
+  .type-btn .tdesc { display: none; }
+  .type-btn.active {
+    border-color: var(--navy);
+    background: #eef2f6;
+  }
+  .type-btn.active .ttitle { color: var(--navy); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">UNIVERS <span>ADVOKATER</span> · Research</div>
+  <div class="tag">Internt prototypeeksempel</div>
+</header>
+
+<main>
+  <div class="demo-banner">
+    Dette er en klikbar prototype med et opdigtet eksempel til illustration. Ingen af oplysningerne
+    i eksempelrapporten er ægte data, og værktøjet er ikke bygget endnu.
+  </div>
+
+  <!-- INPUT VIEW -->
+  <div id="inputView" class="card">
+    <h1>Ny research</h1>
+    <div class="subtitle">Indtast basale oplysninger. Værktøjet henter fra åbne kilder og leverer en kladde.</div>
+
+    <form id="researchForm" onsubmit="return false;">
+
+      <div class="type-toggle">
+        <button type="button" class="type-btn active" id="typeBtnPerson" onclick="setType('person')">
+          <div class="ttitle">Privatperson</div>
+          <div class="tdesc">Navn og fødselsdato</div>
+        </button>
+        <button type="button" class="type-btn" id="typeBtnCompany" onclick="setType('company')">
+          <div class="ttitle">Virksomhed</div>
+          <div class="tdesc">Navn og CVR-nr.</div>
+        </button>
+      </div>
+
+      <div id="personFields">
+        <div class="row">
+          <div class="field">
+            <label>Navn</label>
+            <input type="text" id="fname" value="Bjørn Kjeldsen">
+          </div>
+          <div class="field">
+            <label>Fødselsdato</label>
+            <input type="date" id="fdob" value="1971-03-14">
+          </div>
+        </div>
+      </div>
+
+      <div id="companyFields" style="display:none;">
+        <div class="row">
+          <div class="field">
+            <label>Virksomhedsnavn</label>
+            <input type="text" id="fcompanyname" value="Nordvang Byg ApS">
+          </div>
+          <div class="field">
+            <label>CVR-nr.</label>
+            <input type="text" id="fcvr" placeholder="f.eks. 12345678" value="29876543">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Relation til sagen</label>
+          <select id="frole">
+            <option>Klient</option>
+            <option selected>Modpart</option>
+            <option>Øvrig / tredjemand</option>
+          </select>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Områder</legend>
+        <div class="check-row">
+          <input type="checkbox" id="c1" checked>
+          <div><div class="ctext">PEP-tjek</div><div class="cdesc">Er personen politisk eksponeret</div></div>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="c2" checked>
+          <div><div class="ctext">Hvidvask</div><div class="cdesc">Reelle ejere, sanktionslister, konkurs og tvangsopløsning</div></div>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="c3" checked>
+          <div><div class="ctext">Relaterede parter</div><div class="cdesc">Liste til manuelt opslag i sagssystemet, værktøjet vurderer ikke selv konflikt</div></div>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="c4" checked>
+          <div><div class="ctext">Baggrundstjek</div><div class="cdesc">Presse, ejendom, kontaktoplysninger, SoMe</div></div>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="c5" checked>
+          <div><div class="ctext">Økonomi og risiko</div><div class="cdesc">Regnskaber, revisorforbehold</div></div>
+        </div>
+      </fieldset>
+
+      <button class="primary" onclick="startSearch()">Find oplysninger</button>
+    </form>
+  </div>
+
+  <!-- LOADING VIEW -->
+  <div id="loadingView" class="card">
+    <div class="spinner"></div>
+    <div id="loadingText" class="step">Slår op i CVR...</div>
+  </div>
+
+  <!-- REPORT VIEW: PRIVATPERSON -->
+  <div id="reportViewPerson">
+    <div class="kladde-banner">
+      KLADDE — dette er ikke hvidvaskdokumentation. Alle fund skal gennemgås og vurderes manuelt.
+    </div>
+
+    <div class="card">
+      <div class="report-header">
+        <div>
+          <h1>Bjørn Kjeldsen</h1>
+          <div class="meta">Født 14-03-1971 &middot; Modpart &middot; Research udført 17-08-2026 kl. 14.02</div>
+        </div>
+        <div>
+          <button class="secondary" onclick="resetDemo()">Ny søgning</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">PEP-tjek <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Ikke fundet på PEP-liste</span>
+          Ingen træf på navn og fødselsdato i Finanstilsynets liste over politisk eksponerede personer.
+          <div class="src">Kilde: Finanstilsynets PEP-liste, hentet 17-08-2026. Dækker kun danske PEP'er.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Hvidvask og sanktioner <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Ingen sanktionstræf</span>
+          Intet match på navn og fødselsdato i EU's og FN's konsoliderede sanktionslister.
+          <div class="src">Kilde: EU Sanctions Map, FN's sanktionsliste, hentet 17-08-2026.</div>
+        </div>
+        <div class="verified-block">
+          <span class="verified-label">Ingen konkurs eller tvangsopløsning</span>
+          Ingen aktive eller afsluttede sager i Statstidende under dette navn og fødselsdato.
+          <div class="src">Kilde: Statstidende, hentet 17-08-2026.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Relaterede parter <span class="badge">Til manuelt opslag</span></div>
+        <table>
+          <tr><th>Navn</th><th>Relation</th><th>Kilde</th></tr>
+          <tr><td>Kjeldsen Byggeservice ApS</td><td>Direktør</td><td>CVR</td></tr>
+          <tr><td>Mette Kjeldsen</td><td>Reel ejer, 40%</td><td>CVR</td></tr>
+          <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelsesmedlem</td><td>CVR</td></tr>
+        </table>
+        <div class="hint">Værktøjet vurderer ikke selv interessekonflikt. Slå listen op i sagssystemet.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Ejendom <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Ejerskab (BBR/OIS/Tinglysning)</span>
+          Ejer ejendommen Kastanievej 22, 8000 Aarhus C, ejendomsvurdering 3.450.000 kr. (2025).
+          <div class="src">Kilde: OIS, BBR, Tinglysning.dk, hentet 17-08-2026.</div>
+        </div>
+        <div class="hint">Adressen kommer fra folkeregisteradresse/CVR. Værktøjet søger ikke landsdækkende på navn.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Kontaktoplysninger <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Telefon og adresse</span>
+          Telefon: 20 XX XX XX. Adresse: Kastanievej 22, 8000 Aarhus C.
+          <div class="src">Kilde: Krak.dk, hentet 17-08-2026. Ingen åben kilde til mailadresse for privatpersoner.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Medier og pressearkiver <span class="badge unverified">Ubekræftet</span></div>
+        <div class="unverified-block">
+          <span class="unverified-label">Ubekræftet — presseomtale</span>
+          Navnet "Bjørn Kjeldsen" optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke
+          bindes entydigt til denne person, da artiklen ikke oplyser fødselsdato.
+          <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a> (link, ikke automatisk sammenfattet)</div>
+        </div>
+        <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Sociale medier <span class="badge unverified">Ubekræftet</span></div>
+        <div class="unverified-block">
+          <span class="unverified-label">Ubekræftet — LinkedIn</span>
+          Muligt navnematch, ingen identitetsverificering mulig.
+          <div class="src">Kilde: <a href="#">linkedin.com/in/bjoernkjeldsen-eksempel</a> (manuelt link, ikke automatisk indhentet)</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Økonomi og risiko <span class="badge verified">Verificeret</span></div>
+        <table>
+          <tr><th>Selskab</th><th>Seneste regnskabsår</th><th>Revisorforbehold</th></tr>
+          <tr><td>Kjeldsen Byggeservice ApS</td><td>2024/25</td><td>Ingen</td></tr>
+        </table>
+        <div class="src" style="margin-top:6px;">Kilde: regnskaber.virk.dk, hentet 17-08-2026.</div>
+      </div>
+
+      <div class="footer-note">
+        Dette er et automatisk genereret udkast til brug for advokatens eget skøn. Ubekræftede fund er
+        markeret tydeligt og skal ikke behandles som fakta. Værktøjet afgør ikke interessekonflikter.
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT VIEW: VIRKSOMHED -->
+  <div id="reportViewCompany">
+    <div class="kladde-banner">
+      KLADDE — dette er ikke hvidvaskdokumentation. Alle fund skal gennemgås og vurderes manuelt.
+    </div>
+
+    <div class="card">
+      <div class="report-header">
+        <div>
+          <h1>Nordvang Byg ApS</h1>
+          <div class="meta">CVR 29876543 &middot; Modpart &middot; Research udført 17-08-2026 kl. 14.02</div>
+        </div>
+        <div>
+          <button class="secondary" onclick="resetDemo()">Ny søgning</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Stamdata <span class="badge verified">Verificeret</span></div>
+        <table>
+          <tr><th>Branche</th><td>412000 &middot; Opførelse af bygninger</td></tr>
+          <tr><th>Antal ansatte</th><td>18 (seneste kvartal)</td></tr>
+          <tr><th>Status</th><td>Normal, ikke under konkurs eller tvangsopløsning</td></tr>
+          <tr><th>Revisor</th><td>BDO Statsautoriseret Revisionsaktieselskab</td></tr>
+        </table>
+        <div class="src" style="margin-top:6px;">Kilde: CVR, hentet 17-08-2026.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">PEP-tjek af reelle ejere <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Ingen PEP-træf</span>
+          Ingen af de registrerede reelle ejere findes på Finanstilsynets PEP-liste.
+          <div class="src">Kilde: CVR (reelle ejere), Finanstilsynets PEP-liste, hentet 17-08-2026.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Hvidvask og sanktioner <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Ingen sanktionstræf</span>
+          Intet match på selskabet eller dets reelle ejere i EU's og FN's konsoliderede sanktionslister.
+          <div class="src">Kilde: EU Sanctions Map, FN's sanktionsliste, hentet 17-08-2026.</div>
+        </div>
+        <div class="verified-block">
+          <span class="verified-label">Ingen konkurs eller tvangsopløsning</span>
+          Ingen aktive eller afsluttede sager i Statstidende under dette CVR-nummer.
+          <div class="src">Kilde: Statstidende, hentet 17-08-2026.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Reelle ejere og relaterede parter <span class="badge">Til manuelt opslag</span></div>
+        <table>
+          <tr><th>Navn</th><th>Relation</th><th>Ejerandel</th><th>Kilde</th></tr>
+          <tr><td>Bjørn Kjeldsen</td><td>Direktør, reel ejer</td><td>60%</td><td>CVR</td></tr>
+          <tr><td>Mette Kjeldsen</td><td>Reel ejer</td><td>40%</td><td>CVR</td></tr>
+          <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelse (fælles medlem)</td><td>&ndash;</td><td>CVR</td></tr>
+        </table>
+        <div class="hint">Værktøjet vurderer ikke selv interessekonflikt. Slå listen op i sagssystemet.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Ejendom <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Ejerskab (BBR/OIS/Tinglysning)</span>
+          Selskabet ejer erhvervsejendommen Industrivej 8, 8210 Aarhus V, ejendomsvurdering
+          6.200.000 kr. (2025).
+          <div class="src">Kilde: OIS, BBR, Tinglysning.dk, hentet 17-08-2026.</div>
+        </div>
+        <div class="hint">Adressen kommer fra CVR. Værktøjet søger ikke landsdækkende på navn/CVR-nr.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Kontaktoplysninger <span class="badge verified">Verificeret</span></div>
+        <div class="verified-block">
+          <span class="verified-label">Telefon, adresse og hjemmeside</span>
+          Telefon: 87 XX XX XX. Adresse: Industrivej 8, 8210 Aarhus V. Hjemmeside: nordvangbyg-eksempel.dk
+          <div class="src">Kilde: CVR, virksomhedens hjemmeside, hentet 17-08-2026.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Medier og pressearkiver <span class="badge unverified">Ubekræftet</span></div>
+        <div class="unverified-block">
+          <span class="unverified-label">Ubekræftet — presseomtale</span>
+          Selskabsnavnet optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke bindes
+          entydigt uden yderligere kontekst.
+          <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a> (link, ikke automatisk sammenfattet)</div>
+        </div>
+        <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Sociale medier <span class="badge unverified">Ubekræftet</span></div>
+        <div class="unverified-block">
+          <span class="unverified-label">Ubekræftet — LinkedIn</span>
+          Selskabsside fundet, men indhold er ikke hentet automatisk.
+          <div class="src">Kilde: <a href="#">linkedin.com/company/nordvang-byg-eksempel</a> (manuelt link, ikke automatisk indhentet)</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Kundeanmeldelser <span class="badge unverified">Ubekræftet</span></div>
+        <div class="unverified-block">
+          <span class="unverified-label">Ubekræftet — Trustpilot/Google</span>
+          3,8 ud af 5 stjerner (14 anmeldelser). Tilbagevendende tema: forsinket levering på to sager.
+          Kan ikke bindes til CVR-nummer, kun til firmanavn.
+          <div class="src">Kilde: <a href="#">Trustpilot</a>, <a href="#">Google Anmeldelser</a>, hentet 17-08-2026.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Økonomi og risiko <span class="badge verified">Verificeret</span></div>
+        <table>
+          <tr><th>Regnskabsår</th><th>Resultat</th><th>Egenkapital</th><th>Revisorforbehold</th></tr>
+          <tr><td>2024/25</td><td>1.240.000 kr.</td><td>3.100.000 kr.</td><td>Ingen</td></tr>
+          <tr><td>2023/24</td><td>860.000 kr.</td><td>2.010.000 kr.</td><td>Ingen</td></tr>
+        </table>
+        <div class="src" style="margin-top:6px;">Kilde: regnskaber.virk.dk, hentet 17-08-2026.</div>
+      </div>
+
+      <div class="footer-note">
+        Dette er et automatisk genereret udkast til brug for advokatens eget skøn. Ubekræftede fund er
+        markeret tydeligt og skal ikke behandles som fakta. Værktøjet afgør ikke interessekonflikter.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  let currentType = 'person';
+
+  const stepsPerson = [
+    "Slår op i CVR...",
+    "Tjekker Finanstilsynets PEP-liste...",
+    "Tjekker EU- og FN-sanktionslister...",
+    "Slår op i Statstidende...",
+    "Henter ejendomsoplysninger (OIS/BBR/Tinglysning)...",
+    "Slår op kontaktoplysninger (Krak)...",
+    "Søger presse og medier...",
+    "Søger sociale medier...",
+    "Samler kladde..."
+  ];
+
+  const stepsCompany = [
+    "Slår op i CVR...",
+    "Henter reelle ejere...",
+    "Tjekker Finanstilsynets PEP-liste for reelle ejere...",
+    "Tjekker EU- og FN-sanktionslister...",
+    "Slår op i Statstidende...",
+    "Henter ejendomsoplysninger (OIS/BBR/Tinglysning)...",
+    "Slår op kontaktoplysninger (CVR/hjemmeside)...",
+    "Søger presse og medier...",
+    "Søger sociale medier...",
+    "Henter kundeanmeldelser (Trustpilot/Google)...",
+    "Henter seneste regnskaber...",
+    "Samler kladde..."
+  ];
+
+  function setType(type) {
+    currentType = type;
+    document.getElementById('typeBtnPerson').classList.toggle('active', type === 'person');
+    document.getElementById('typeBtnCompany').classList.toggle('active', type === 'company');
+    document.getElementById('personFields').style.display = (type === 'person') ? 'block' : 'none';
+    document.getElementById('companyFields').style.display = (type === 'company') ? 'block' : 'none';
+  }
+
+  function startSearch() {
+    document.getElementById('inputView').style.display = 'none';
+    document.getElementById('loadingView').style.display = 'block';
+    const steps = (currentType === 'company') ? stepsCompany : stepsPerson;
+    let i = 0;
+    const el = document.getElementById('loadingText');
+    el.textContent = steps[0];
+    const interval = setInterval(() => {
+      i++;
+      if (i < steps.length) {
+        el.textContent = steps[i];
+      } else {
+        clearInterval(interval);
+        document.getElementById('loadingView').style.display = 'none';
+        const targetId = (currentType === 'company') ? 'reportViewCompany' : 'reportViewPerson';
+        document.getElementById(targetId).style.display = 'block';
+        window.scrollTo(0,0);
+      }
+    }, 550);
+  }
+
+  function resetDemo() {
+    document.getElementById('reportViewPerson').style.display = 'none';
+    document.getElementById('reportViewCompany').style.display = 'none';
+    document.getElementById('inputView').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+</script>
+
+</body>
+</html>
