@@ -31,7 +31,7 @@
     color: var(--text);
   }
   header {
-    background: var(--navy);
+    background: var(--gold);
     color: #fff;
     padding: 16px 32px;
     display: flex;
@@ -51,10 +51,10 @@
     width: auto;
     display: block;
   }
-  header .brand .divider { color: #7d8fa1; }
+  header .brand .divider { color: #cfd8c8; }
   header .tag {
     font-size: 12px;
-    color: #c7d0da;
+    color: #e2e8dc;
   }
   main {
     max-width: 900px;
@@ -110,6 +110,23 @@
   .check-row .cdesc { font-size: 12px; color: var(--muted); }
   .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
   .optional { font-weight: 400; color: var(--muted); font-size: 12px; }
+  /* Fødselsdato: masken dd-mm-åååå står bag feltet og bliver skrevet over,
+     efterhånden som der tastes. Den skrevne del gøres usynlig i masken, så
+     det er selve inputtets tekst, man ser. */
+  .dob-wrap { position: relative; }
+  .dob-ghost {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-family: inherit;
+    white-space: pre;
+    pointer-events: none;
+  }
+  .dob-ghost .typed { color: transparent; }
+  .dob-ghost .rest { color: #a0a5ab; }
+  #fdob { background: transparent; position: relative; }
   .autocomplete-wrap { position: relative; }
   .suggestions {
     display: none;
@@ -136,7 +153,7 @@
   .suggestions div:hover { background: #eef2f6; }
   .addr-ok { color: var(--green); }
   button.primary {
-    background: var(--navy);
+    background: var(--gold);
     color: #fff;
     border: none;
     padding: 12px 26px;
@@ -145,7 +162,7 @@
     font-weight: 600;
     cursor: pointer;
   }
-  button.primary:hover { background: var(--navy-light); }
+  button.primary:hover { background: #5b6a4b; }
   button.secondary {
     background: none;
     border: 1px solid #ccc;
@@ -486,7 +503,10 @@
           </div>
           <div class="field">
             <label>Fødselsdato <span class="optional">(dd-mm-åååå, valgfrit)</span></label>
-            <input type="text" id="fdob" placeholder="dd-mm-åååå" value="14-03-1971" maxlength="10" inputmode="numeric" oninput="formatDob(this)">
+            <div class="dob-wrap">
+              <span class="dob-ghost" id="dobGhost"><span class="typed"></span><span class="rest">dd-mm-åååå</span></span>
+              <input type="text" id="fdob" value="14-03-1971" maxlength="10" inputmode="numeric" oninput="formatDob(this, event)">
+            </div>
           </div>
         </div>
         <div class="row">
@@ -1100,13 +1120,29 @@
     setTimeout(() => { document.getElementById('addressSuggestions').style.display = 'none'; }, 150);
   }
 
-  function formatDob(el) {
-    const digits = el.value.replace(/\D/g, '').slice(0, 8);
-    let out = digits.slice(0, 2);
-    if (digits.length > 2) out += '-' + digits.slice(2, 4);
-    if (digits.length > 4) out += '-' + digits.slice(4, 8);
+  const DOB_MASKE = 'dd-mm-åååå';
+
+  function formatDob(el, ev) {
+    // Ved sletning må bindestregen ikke sættes tilbage med det samme, ellers
+    // kan man ikke slette sig baglæns gennem feltet.
+    const sletter = ev && ev.inputType && ev.inputType.indexOf('delete') === 0;
+    const d = el.value.replace(/\D/g, '').slice(0, 8);
+    let out = d.slice(0, 2);
+    if (d.length >= 2 && !(sletter && d.length === 2)) out += '-';
+    if (d.length > 2) out += d.slice(2, 4);
+    if (d.length >= 4 && !(sletter && d.length === 4)) out += '-';
+    if (d.length > 4) out += d.slice(4, 8);
     el.value = out;
+    opdaterDobMaske(el);
   }
+
+  function opdaterDobMaske(el) {
+    const v = el.value;
+    document.querySelector('#dobGhost .typed').textContent = v;
+    document.querySelector('#dobGhost .rest').textContent = DOB_MASKE.slice(v.length);
+  }
+
+  opdaterDobMaske(document.getElementById('fdob'));
 
   const areaIds = ['c1','c2','c3','c4','c5'];
 
