@@ -219,6 +219,23 @@
     margin-bottom: 20px;
   }
   .report-header .meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .report-header .venstre { display: flex; gap: 18px; align-items: flex-start; }
+  /* Et fundet portræt kan aldrig identitetsverificeres, så det står med
+     ubekræftet-mærkat, selvom det ligger øverst i rapporten. */
+  .portraet-wrap { flex: 0 0 auto; text-align: center; }
+  .portraet {
+    width: 92px;
+    height: 92px;
+    border-radius: 8px;
+    background: #e5e9ec;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portraet svg { width: 52px; height: 52px; fill: #a9b2b9; }
+  .portraet-note { font-size: 10px; color: var(--muted); margin-top: 5px; }
+  .portraet-wrap .badge { margin-top: 6px; font-size: 10px; padding: 2px 8px; }
   .badge {
     display: inline-block;
     font-size: 11px;
@@ -693,9 +710,18 @@
 
     <div class="card">
       <div class="report-header">
-        <div>
-          <h1>Bjørn Kjeldsen</h1>
-          <div class="meta">Født 14-03-1971 &middot; Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
+        <div class="venstre">
+          <div class="portraet-wrap sec-profiler">
+            <div class="portraet">
+              <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6z"/></svg>
+            </div>
+            <div class="badge unverified">Ubekræftet</div>
+            <div class="portraet-note">Fundet på LinkedIn</div>
+          </div>
+          <div>
+            <h1>Bjørn Kjeldsen</h1>
+            <div class="meta">Født 14-03-1971 &middot; Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
+          </div>
         </div>
         <div class="knapper">
           <button class="secondary" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Udskriv</button>
