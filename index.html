@@ -110,6 +110,8 @@
   .check-row .ctext { font-size: 14px; }
   .check-row .cdesc { font-size: 12px; color: var(--muted); }
   .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .optional { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .format-hint { font-size: 12px; color: var(--muted); margin: -2px 0 5px; }
   button.primary {
     background: var(--navy);
     color: #fff;
@@ -299,15 +301,24 @@
             <input type="text" id="fname" value="Bjørn Kjeldsen">
           </div>
           <div class="field">
-            <label>Fødselsdato</label>
-            <input type="date" id="fdob" value="1971-03-14">
+            <label>Fødselsdato <span class="optional">(valgfrit)</span></label>
+            <div class="format-hint">dd-mm-åååå</div>
+            <input type="text" id="fdob" placeholder="dd-mm-åååå" value="14-03-1971">
           </div>
         </div>
         <div class="row">
           <div class="field">
-            <label>Postnr./adresse</label>
-            <input type="text" id="faddress" placeholder="f.eks. 8000 Aarhus C" value="Kastanievej 22, 8000 Aarhus C">
+            <label>Adresse <span class="optional">(valgfrit)</span></label>
+            <div class="format-hint">Gade/vej og nr., postnr. og by</div>
+            <input type="text" id="faddress" placeholder="Gade/vej og nr., postnr. og by" value="Kastanievej 22, 8000 Aarhus C">
             <div class="hint">Bruges til at undgå forveksling ved almindelige navne, bl.a. hos Statstidende og Krak.dk.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Eventuel virksomhedstilknytning <span class="optional">(valgfrit)</span></label>
+            <input type="text" id="fpersoncompany" placeholder="Firmanavn eller CVR-nr., hvis kendt">
+            <div class="hint">Hjælper med at skelne personer med samme navn og med at finde selskabsroller.</div>
           </div>
         </div>
       </div>
@@ -319,28 +330,30 @@
             <input type="text" id="fcompanyname" value="Nordvang Byg ApS">
           </div>
           <div class="field">
-            <label>CVR-nr.</label>
+            <label>CVR-nr. <span class="optional">(valgfrit)</span></label>
             <input type="text" id="fcvr" placeholder="f.eks. 12345678" value="29876543">
           </div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="field">
-          <label>Relation til sagen</label>
-          <select id="frole" onchange="toggleHjemmelHint()">
-            <option selected>Klient</option>
-            <option>Modpart</option>
-            <option>Øvrig / tredjemand</option>
-          </select>
-          <div id="hjemmelHint" style="display:none; font-size:12px; color:var(--amber); background:var(--amber-bg); border:1px solid #e8c98a; border-radius:6px; padding:6px 10px; margin-top:6px;">
-            Hjemlen til at søge på modparter/tredjemænd er endnu ikke juridisk afklaret, se §5 i kildelisten.
+      <fieldset>
+        <legend>Søgemetode</legend>
+        <div class="check-row">
+          <input type="checkbox" id="cfuzzy">
+          <div>
+            <div class="ctext">Fonetisk søgning og fuzzy match</div>
+            <div class="cdesc">Finder også stavevarianter og lignende navne. Alle træf fra udvidet søgning
+            havner altid i "ubekræftet"-sektionen, da de ikke kan bindes entydigt.</div>
           </div>
         </div>
-      </div>
+      </fieldset>
 
       <fieldset>
         <legend>Områder</legend>
+        <div class="check-row" style="border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+          <input type="checkbox" id="cAll" onclick="toggleAll(this)">
+          <div><div class="ctext"><strong>Søg alt</strong></div><div class="cdesc">Slår alle områder nedenfor til</div></div>
+        </div>
         <div class="check-row">
           <input type="checkbox" id="c1" checked>
           <div><div class="ctext">PEP-tjek</div><div class="cdesc">Er personen politisk eksponeret</div></div>
@@ -355,7 +368,7 @@
         </div>
         <div class="check-row">
           <input type="checkbox" id="c4" checked>
-          <div><div class="ctext">Baggrundstjek</div><div class="cdesc">Presse, ejendom, kontaktoplysninger, SoMe, kundeanmeldelser (kun virksomheder)</div></div>
+          <div><div class="ctext">Baggrundstjek</div><div class="cdesc">Presse, ejendom, telefon og mail, profiler og hjemmesider, kundeanmeldelser (kun virksomheder)</div></div>
         </div>
         <div class="check-row">
           <input type="checkbox" id="c5" checked>
@@ -377,13 +390,17 @@
   <div id="reportViewPerson">
     <div class="kladde-banner">
       KLADDE — dette er ikke hvidvaskdokumentation. Alle fund skal gennemgås og vurderes manuelt.
+      <div style="font-weight:400; margin-top:6px;">
+        Bruges værktøjet på andre end egne klienter, fx modparter eller tredjemænd, er hjemlen
+        hertil endnu ikke juridisk afklaret. Se §5 i kildelisten.
+      </div>
     </div>
 
     <div class="card">
       <div class="report-header">
         <div>
           <h1>Bjørn Kjeldsen</h1>
-          <div class="meta">Født 14-03-1971 &middot; Modpart &middot; Research udført 17-08-2026 kl. 14.02</div>
+          <div class="meta">Født 14-03-1971 &middot; Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div>
           <button class="secondary" onclick="resetDemo()">Ny søgning</button>
@@ -436,11 +453,22 @@
 
       <div class="section">
         <div class="section-title">Kontaktoplysninger <span class="badge verified">Verificeret</span></div>
-        <div class="verified-block">
-          <span class="verified-label">Telefon og adresse</span>
-          Telefon: 20 XX XX XX. Adresse: Kastanievej 22, 8000 Aarhus C.
-          <div class="src">Kilde: Krak.dk, hentet 17-08-2026. Ingen åben kilde til mailadresse for privatpersoner.</div>
-        </div>
+        <table>
+          <tr><th>Telefon</th><td>20 XX XX XX <span class="src">(Krak.dk)</span></td></tr>
+          <tr><th>Adresse</th><td>Kastanievej 22, 8000 Aarhus C <span class="src">(Krak.dk)</span></td></tr>
+          <tr><th>Mail</th><td><em style="color:var(--muted);">Ikke fundet. Der findes ingen åben, offentlig kilde til privatpersoners mailadresse.</em></td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Virksomhedstilknytninger <span class="badge verified">Verificeret</span></div>
+        <table>
+          <tr><th>Selskab</th><th>Rolle</th><th>CVR-nr.</th></tr>
+          <tr><td>Kjeldsen Byggeservice ApS</td><td>Direktør</td><td>31234567</td></tr>
+          <tr><td>Nordvang Byg ApS</td><td>Direktør, reel ejer (60%)</td><td>29876543</td></tr>
+          <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelsesmedlem</td><td>33445566</td></tr>
+        </table>
+        <div class="src" style="margin-top:6px;">Kilde: CVR (personopslag), hentet 17-08-2026.</div>
       </div>
 
       <div class="section">
@@ -455,11 +483,17 @@
       </div>
 
       <div class="section">
-        <div class="section-title">Sociale medier <span class="badge unverified">Ubekræftet</span></div>
+        <div class="section-title">Profiler og hjemmesider <span class="badge unverified">Ubekræftet</span></div>
         <div class="unverified-block">
-          <span class="unverified-label">Ubekræftet — LinkedIn</span>
-          Muligt navnematch, ingen identitetsverificering mulig.
-          <div class="src">Kilde: <a href="#">linkedin.com/in/bjoernkjeldsen-eksempel</a> (manuelt link, ikke automatisk indhentet)</div>
+          <span class="unverified-label">Ubekræftet — mulige profiler</span>
+          Fundet på navn. Ingen af dem kan identitetsverificeres, da profiler ikke oplyser fødselsdato.
+          <table style="margin-top:8px;">
+            <tr><th>LinkedIn</th><td><a href="#">linkedin.com/in/bjoernkjeldsen-eksempel</a></td></tr>
+            <tr><th>Facebook</th><td><a href="#">facebook.com/bjoern.kjeldsen.eksempel</a></td></tr>
+            <tr><th>Hjemmeside</th><td><a href="#">kjeldsenbyg-eksempel.dk</a></td></tr>
+            <tr><th>Øvrige</th><td><em style="color:var(--muted);">Ingen yderligere profiler fundet</em></td></tr>
+          </table>
+          <div class="src">Kun links, indhold er ikke automatisk indhentet.</div>
         </div>
       </div>
 
@@ -483,13 +517,17 @@
   <div id="reportViewCompany">
     <div class="kladde-banner">
       KLADDE — dette er ikke hvidvaskdokumentation. Alle fund skal gennemgås og vurderes manuelt.
+      <div style="font-weight:400; margin-top:6px;">
+        Bruges værktøjet på andre end egne klienter, fx modparter eller tredjemænd, er hjemlen
+        hertil endnu ikke juridisk afklaret. Se §5 i kildelisten.
+      </div>
     </div>
 
     <div class="card">
       <div class="report-header">
         <div>
           <h1>Nordvang Byg ApS</h1>
-          <div class="meta">CVR 29876543 &middot; Modpart &middot; Research udført 17-08-2026 kl. 14.02</div>
+          <div class="meta">CVR 29876543 &middot; Industrivej 8, 8210 Aarhus V &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div>
           <button class="secondary" onclick="resetDemo()">Ny søgning</button>
@@ -554,12 +592,12 @@
 
       <div class="section">
         <div class="section-title">Kontaktoplysninger <span class="badge verified">Verificeret</span></div>
-        <div class="verified-block">
-          <span class="verified-label">Telefon, mail, adresse og hjemmeside</span>
-          Telefon: 87 XX XX XX. Mail: kontakt@nordvangbyg-eksempel.dk. Adresse: Industrivej 8, 8210 Aarhus V.
-          Hjemmeside: nordvangbyg-eksempel.dk
-          <div class="src">Kilde: CVR, virksomhedens hjemmeside, hentet 17-08-2026. Mail findes for virksomheder, ikke for privatpersoner.</div>
-        </div>
+        <table>
+          <tr><th>Telefon</th><td>87 XX XX XX <span class="src">(CVR)</span></td></tr>
+          <tr><th>Mail</th><td>kontakt@nordvangbyg-eksempel.dk <span class="src">(virksomhedens hjemmeside)</span></td></tr>
+          <tr><th>Adresse</th><td>Industrivej 8, 8210 Aarhus V <span class="src">(CVR)</span></td></tr>
+          <tr><th>Hjemmeside</th><td><a href="#">nordvangbyg-eksempel.dk</a></td></tr>
+        </table>
       </div>
 
       <div class="section">
@@ -574,11 +612,17 @@
       </div>
 
       <div class="section">
-        <div class="section-title">Sociale medier <span class="badge unverified">Ubekræftet</span></div>
+        <div class="section-title">Profiler og hjemmesider <span class="badge unverified">Ubekræftet</span></div>
         <div class="unverified-block">
-          <span class="unverified-label">Ubekræftet — LinkedIn</span>
-          Selskabsside fundet, men indhold er ikke hentet automatisk.
-          <div class="src">Kilde: <a href="#">linkedin.com/company/nordvang-byg-eksempel</a> (manuelt link, ikke automatisk indhentet)</div>
+          <span class="unverified-label">Ubekræftet — mulige profiler</span>
+          Fundet på firmanavn. Kan ikke bindes til CVR-nummer.
+          <table style="margin-top:8px;">
+            <tr><th>LinkedIn</th><td><a href="#">linkedin.com/company/nordvang-byg-eksempel</a></td></tr>
+            <tr><th>Facebook</th><td><a href="#">facebook.com/nordvangbyg.eksempel</a></td></tr>
+            <tr><th>Hjemmeside</th><td><a href="#">nordvangbyg-eksempel.dk</a></td></tr>
+            <tr><th>Øvrige</th><td><em style="color:var(--muted);">Ingen yderligere profiler fundet</em></td></tr>
+          </table>
+          <div class="src">Kun links, indhold er ikke automatisk indhentet.</div>
         </div>
       </div>
 
@@ -619,10 +663,11 @@
     "Tjekker Finanstilsynets PEP-liste...",
     "Tjekker EU- og FN-sanktionslister...",
     "Slår op i Statstidende...",
+    "Henter virksomhedstilknytninger...",
     "Henter ejendomsoplysninger (OIS/BBR/Tinglysning)...",
     "Slår op kontaktoplysninger (Krak)...",
     "Søger presse og medier...",
-    "Søger sociale medier...",
+    "Søger profiler og hjemmesider...",
     "Samler kladde..."
   ];
 
@@ -635,16 +680,27 @@
     "Henter ejendomsoplysninger (OIS/BBR/Tinglysning)...",
     "Slår op kontaktoplysninger (CVR/hjemmeside)...",
     "Søger presse og medier...",
-    "Søger sociale medier...",
+    "Søger profiler og hjemmesider...",
     "Henter kundeanmeldelser (Trustpilot/Google)...",
     "Henter seneste regnskaber...",
     "Samler kladde..."
   ];
 
-  function toggleHjemmelHint() {
-    const role = document.getElementById('frole').value;
-    document.getElementById('hjemmelHint').style.display = (role === 'Klient') ? 'none' : 'block';
+  const areaIds = ['c1','c2','c3','c4','c5'];
+
+  function toggleAll(master) {
+    areaIds.forEach(id => { document.getElementById(id).checked = master.checked; });
   }
+
+  function syncAllCheckbox() {
+    const allOn = areaIds.every(id => document.getElementById(id).checked);
+    document.getElementById('cAll').checked = allOn;
+  }
+
+  areaIds.forEach(id => {
+    document.getElementById(id).addEventListener('change', syncAllCheckbox);
+  });
+  syncAllCheckbox();
 
   function setType(type) {
     currentType = type;
