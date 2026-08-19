@@ -286,16 +286,21 @@
     padding-bottom: 8px;
     margin-bottom: 12px;
   }
-  /* Farven sidder kun på selve titlen, ikke på hele linjen, så mærkatet for
-     verificeret/ubekræftet står på hvid baggrund og ikke drukner i sektionsfarven. */
-  .tchip {
-    display: inline-block;
+  /* Det farvede banner dækker titel og kildeknapper og stopper lige før mærkatet
+     for verificeret/ubekræftet, så det står på hvid baggrund og er let at skelne. */
+  .tbar {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
     background: var(--sec);
+    border-radius: 6px;
+    padding: 7px 14px;
+  }
+  .tchip {
     color: #fff;
     font-size: 15px;
     font-weight: 700;
-    padding: 7px 14px;
-    border-radius: 6px;
   }
   .verified-block {
     border-left: 7px solid var(--green);
@@ -395,15 +400,19 @@
     background: var(--sw);
   }
   @media (min-width: 1420px) { .toc.har-indhold { display: block; } }
-  /* Fremhævning, når man springer til et afsnit fra oversigten. */
+  /* Fremhævning, når man springer til et afsnit fra oversigten. Outline bruges
+     frem for border, fordi den ikke flytter rundt på indholdet. */
   .section.fremhaev {
-    animation: fremhaev 1.8s ease-out;
+    animation: fremhaev 2.6s ease-out;
     border-radius: 8px;
   }
   @keyframes fremhaev {
-    0%   { box-shadow: 0 0 0 4px var(--sec); background: #f3f7fb; }
-    70%  { box-shadow: 0 0 0 4px var(--sec); background: #f3f7fb; }
-    100% { box-shadow: 0 0 0 4px rgba(0,0,0,0); background: transparent; }
+    0%   { outline: 6px solid var(--sec); outline-offset: 18px; background: #e7eef6; }
+    12%  { outline: 6px solid var(--sec); outline-offset: 8px;  background: #e7eef6; }
+    30%  { outline: 6px solid var(--sec); outline-offset: 14px; background: #e7eef6; }
+    45%  { outline: 6px solid var(--sec); outline-offset: 8px;  background: #e7eef6; }
+    80%  { outline: 6px solid var(--sec); outline-offset: 8px;  background: #e7eef6; }
+    100% { outline: 6px solid transparent; outline-offset: 8px; background: transparent; }
   }
   .footer-note {
     font-size: 12px;
@@ -588,12 +597,12 @@
       </div>
 
       <div class="section kontakt-top sec-kontakt">
-        <div class="section-title"><span class="tchip">Kontaktoplysninger</span>
-          <span class="title-right">
-            <a class="kildeknap" href="https://www.krak.dk/" target="_blank" rel="noopener">Åbn Krak.dk</a>
+        <div class="section-title">
+            <span class="tbar"><span class="tchip">Kontaktoplysninger</span>
+              <a class="kildeknap" href="https://www.krak.dk/" target="_blank" rel="noopener">Åbn Krak.dk</a>
+            </span>
             <span class="badge verified">Verificeret på navn og adresse</span>
-          </span>
-        </div>
+          </div>
         <table>
           <tr><th>Telefon</th><td>20 XX XX XX <span class="src">(Krak.dk)</span></td></tr>
           <tr><th>Adresse</th><td>Kastanievej 22, 8000 Aarhus C <span class="src">(Krak.dk)</span></td></tr>
@@ -606,11 +615,11 @@
         <div class="group-title">Screening</div>
 
         <div class="section sec-pep">
-          <div class="section-title"><span class="tchip">PEP-tjek</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">PEP-tjek</span>
               <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
-              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
+            <span class="badge verified">Verificeret på navn og fødselsdato</span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ikke fundet på PEP-liste</span>
@@ -620,12 +629,12 @@
         </div>
 
         <div class="section sec-sanktion">
-          <div class="section-title"><span class="tchip">Sanktionslister</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Sanktionslister</span>
               <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
               <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
-              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
+            <span class="badge verified">Verificeret på navn og fødselsdato</span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sanktionstræf</span>
@@ -635,11 +644,11 @@
         </div>
 
         <div class="section sec-konkurs">
-          <div class="section-title"><span class="tchip">Konkurs og gældssanering</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Konkurs og gældssanering</span>
               <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
-              <span class="badge verified">Verificeret på navn og adresse</span>
             </span>
+            <span class="badge verified">Verificeret på navn og adresse</span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sager</span>
@@ -653,11 +662,11 @@
         <div class="group-title">Selskaber og økonomi</div>
 
         <div class="section sec-roller">
-          <div class="section-title"><span class="tchip">Virksomhedstilknytninger</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Virksomhedstilknytninger</span>
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
-              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
+            <span class="badge verified">Verificeret på CVR-nr.</span>
           </div>
           <table>
             <tr><th>Selskab</th><th>Rolle</th><th>CVR-nr.</th></tr>
@@ -669,11 +678,11 @@
         </div>
 
         <div class="section sec-parter">
-          <div class="section-title"><span class="tchip">Relaterede parter</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Relaterede parter</span>
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
-              <span class="badge">Til manuelt opslag</span>
             </span>
+            <span class="badge">Til manuelt opslag</span>
           </div>
           <table>
             <tr><th>Navn</th><th>Relation</th><th>Kilde</th></tr>
@@ -685,11 +694,11 @@
         </div>
 
         <div class="section sec-regnskab">
-          <div class="section-title"><span class="tchip">Regnskaber</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Regnskaber</span>
               <a class="kildeknap" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">Åbn regnskaber.virk.dk</a>
-              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
+            <span class="badge verified">Verificeret på CVR-nr.</span>
           </div>
           <table>
             <tr><th>Selskab</th><th>Seneste regnskabsår</th><th>Revisorforbehold</th></tr>
@@ -703,12 +712,12 @@
         <div class="group-title">Ejendom</div>
 
         <div class="section sec-ejendom">
-          <div class="section-title"><span class="tchip">Ejendom</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Ejendom</span>
               <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
               <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
-              <span class="badge verified">Verificeret på adresse</span>
             </span>
+            <span class="badge verified">Verificeret på adresse</span>
           </div>
           <table>
             <tr><th>Adresse</th><th>Ejendomsvurdering</th><th>Seneste handel</th></tr>
@@ -728,12 +737,12 @@
         </div>
 
         <div class="section sec-presse">
-          <div class="section-title"><span class="tchip">Presse og medier</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Presse og medier</span>
               <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
               <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
-              <span class="badge unverified">Ubekræftet, kun navnematch</span>
             </span>
+            <span class="badge unverified">Ubekræftet, kun navnematch</span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Muligt navnematch</span>
@@ -745,7 +754,10 @@
         </div>
 
         <div class="section sec-profiler">
-          <div class="section-title"><span class="tchip">Profiler og hjemmesider</span><span class="badge unverified">Ubekræftet, kun navnematch</span></div>
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Profiler og hjemmesider</span></span>
+            <span class="badge unverified">Ubekræftet, kun navnematch</span>
+          </div>
           <div class="unverified-block">
             <span class="unverified-label">Mulige profiler</span>
             Fundet på navn. Ingen af dem kan identitetsverificeres, da profiler ikke oplyser fødselsdato.
@@ -796,12 +808,12 @@
       </div>
 
       <div class="section kontakt-top sec-kontakt">
-        <div class="section-title"><span class="tchip">Kontaktoplysninger</span>
-          <span class="title-right">
-            <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
+        <div class="section-title">
+            <span class="tbar"><span class="tchip">Kontaktoplysninger</span>
+              <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
+            </span>
             <span class="badge verified">Verificeret på CVR-nr.</span>
-          </span>
-        </div>
+          </div>
         <table>
           <tr><th>Telefon</th><td>87 XX XX XX <span class="src">(CVR)</span></td></tr>
           <tr><th>Mail</th><td>kontakt@nordvangbyg-eksempel.dk <span class="src">(virksomhedens hjemmeside)</span></td></tr>
@@ -814,11 +826,11 @@
         <div class="group-title">Stamdata</div>
 
         <div class="section sec-stamdata">
-          <div class="section-title"><span class="tchip">Selskabet</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Selskabet</span>
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
-              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
+            <span class="badge verified">Verificeret på CVR-nr.</span>
           </div>
           <table>
             <tr><th>Branche</th><td>412000 &middot; Opførelse af bygninger</td></tr>
@@ -834,11 +846,11 @@
         <div class="group-title">Screening</div>
 
         <div class="section sec-pep">
-          <div class="section-title"><span class="tchip">PEP-tjek af reelle ejere</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">PEP-tjek af reelle ejere</span>
               <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
-              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
+            <span class="badge verified">Verificeret på navn og fødselsdato</span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen PEP-træf</span>
@@ -848,12 +860,12 @@
         </div>
 
         <div class="section sec-sanktion">
-          <div class="section-title"><span class="tchip">Sanktionslister</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Sanktionslister</span>
               <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
               <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
-              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
+            <span class="badge verified">Verificeret på navn og fødselsdato</span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sanktionstræf</span>
@@ -864,11 +876,11 @@
         </div>
 
         <div class="section sec-konkurs">
-          <div class="section-title"><span class="tchip">Konkurs og tvangsopløsning</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Konkurs og tvangsopløsning</span>
               <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
-              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
+            <span class="badge verified">Verificeret på CVR-nr.</span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sager</span>
@@ -882,11 +894,11 @@
         <div class="group-title">Ejere og økonomi</div>
 
         <div class="section sec-parter">
-          <div class="section-title"><span class="tchip">Reelle ejere og relaterede parter</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Reelle ejere og relaterede parter</span>
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
-              <span class="badge">Til manuelt opslag</span>
             </span>
+            <span class="badge">Til manuelt opslag</span>
           </div>
           <table>
             <tr><th>Navn</th><th>Relation</th><th>Ejerandel</th><th>Kilde</th></tr>
@@ -898,11 +910,11 @@
         </div>
 
         <div class="section sec-regnskab">
-          <div class="section-title"><span class="tchip">Regnskaber</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Regnskaber</span>
               <a class="kildeknap" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">Åbn regnskaber.virk.dk</a>
-              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
+            <span class="badge verified">Verificeret på CVR-nr.</span>
           </div>
           <table>
             <tr><th>Regnskabsår</th><th>Resultat</th><th>Egenkapital</th><th>Revisorforbehold</th></tr>
@@ -917,12 +929,12 @@
         <div class="group-title">Ejendom</div>
 
         <div class="section sec-ejendom">
-          <div class="section-title"><span class="tchip">Ejendom</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Ejendom</span>
               <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
               <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
-              <span class="badge verified">Verificeret på adresse</span>
             </span>
+            <span class="badge verified">Verificeret på adresse</span>
           </div>
           <table>
             <tr><th>Adresse</th><th>Type</th><th>Ejendomsvurdering</th></tr>
@@ -942,12 +954,12 @@
         </div>
 
         <div class="section sec-presse">
-          <div class="section-title"><span class="tchip">Presse og medier</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Presse og medier</span>
               <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
               <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
-              <span class="badge unverified">Ubekræftet, kun navnematch</span>
             </span>
+            <span class="badge unverified">Ubekræftet, kun navnematch</span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Muligt navnematch</span>
@@ -959,7 +971,10 @@
         </div>
 
         <div class="section sec-profiler">
-          <div class="section-title"><span class="tchip">Profiler og hjemmesider</span><span class="badge unverified">Ubekræftet, kun navnematch</span></div>
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Profiler og hjemmesider</span></span>
+            <span class="badge unverified">Ubekræftet, kun navnematch</span>
+          </div>
           <div class="unverified-block">
             <span class="unverified-label">Mulige profiler</span>
             Fundet på firmanavn. Kan ikke bindes til CVR-nummer.
@@ -975,11 +990,11 @@
         </div>
 
         <div class="section sec-anmeldelse">
-          <div class="section-title"><span class="tchip">Kundeanmeldelser</span>
-            <span class="title-right">
+          <div class="section-title">
+            <span class="tbar"><span class="tchip">Kundeanmeldelser</span>
               <a class="kildeknap" href="https://dk.trustpilot.com/" target="_blank" rel="noopener">Åbn Trustpilot</a>
-              <span class="badge unverified">Ubekræftet, kun firmanavn</span>
             </span>
+            <span class="badge unverified">Ubekræftet, kun firmanavn</span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Trustpilot og Google</span>
@@ -1166,11 +1181,11 @@
 
   function goToSection(id, link) {
     const el = document.getElementById(id);
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.classList.remove('fremhaev');
     void el.offsetWidth;
     el.classList.add('fremhaev');
-    setTimeout(() => el.classList.remove('fremhaev'), 2000);
+    setTimeout(() => el.classList.remove('fremhaev'), 2800);
     document.querySelectorAll('#toc a').forEach(a => a.classList.remove('aktiv'));
     link.classList.add('aktiv');
   }
