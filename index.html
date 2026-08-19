@@ -301,7 +301,7 @@
           </div>
           <div class="field">
             <label>Fødselsdato <span class="optional">(dd-mm-åååå, valgfrit)</span></label>
-            <input type="text" id="fdob" placeholder="dd-mm-åååå" value="14-03-1971">
+            <input type="text" id="fdob" placeholder="dd-mm-åååå" value="14-03-1971" maxlength="10" inputmode="numeric" oninput="formatDob(this)">
           </div>
         </div>
         <div class="row">
@@ -682,6 +682,14 @@
     "Henter seneste regnskaber...",
     "Samler kladde..."
   ];
+
+  function formatDob(el) {
+    const digits = el.value.replace(/\D/g, '').slice(0, 8);
+    let out = digits.slice(0, 2);
+    if (digits.length > 2) out += '-' + digits.slice(2, 4);
+    if (digits.length > 4) out += '-' + digits.slice(4, 8);
+    el.value = out;
+  }
 
   const areaIds = ['c1','c2','c3','c4','c5'];
 
