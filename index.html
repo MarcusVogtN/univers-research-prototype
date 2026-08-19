@@ -225,26 +225,42 @@
     color: #7a5305;
     margin: -6px 0 16px;
   }
-  .overblik {
+  .kontakt-top {
     border: 1px solid var(--border);
     border-radius: 8px;
-    overflow: hidden;
+    background: #fbfcfd;
+    padding: 16px 20px 14px;
     margin-bottom: 30px;
   }
-  .overblik table { margin: 0; font-size: 13px; }
-  .overblik td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; }
-  .overblik tr:last-child td { border-bottom: none; }
-  .overblik td:first-child { width: 210px; color: var(--muted); }
-  .dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    margin-right: 7px;
-    vertical-align: middle;
+  .kontakt-top .section-title { margin-bottom: 6px; }
+  .kontakt-top table tr:last-child th,
+  .kontakt-top table tr:last-child td { border-bottom: none; }
+  .title-right {
+    display: flex;
+    align-items: center;
+    gap: 9px;
   }
-  .dot.ok { background: var(--green); }
-  .dot.warn { background: var(--amber); }
-  .dot.none { background: #c4c8cc; }
+  .kildeknap {
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--navy-light);
+    border: 1px solid #c3ccd6;
+    background: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .kildeknap:hover { background: #eef2f6; border-color: var(--navy-light); }
+  .kildeknap::after { content: " \2197"; font-size: 10px; }
+  a.ext { color: var(--navy-light); text-decoration: underline; }
+  a.ext::after { content: " \2197"; font-size: 10px; }
+  .src a { color: inherit; text-decoration: underline; }
+  .kilde-intro {
+    font-size: 13px;
+    color: var(--muted);
+    margin: -8px 0 22px;
+  }
   .section-title {
     font-size: 15px;
     font-weight: 700;
@@ -255,6 +271,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .verified-block {
     border-left: 4px solid var(--green);
@@ -477,121 +495,164 @@
         </div>
       </div>
 
-      <div class="overblik">
+      <div class="kilde-intro">
+        Alle kilder kan åbnes direkte. Klik på kildeknappen ved hvert afsnit for at gå til kilden
+        og kontrollere fundet selv.
+      </div>
+
+      <div class="section kontakt-top">
+        <div class="section-title">Kontaktoplysninger
+          <span class="title-right">
+            <a class="kildeknap" href="https://www.krak.dk/" target="_blank" rel="noopener">Åbn Krak.dk</a>
+            <span class="badge verified">Verificeret</span>
+          </span>
+        </div>
         <table>
-          <tr><td>PEP</td><td><span class="dot ok"></span>Ingen træf</td></tr>
-          <tr><td>Sanktioner (EU/FN)</td><td><span class="dot ok"></span>Ingen træf</td></tr>
-          <tr><td>Konkurs, gældssanering</td><td><span class="dot ok"></span>Ingen sager</td></tr>
-          <tr><td>Selskabsroller</td><td><span class="dot warn"></span>3 selskaber, bør slås op i sagssystemet</td></tr>
-          <tr><td>Ejendom</td><td><span class="dot warn"></span>1 ejendom fundet</td></tr>
-          <tr><td>Ubekræftede spor</td><td><span class="dot warn"></span>2 fund kræver manuel vurdering</td></tr>
+          <tr><th>Telefon</th><td>20 XX XX XX <span class="src">(Krak.dk)</span></td></tr>
+          <tr><th>Adresse</th><td>Kastanievej 22, 8000 Aarhus C <span class="src">(Krak.dk)</span></td></tr>
+          <tr><th>Mail</th><td><em style="color:var(--muted);">Ikke fundet. Der findes ingen åben, offentlig kilde til privatpersoners mailadresse.</em></td></tr>
+          <tr><th>Selskaber</th><td>Kjeldsen Byggeservice ApS, Nordvang Byg ApS, Nordvang Ejendomme ApS <span class="src">(CVR, se afsnittet nedenfor)</span></td></tr>
         </table>
       </div>
 
       <div class="group">
-        <div class="group-title">1. Screening</div>
+        <div class="group-title">Screening</div>
 
         <div class="section">
-          <div class="section-title">PEP-tjek <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">PEP-tjek
+            <span class="title-right">
+              <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <div class="verified-block">
             <span class="verified-label">Ikke fundet på PEP-liste</span>
             Ingen træf på navn og fødselsdato i Finanstilsynets liste over politisk eksponerede personer.
-            <div class="src">Kilde: Finanstilsynets PEP-liste, hentet 17-08-2026. Dækker kun danske PEP'er.</div>
+            <div class="src">Kilde: <a class="ext" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Finanstilsynets PEP-liste</a>, hentet 17-08-2026. Dækker kun danske PEP'er.</div>
           </div>
         </div>
 
         <div class="section">
-          <div class="section-title">Sanktionslister <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Sanktionslister
+            <span class="title-right">
+              <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
+              <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sanktionstræf</span>
             Intet match på navn og fødselsdato i EU's og FN's konsoliderede sanktionslister.
-            <div class="src">Kilde: EU Sanctions Map, FN's sanktionsliste, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU Sanctions Map</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.</div>
           </div>
         </div>
 
         <div class="section">
-          <div class="section-title">Konkurs og gældssanering <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Konkurs og gældssanering
+            <span class="title-right">
+              <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sager</span>
             Ingen aktive eller afsluttede sager i Statstidende under dette navn og adresse.
-            <div class="src">Kilde: Statstidende, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Statstidende</a>, hentet 17-08-2026.</div>
           </div>
         </div>
       </div>
 
       <div class="group">
-        <div class="group-title">2. Selskaber og økonomi</div>
+        <div class="group-title">Selskaber og økonomi</div>
 
         <div class="section">
-          <div class="section-title">Virksomhedstilknytninger <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Virksomhedstilknytninger
+            <span class="title-right">
+              <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <table>
             <tr><th>Selskab</th><th>Rolle</th><th>CVR-nr.</th></tr>
-            <tr><td>Kjeldsen Byggeservice ApS</td><td>Direktør</td><td>31234567</td></tr>
-            <tr><td>Nordvang Byg ApS</td><td>Direktør, reel ejer (60%)</td><td>29876543</td></tr>
-            <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelsesmedlem</td><td>33445566</td></tr>
+            <tr><td>Kjeldsen Byggeservice ApS</td><td>Direktør</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">31234567</a></td></tr>
+            <tr><td>Nordvang Byg ApS</td><td>Direktør, reel ejer (60%)</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">29876543</a></td></tr>
+            <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelsesmedlem</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">33445566</a></td></tr>
           </table>
-          <div class="src" style="margin-top:6px;">Kilde: CVR (personopslag), hentet 17-08-2026.</div>
+          <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR (personopslag)</a>, hentet 17-08-2026.</div>
         </div>
 
         <div class="section">
-          <div class="section-title">Relaterede parter <span class="badge">Til manuelt opslag</span></div>
+          <div class="section-title">Relaterede parter
+            <span class="title-right">
+              <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
+              <span class="badge">Til manuelt opslag</span>
+            </span>
+          </div>
           <table>
             <tr><th>Navn</th><th>Relation</th><th>Kilde</th></tr>
-            <tr><td>Kjeldsen Byggeservice ApS</td><td>Direktør</td><td>CVR</td></tr>
-            <tr><td>Mette Kjeldsen</td><td>Reel ejer, 40%</td><td>CVR</td></tr>
-            <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelsesmedlem</td><td>CVR</td></tr>
+            <tr><td>Kjeldsen Byggeservice ApS</td><td>Direktør</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
+            <tr><td>Mette Kjeldsen</td><td>Reel ejer, 40%</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
+            <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelsesmedlem</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
           </table>
           <div class="hint">Værktøjet vurderer ikke selv interessekonflikt. Slå listen op i sagssystemet.</div>
         </div>
 
         <div class="section">
-          <div class="section-title">Regnskaber <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Regnskaber
+            <span class="title-right">
+              <a class="kildeknap" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">Åbn regnskaber.virk.dk</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <table>
             <tr><th>Selskab</th><th>Seneste regnskabsår</th><th>Revisorforbehold</th></tr>
-            <tr><td>Kjeldsen Byggeservice ApS</td><td>2024/25</td><td>Ingen</td></tr>
+            <tr><td>Kjeldsen Byggeservice ApS</td><td><a class="ext" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">2024/25</a></td><td>Ingen</td></tr>
           </table>
-          <div class="src" style="margin-top:6px;">Kilde: regnskaber.virk.dk, hentet 17-08-2026.</div>
+          <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">regnskaber.virk.dk</a>, hentet 17-08-2026.</div>
         </div>
       </div>
 
       <div class="group">
-        <div class="group-title">3. Kontakt og ejendom</div>
+        <div class="group-title">Ejendom</div>
 
         <div class="section">
-          <div class="section-title">Kontaktoplysninger <span class="badge verified">Verificeret</span></div>
-          <table>
-            <tr><th>Telefon</th><td>20 XX XX XX <span class="src">(Krak.dk)</span></td></tr>
-            <tr><th>Adresse</th><td>Kastanievej 22, 8000 Aarhus C <span class="src">(Krak.dk)</span></td></tr>
-            <tr><th>Mail</th><td><em style="color:var(--muted);">Ikke fundet. Der findes ingen åben, offentlig kilde til privatpersoners mailadresse.</em></td></tr>
-          </table>
-        </div>
-
-        <div class="section">
-          <div class="section-title">Ejendom <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Ejendom
+            <span class="title-right">
+              <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
+              <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <table>
             <tr><th>Adresse</th><th>Ejendomsvurdering</th><th>Seneste handel</th></tr>
             <tr><td>Kastanievej 22, 8000 Aarhus C</td><td>3.450.000 kr. (2025)</td><td>2.ureg. 2016</td></tr>
           </table>
-          <div class="src" style="margin-top:6px;">Kilde: OIS, BBR, Tinglysning.dk, hentet 17-08-2026.</div>
+          <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://ois.dk/" target="_blank" rel="noopener">OIS</a>, <a class="ext" href="https://bbr.dk/" target="_blank" rel="noopener">BBR</a>, <a class="ext" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Tinglysning.dk</a>, hentet 17-08-2026.</div>
           <div class="hint">Opslaget tager udgangspunkt i den kendte adresse. Der findes ingen åben kilde,
           der kan finde alle ejendomme på navn alene, så listen er ikke nødvendigvis komplet.</div>
         </div>
       </div>
 
       <div class="group unverified-zone">
-        <div class="group-title">4. Ubekræftede spor</div>
+        <div class="group-title">Ubekræftede spor</div>
         <div class="zone-intro">
           Fundene herunder kan ikke bindes entydigt til personen. De er ikke fakta, men spor,
           advokaten selv kan forfølge.
         </div>
 
         <div class="section">
-          <div class="section-title">Presse og medier <span class="badge unverified">Ubekræftet</span></div>
+          <div class="section-title">Presse og medier
+            <span class="title-right">
+              <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
+              <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
+              <span class="badge unverified">Ubekræftet</span>
+            </span>
+          </div>
           <div class="unverified-block">
             <span class="unverified-label">Muligt navnematch</span>
             Navnet "Bjørn Kjeldsen" optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke
             bindes entydigt til denne person, da artiklen ikke oplyser fødselsdato.
-            <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
+            <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
           </div>
           <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata. Infomedia er ikke søgt, kræver institutionsabonnement, se §3 i kildelisten.</div>
         </div>
@@ -602,9 +663,9 @@
             <span class="unverified-label">Mulige profiler</span>
             Fundet på navn. Ingen af dem kan identitetsverificeres, da profiler ikke oplyser fødselsdato.
             <table style="margin-top:8px;">
-              <tr><th>LinkedIn</th><td><a href="#">linkedin.com/in/bjoernkjeldsen-eksempel</a></td></tr>
-              <tr><th>Facebook</th><td><a href="#">facebook.com/bjoern.kjeldsen.eksempel</a></td></tr>
-              <tr><th>Hjemmeside</th><td><a href="#">kjeldsenbyg-eksempel.dk</a></td></tr>
+              <tr><th>LinkedIn</th><td><a class="ext" href="#">linkedin.com/in/bjoernkjeldsen-eksempel</a></td></tr>
+              <tr><th>Facebook</th><td><a class="ext" href="#">facebook.com/bjoern.kjeldsen.eksempel</a></td></tr>
+              <tr><th>Hjemmeside</th><td><a class="ext" href="#">kjeldsenbyg-eksempel.dk</a></td></tr>
               <tr><th>Øvrige</th><td><em style="color:var(--muted);">Ingen yderligere profiler fundet</em></td></tr>
             </table>
             <div class="src">Kun links, indhold er ikke automatisk indhentet.</div>
@@ -640,128 +701,169 @@
         </div>
       </div>
 
-      <div class="overblik">
+      <div class="kilde-intro">
+        Alle kilder kan åbnes direkte. Klik på kildeknappen ved hvert afsnit for at gå til kilden
+        og kontrollere fundet selv.
+      </div>
+
+      <div class="section kontakt-top">
+        <div class="section-title">Kontaktoplysninger
+          <span class="title-right">
+            <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
+            <span class="badge verified">Verificeret</span>
+          </span>
+        </div>
         <table>
-          <tr><td>PEP (reelle ejere)</td><td><span class="dot ok"></span>Ingen træf</td></tr>
-          <tr><td>Sanktioner (EU/FN)</td><td><span class="dot ok"></span>Ingen træf</td></tr>
-          <tr><td>Konkurs, tvangsopløsning</td><td><span class="dot ok"></span>Ingen sager, status normal</td></tr>
-          <tr><td>Regnskab</td><td><span class="dot ok"></span>Indleveret til tiden, ingen revisorforbehold</td></tr>
-          <tr><td>Reelle ejere</td><td><span class="dot warn"></span>3 parter, bør slås op i sagssystemet</td></tr>
-          <tr><td>Ejendom</td><td><span class="dot warn"></span>1 ejendom fundet</td></tr>
-          <tr><td>Ubekræftede spor</td><td><span class="dot warn"></span>3 fund kræver manuel vurdering</td></tr>
+          <tr><th>Telefon</th><td>87 XX XX XX <span class="src">(CVR)</span></td></tr>
+          <tr><th>Mail</th><td>kontakt@nordvangbyg-eksempel.dk <span class="src">(virksomhedens hjemmeside)</span></td></tr>
+          <tr><th>Adresse</th><td>Industrivej 8, 8210 Aarhus V <span class="src">(CVR)</span></td></tr>
+          <tr><th>Hjemmeside</th><td><a class="ext" href="#">nordvangbyg-eksempel.dk</a></td></tr>
         </table>
       </div>
 
       <div class="group">
-        <div class="group-title">1. Stamdata</div>
+        <div class="group-title">Stamdata</div>
 
         <div class="section">
-          <div class="section-title">Selskabet <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Selskabet
+            <span class="title-right">
+              <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <table>
             <tr><th>Branche</th><td>412000 &middot; Opførelse af bygninger</td></tr>
             <tr><th>Antal ansatte</th><td>18 (seneste kvartal)</td></tr>
             <tr><th>Status</th><td>Normal, ikke under konkurs eller tvangsopløsning</td></tr>
             <tr><th>Revisor</th><td>BDO Statsautoriseret Revisionsaktieselskab</td></tr>
           </table>
-          <div class="src" style="margin-top:6px;">Kilde: CVR, hentet 17-08-2026.</div>
+          <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a>, hentet 17-08-2026.</div>
         </div>
       </div>
 
       <div class="group">
-        <div class="group-title">2. Screening</div>
+        <div class="group-title">Screening</div>
 
         <div class="section">
-          <div class="section-title">PEP-tjek af reelle ejere <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">PEP-tjek af reelle ejere
+            <span class="title-right">
+              <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <div class="verified-block">
             <span class="verified-label">Ingen PEP-træf</span>
             Ingen af de registrerede reelle ejere findes på Finanstilsynets PEP-liste.
-            <div class="src">Kilde: CVR (reelle ejere), Finanstilsynets PEP-liste, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR (reelle ejere)</a>, <a class="ext" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Finanstilsynets PEP-liste</a>, hentet 17-08-2026.</div>
           </div>
         </div>
 
         <div class="section">
-          <div class="section-title">Sanktionslister <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Sanktionslister
+            <span class="title-right">
+              <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
+              <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sanktionstræf</span>
             Intet match på selskabet eller dets reelle ejere i EU's og FN's konsoliderede sanktionslister.
-            <div class="src">Kilde: EU Sanctions Map, FN's sanktionsliste, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU Sanctions Map</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.</div>
           </div>
         </div>
 
         <div class="section">
-          <div class="section-title">Konkurs og tvangsopløsning <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Konkurs og tvangsopløsning
+            <span class="title-right">
+              <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sager</span>
             Ingen aktive eller afsluttede sager i Statstidende under dette CVR-nummer.
-            <div class="src">Kilde: Statstidende, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Statstidende</a>, hentet 17-08-2026.</div>
           </div>
         </div>
       </div>
 
       <div class="group">
-        <div class="group-title">3. Ejere og økonomi</div>
+        <div class="group-title">Ejere og økonomi</div>
 
         <div class="section">
-          <div class="section-title">Reelle ejere og relaterede parter <span class="badge">Til manuelt opslag</span></div>
+          <div class="section-title">Reelle ejere og relaterede parter
+            <span class="title-right">
+              <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
+              <span class="badge">Til manuelt opslag</span>
+            </span>
+          </div>
           <table>
             <tr><th>Navn</th><th>Relation</th><th>Ejerandel</th><th>Kilde</th></tr>
-            <tr><td>Bjørn Kjeldsen</td><td>Direktør, reel ejer</td><td>60%</td><td>CVR</td></tr>
-            <tr><td>Mette Kjeldsen</td><td>Reel ejer</td><td>40%</td><td>CVR</td></tr>
-            <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelse (fælles medlem)</td><td>&ndash;</td><td>CVR</td></tr>
+            <tr><td>Bjørn Kjeldsen</td><td>Direktør, reel ejer</td><td>60%</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
+            <tr><td>Mette Kjeldsen</td><td>Reel ejer</td><td>40%</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
+            <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelse (fælles medlem)</td><td>&ndash;</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
           </table>
           <div class="hint">Værktøjet vurderer ikke selv interessekonflikt. Slå listen op i sagssystemet.</div>
         </div>
 
         <div class="section">
-          <div class="section-title">Regnskaber <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Regnskaber
+            <span class="title-right">
+              <a class="kildeknap" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">Åbn regnskaber.virk.dk</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <table>
             <tr><th>Regnskabsår</th><th>Resultat</th><th>Egenkapital</th><th>Revisorforbehold</th></tr>
-            <tr><td>2024/25</td><td>1.240.000 kr.</td><td>3.100.000 kr.</td><td>Ingen</td></tr>
-            <tr><td>2023/24</td><td>860.000 kr.</td><td>2.010.000 kr.</td><td>Ingen</td></tr>
+            <tr><td><a class="ext" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">2024/25</a></td><td>1.240.000 kr.</td><td>3.100.000 kr.</td><td>Ingen</td></tr>
+            <tr><td><a class="ext" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">2023/24</a></td><td>860.000 kr.</td><td>2.010.000 kr.</td><td>Ingen</td></tr>
           </table>
-          <div class="src" style="margin-top:6px;">Kilde: regnskaber.virk.dk, hentet 17-08-2026.</div>
+          <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">regnskaber.virk.dk</a>, hentet 17-08-2026.</div>
         </div>
       </div>
 
       <div class="group">
-        <div class="group-title">4. Kontakt og ejendom</div>
+        <div class="group-title">Ejendom</div>
 
         <div class="section">
-          <div class="section-title">Kontaktoplysninger <span class="badge verified">Verificeret</span></div>
-          <table>
-            <tr><th>Telefon</th><td>87 XX XX XX <span class="src">(CVR)</span></td></tr>
-            <tr><th>Mail</th><td>kontakt@nordvangbyg-eksempel.dk <span class="src">(virksomhedens hjemmeside)</span></td></tr>
-            <tr><th>Adresse</th><td>Industrivej 8, 8210 Aarhus V <span class="src">(CVR)</span></td></tr>
-            <tr><th>Hjemmeside</th><td><a href="#">nordvangbyg-eksempel.dk</a></td></tr>
-          </table>
-        </div>
-
-        <div class="section">
-          <div class="section-title">Ejendom <span class="badge verified">Verificeret</span></div>
+          <div class="section-title">Ejendom
+            <span class="title-right">
+              <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
+              <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
+              <span class="badge verified">Verificeret</span>
+            </span>
+          </div>
           <table>
             <tr><th>Adresse</th><th>Type</th><th>Ejendomsvurdering</th></tr>
             <tr><td>Industrivej 8, 8210 Aarhus V</td><td>Erhvervsejendom</td><td>6.200.000 kr. (2025)</td></tr>
           </table>
-          <div class="src" style="margin-top:6px;">Kilde: OIS, BBR, Tinglysning.dk, hentet 17-08-2026.</div>
+          <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://ois.dk/" target="_blank" rel="noopener">OIS</a>, <a class="ext" href="https://bbr.dk/" target="_blank" rel="noopener">BBR</a>, <a class="ext" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Tinglysning.dk</a>, hentet 17-08-2026.</div>
           <div class="hint">Opslaget tager udgangspunkt i selskabets adresse fra CVR. Der findes ingen åben kilde,
           der kan finde alle ejendomme på navn eller CVR-nr. alene, så listen er ikke nødvendigvis komplet.</div>
         </div>
       </div>
 
       <div class="group unverified-zone">
-        <div class="group-title">5. Ubekræftede spor</div>
+        <div class="group-title">Ubekræftede spor</div>
         <div class="zone-intro">
           Fundene herunder kan ikke bindes entydigt til CVR-nummeret. De er ikke fakta, men spor,
           advokaten selv kan forfølge.
         </div>
 
         <div class="section">
-          <div class="section-title">Presse og medier <span class="badge unverified">Ubekræftet</span></div>
+          <div class="section-title">Presse og medier
+            <span class="title-right">
+              <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
+              <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
+              <span class="badge unverified">Ubekræftet</span>
+            </span>
+          </div>
           <div class="unverified-block">
             <span class="unverified-label">Muligt navnematch</span>
             Selskabsnavnet optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke bindes
             entydigt uden yderligere kontekst.
-            <div class="src">Kilde: <a href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
+            <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
           </div>
           <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata. Infomedia er ikke søgt, kræver institutionsabonnement, se §3 i kildelisten.</div>
         </div>
@@ -772,9 +874,9 @@
             <span class="unverified-label">Mulige profiler</span>
             Fundet på firmanavn. Kan ikke bindes til CVR-nummer.
             <table style="margin-top:8px;">
-              <tr><th>LinkedIn</th><td><a href="#">linkedin.com/company/nordvang-byg-eksempel</a></td></tr>
-              <tr><th>Facebook</th><td><a href="#">facebook.com/nordvangbyg.eksempel</a></td></tr>
-              <tr><th>Hjemmeside</th><td><a href="#">nordvangbyg-eksempel.dk</a></td></tr>
+              <tr><th>LinkedIn</th><td><a class="ext" href="#">linkedin.com/company/nordvang-byg-eksempel</a></td></tr>
+              <tr><th>Facebook</th><td><a class="ext" href="#">facebook.com/nordvangbyg.eksempel</a></td></tr>
+              <tr><th>Hjemmeside</th><td><a class="ext" href="#">nordvangbyg-eksempel.dk</a></td></tr>
               <tr><th>Øvrige</th><td><em style="color:var(--muted);">Ingen yderligere profiler fundet</em></td></tr>
             </table>
             <div class="src">Kun links, indhold er ikke automatisk indhentet.</div>
@@ -782,12 +884,17 @@
         </div>
 
         <div class="section">
-          <div class="section-title">Kundeanmeldelser <span class="badge unverified">Ubekræftet</span></div>
+          <div class="section-title">Kundeanmeldelser
+            <span class="title-right">
+              <a class="kildeknap" href="https://dk.trustpilot.com/" target="_blank" rel="noopener">Åbn Trustpilot</a>
+              <span class="badge unverified">Ubekræftet</span>
+            </span>
+          </div>
           <div class="unverified-block">
             <span class="unverified-label">Trustpilot og Google</span>
             3,8 ud af 5 stjerner (14 anmeldelser). Tilbagevendende tema: forsinket levering på to sager.
             Kan ikke bindes til CVR-nummer, kun til firmanavn.
-            <div class="src">Kilde: <a href="#">Trustpilot</a>, <a href="#">Google Anmeldelser</a>, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://dk.trustpilot.com/" target="_blank" rel="noopener">Trustpilot</a>, <a class="ext" href="#">Google Anmeldelser</a>, hentet 17-08-2026.</div>
           </div>
         </div>
       </div>
