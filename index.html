@@ -111,6 +111,31 @@
   .check-row .cdesc { font-size: 12px; color: var(--muted); }
   .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
   .optional { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .autocomplete-wrap { position: relative; }
+  .suggestions {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 2px;
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .suggestions div {
+    padding: 8px 11px;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid #f2f2f2;
+  }
+  .suggestions div:last-child { border-bottom: none; }
+  .suggestions div:hover { background: #eef2f6; }
+  .addr-ok { color: var(--green); }
   button.primary {
     background: var(--navy);
     color: #fff;
@@ -306,9 +331,13 @@
         </div>
         <div class="row">
           <div class="field">
-            <label>Adresse <span class="optional">(gade/vej og nr., postnr. og by, valgfrit)</span></label>
-            <input type="text" id="faddress" placeholder="Gade/vej og nr., postnr. og by" value="Kastanievej 22, 8000 Aarhus C">
-            <div class="hint">Bruges til at undgå forveksling ved almindelige navne, bl.a. hos Statstidende og Krak.dk.</div>
+            <label>Adresse <span class="optional">(valgfrit)</span></label>
+            <div class="autocomplete-wrap">
+              <input type="text" id="faddress" placeholder="Begynd at skrive vejnavn og nr., f.eks. Rådhuspladsen 2"
+                     autocomplete="off" oninput="searchAddress(this)" onblur="hideSuggestionsSoon()">
+              <div id="addressSuggestions" class="suggestions"></div>
+            </div>
+            <div id="addressStatus" class="hint">Foreslås fra Danmarks officielle adresseregister (DAWA). Vælg fra listen, så er formatet altid rigtigt.</div>
           </div>
         </div>
         <div class="row">
@@ -682,6 +711,56 @@
     "Henter seneste regnskaber...",
     "Samler kladde..."
   ];
+
+  // Valgt adresse gemmes struktureret, så opslag i BBR/OIS/Tinglysning kan bruge adgangsadresseid.
+  let valgtAdresse = null;
+  let addrTimer = null;
+
+  function searchAddress(el) {
+    valgtAdresse = null;
+    const q = el.value.trim();
+    const box = document.getElementById('addressSuggestions');
+    const status = document.getElementById('addressStatus');
+    status.className = 'hint';
+    status.textContent = 'Foreslås fra Danmarks officielle adresseregister (DAWA). Vælg fra listen, så er formatet altid rigtigt.';
+
+    if (q.length < 3) { box.style.display = 'none'; return; }
+
+    clearTimeout(addrTimer);
+    addrTimer = setTimeout(() => {
+      fetch('https://api.dataforsyningen.dk/adresser/autocomplete?per_side=6&q=' + encodeURIComponent(q))
+        .then(r => r.json())
+        .then(list => {
+          if (!list.length) { box.style.display = 'none'; return; }
+          box.innerHTML = '';
+          list.forEach(item => {
+            const row = document.createElement('div');
+            row.textContent = item.tekst;
+            row.onmousedown = () => vaelgAdresse(item);
+            box.appendChild(row);
+          });
+          box.style.display = 'block';
+        })
+        .catch(() => { box.style.display = 'none'; });
+    }, 200);
+  }
+
+  function vaelgAdresse(item) {
+    const a = item.adresse;
+    valgtAdresse = {
+      vejnavn: a.vejnavn, husnr: a.husnr, etage: a.etage, doer: a.dør,
+      postnr: a.postnr, by: a.postnrnavn, adgangsadresseid: a.adgangsadresseid
+    };
+    document.getElementById('faddress').value = item.tekst;
+    document.getElementById('addressSuggestions').style.display = 'none';
+    const status = document.getElementById('addressStatus');
+    status.className = 'hint addr-ok';
+    status.textContent = 'Valideret adresse. Klar til opslag i BBR, OIS og Tinglysning.';
+  }
+
+  function hideSuggestionsSoon() {
+    setTimeout(() => { document.getElementById('addressSuggestions').style.display = 'none'; }, 150);
+  }
 
   function formatDob(el) {
     const digits = el.value.replace(/\D/g, '').slice(0, 8);
