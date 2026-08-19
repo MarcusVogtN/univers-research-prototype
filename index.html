@@ -374,17 +374,6 @@
         </div>
         <div class="row">
           <div class="field">
-            <label>Adresse <span class="optional">(valgfrit)</span></label>
-            <div class="autocomplete-wrap">
-              <input type="text" id="faddress" placeholder="Begynd at skrive vejnavn og nr., f.eks. Rådhuspladsen 2"
-                     autocomplete="off" oninput="searchAddress(this)" onblur="hideSuggestionsSoon()">
-              <div id="addressSuggestions" class="suggestions"></div>
-            </div>
-            <div id="addressStatus" class="hint">Foreslås fra Danmarks officielle adresseregister (DAWA). Vælg fra listen, så er formatet altid rigtigt.</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field">
             <label>Eventuel virksomhedstilknytning <span class="optional">(valgfrit)</span></label>
             <input type="text" id="fpersoncompany" placeholder="Firmanavn eller CVR-nr., hvis kendt">
             <div class="hint">Hjælper med at skelne personer med samme navn og med at finde selskabsroller.</div>
@@ -402,6 +391,18 @@
             <label>CVR-nr. <span class="optional">(valgfrit)</span></label>
             <input type="text" id="fcvr" placeholder="f.eks. 12345678" value="29876543">
           </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Adresse <span class="optional">(valgfrit)</span></label>
+          <div class="autocomplete-wrap">
+            <input type="text" id="faddress" placeholder="Begynd at skrive vejnavn og nr., f.eks. Rådhuspladsen 2"
+                   autocomplete="off" oninput="searchAddress(this)" onblur="hideSuggestionsSoon()">
+            <div id="addressSuggestions" class="suggestions"></div>
+          </div>
+          <div id="addressStatus" class="hint">Foreslås fra Danmarks officielle adresseregister (DAWA). Vælg fra listen, så er formatet altid rigtigt.</div>
         </div>
       </div>
 
@@ -425,23 +426,23 @@
         </div>
         <div class="check-row">
           <input type="checkbox" id="c1" checked>
-          <div><div class="ctext">PEP-tjek</div><div class="cdesc">Er personen politisk eksponeret</div></div>
+          <div><div class="ctext">PEP-tjek</div><div class="cdesc" id="d1"></div></div>
         </div>
         <div class="check-row">
           <input type="checkbox" id="c2" checked>
-          <div><div class="ctext">Hvidvask</div><div class="cdesc">Reelle ejere, sanktionslister, konkurs og tvangsopløsning</div></div>
+          <div><div class="ctext">Hvidvask</div><div class="cdesc" id="d2"></div></div>
         </div>
         <div class="check-row">
           <input type="checkbox" id="c3" checked>
-          <div><div class="ctext">Relaterede parter</div><div class="cdesc">Liste til manuelt opslag i sagssystemet, værktøjet vurderer ikke selv konflikt</div></div>
+          <div><div class="ctext">Relaterede parter</div><div class="cdesc" id="d3"></div></div>
         </div>
         <div class="check-row">
           <input type="checkbox" id="c4" checked>
-          <div><div class="ctext">Baggrundstjek</div><div class="cdesc">Presse, ejendom, telefon og mail, profiler og hjemmesider, kundeanmeldelser (kun virksomheder)</div></div>
+          <div><div class="ctext">Økonomi og risiko</div><div class="cdesc" id="d4"></div></div>
         </div>
         <div class="check-row">
           <input type="checkbox" id="c5" checked>
-          <div><div class="ctext">Økonomi og risiko</div><div class="cdesc">Regnskaber, revisorforbehold</div></div>
+          <div><div class="ctext">Baggrundstjek</div><div class="cdesc" id="d5"></div></div>
         </div>
       </fieldset>
 
@@ -533,15 +534,6 @@
         </div>
 
         <div class="section">
-          <div class="section-title">Regnskaber <span class="badge verified">Verificeret</span></div>
-          <table>
-            <tr><th>Selskab</th><th>Seneste regnskabsår</th><th>Revisorforbehold</th></tr>
-            <tr><td>Kjeldsen Byggeservice ApS</td><td>2024/25</td><td>Ingen</td></tr>
-          </table>
-          <div class="src" style="margin-top:6px;">Kilde: regnskaber.virk.dk, hentet 17-08-2026.</div>
-        </div>
-
-        <div class="section">
           <div class="section-title">Relaterede parter <span class="badge">Til manuelt opslag</span></div>
           <table>
             <tr><th>Navn</th><th>Relation</th><th>Kilde</th></tr>
@@ -550,6 +542,15 @@
             <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelsesmedlem</td><td>CVR</td></tr>
           </table>
           <div class="hint">Værktøjet vurderer ikke selv interessekonflikt. Slå listen op i sagssystemet.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Regnskaber <span class="badge verified">Verificeret</span></div>
+          <table>
+            <tr><th>Selskab</th><th>Seneste regnskabsår</th><th>Revisorforbehold</th></tr>
+            <tr><td>Kjeldsen Byggeservice ApS</td><td>2024/25</td><td>Ingen</td></tr>
+          </table>
+          <div class="src" style="margin-top:6px;">Kilde: regnskaber.virk.dk, hentet 17-08-2026.</div>
         </div>
       </div>
 
@@ -905,13 +906,34 @@
   });
   syncAllCheckbox();
 
+  // Samme fem områder gælder begge typer, men de dækker forskellige kilder.
+  const omraadeTekster = {
+    person: {
+      d1: 'Er personen politisk eksponeret (Finanstilsynets PEP-liste)',
+      d2: 'Sanktionslister, personlig konkurs og gældssanering',
+      d3: 'Personens selskabsroller, til manuelt opslag i sagssystemet',
+      d4: 'Regnskaber for de selskaber, personen er knyttet til',
+      d5: 'Ejendom, telefon, presse, profiler og hjemmesider'
+    },
+    company: {
+      d1: 'Er nogen af de reelle ejere politisk eksponeret',
+      d2: 'Reelle ejere, sanktionslister, konkurs og tvangsopløsning',
+      d3: 'Reelle ejere og koncernforbindelser, til manuelt opslag i sagssystemet',
+      d4: 'Regnskaber, egenkapital og revisorforbehold',
+      d5: 'Ejendom, telefon og mail, presse, profiler, kundeanmeldelser'
+    }
+  };
+
   function setType(type) {
     currentType = type;
     document.getElementById('typeBtnPerson').classList.toggle('active', type === 'person');
     document.getElementById('typeBtnCompany').classList.toggle('active', type === 'company');
     document.getElementById('personFields').style.display = (type === 'person') ? 'block' : 'none';
     document.getElementById('companyFields').style.display = (type === 'company') ? 'block' : 'none';
+    const t = omraadeTekster[type];
+    Object.keys(t).forEach(id => { document.getElementById(id).textContent = t[id]; });
   }
+  setType('person');
 
   function startSearch() {
     document.getElementById('inputView').style.display = 'none';
