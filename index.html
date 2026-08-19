@@ -383,6 +383,7 @@
     border-radius: 10px;
     padding: 16px 14px;
     z-index: 10;
+    overflow-wrap: anywhere;
   }
   .toc.visible { display: block; }
   .toc-title {
@@ -404,7 +405,7 @@
   .toc-group:first-of-type { margin-top: 0; }
   .toc a {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     font-size: 13px;
     color: var(--text);
@@ -415,12 +416,42 @@
   }
   .toc a:hover { background: #eef2f6; }
   .toc a.aktiv { background: #eef2f6; font-weight: 600; }
+  .toc-actions {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .toc-actions button {
+    width: 100%;
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 9px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .toc-actions button:hover { background: #eef2f6; border-color: var(--navy-light); }
   .toc .swatch {
     flex: 0 0 auto;
     width: 12px;
     height: 12px;
+    margin-top: 3px;
     border-radius: 3px;
     background: var(--sw);
+  }
+  /* Lange ord som "Virksomhedstilknytninger" skal brydes, ikke løbe ud over
+     kanten. min-width:0 er nødvendig, ellers nægter flex-elementet at krympe. */
+  .toc-tekst {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
   }
   @media (min-width: 1340px) { .toc.har-indhold { display: block; } }
   /* Fremhævning, når man springer til et afsnit fra oversigten. Outline bruges
@@ -1284,12 +1315,18 @@
       const farve = getComputedStyle(el).getPropertyValue('--sec').trim();
       const a = document.createElement('a');
       a.href = '#' + id;
-      a.innerHTML = '<span class="swatch"></span><span></span>';
+      a.innerHTML = '<span class="swatch"></span><span class="toc-tekst"></span>';
       a.querySelector('.swatch').style.setProperty('--sw', farve);
       a.lastChild.textContent = chip.textContent.trim();
       a.onclick = e => { e.preventDefault(); goToSection(id, a); };
       toc.appendChild(a);
     });
+    const handlinger = document.createElement('div');
+    handlinger.className = 'toc-actions';
+    handlinger.innerHTML =
+      '<button type="button" onclick="window.print()">Print eller gem som PDF</button>' +
+      '<button type="button" onclick="resetDemo()">Ny søgning</button>';
+    toc.appendChild(handlinger);
     toc.classList.add('har-indhold');
   }
 
