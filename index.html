@@ -199,10 +199,10 @@
     display: inline-block;
     font-size: 11px;
     font-weight: 700;
-    padding: 3px 9px;
+    padding: 3px 10px;
     border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
   }
   .badge.verified { background: var(--green-bg); color: var(--green); }
   .badge.unverified { background: var(--amber-bg); color: var(--amber); }
@@ -521,14 +521,15 @@
 
       <div class="kilde-intro">
         Alle kilder kan åbnes direkte. Klik på kildeknappen ved hvert afsnit for at gå til kilden
-        og kontrollere fundet selv.
+        og kontrollere fundet selv. Mærkatet ved hvert afsnit viser, hvilken oplysning fundet er
+        bundet til, og dermed hvor sikkert det er.
       </div>
 
       <div class="section kontakt-top sec-kontakt">
         <div class="section-title">Kontaktoplysninger
           <span class="title-right">
             <a class="kildeknap" href="https://www.krak.dk/" target="_blank" rel="noopener">Åbn Krak.dk</a>
-            <span class="badge verified">Verificeret</span>
+            <span class="badge verified">Verificeret på navn og adresse</span>
           </span>
         </div>
         <table>
@@ -546,7 +547,7 @@
           <div class="section-title">PEP-tjek
             <span class="title-right">
               <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
           </div>
           <div class="verified-block">
@@ -561,7 +562,7 @@
             <span class="title-right">
               <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
               <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
           </div>
           <div class="verified-block">
@@ -575,7 +576,7 @@
           <div class="section-title">Konkurs og gældssanering
             <span class="title-right">
               <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på navn og adresse</span>
             </span>
           </div>
           <div class="verified-block">
@@ -593,7 +594,7 @@
           <div class="section-title">Virksomhedstilknytninger
             <span class="title-right">
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
           </div>
           <table>
@@ -625,7 +626,7 @@
           <div class="section-title">Regnskaber
             <span class="title-right">
               <a class="kildeknap" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">Åbn regnskaber.virk.dk</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
           </div>
           <table>
@@ -644,7 +645,7 @@
             <span class="title-right">
               <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
               <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på adresse</span>
             </span>
           </div>
           <table>
@@ -669,7 +670,7 @@
             <span class="title-right">
               <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
               <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
-              <span class="badge unverified">Ubekræftet</span>
+              <span class="badge unverified">Ubekræftet, kun navnematch</span>
             </span>
           </div>
           <div class="unverified-block">
@@ -682,7 +683,7 @@
         </div>
 
         <div class="section sec-profiler">
-          <div class="section-title">Profiler og hjemmesider <span class="badge unverified">Ubekræftet</span></div>
+          <div class="section-title">Profiler og hjemmesider <span class="badge unverified">Ubekræftet, kun navnematch</span></div>
           <div class="unverified-block">
             <span class="unverified-label">Mulige profiler</span>
             Fundet på navn. Ingen af dem kan identitetsverificeres, da profiler ikke oplyser fødselsdato.
@@ -728,14 +729,15 @@
 
       <div class="kilde-intro">
         Alle kilder kan åbnes direkte. Klik på kildeknappen ved hvert afsnit for at gå til kilden
-        og kontrollere fundet selv.
+        og kontrollere fundet selv. Mærkatet ved hvert afsnit viser, hvilken oplysning fundet er
+        bundet til, og dermed hvor sikkert det er.
       </div>
 
       <div class="section kontakt-top sec-kontakt">
         <div class="section-title">Kontaktoplysninger
           <span class="title-right">
             <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
-            <span class="badge verified">Verificeret</span>
+            <span class="badge verified">Verificeret på CVR-nr.</span>
           </span>
         </div>
         <table>
@@ -753,7 +755,7 @@
           <div class="section-title">Selskabet
             <span class="title-right">
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
           </div>
           <table>
@@ -773,7 +775,7 @@
           <div class="section-title">PEP-tjek af reelle ejere
             <span class="title-right">
               <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
           </div>
           <div class="verified-block">
@@ -788,13 +790,14 @@
             <span class="title-right">
               <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
               <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på navn og fødselsdato</span>
             </span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sanktionstræf</span>
             Intet match på selskabet eller dets reelle ejere i EU's og FN's konsoliderede sanktionslister.
-            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU Sanctions Map</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU Sanctions Map</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.
+            De reelle ejere er tjekket på navn og fødselsdato. Selve selskabet er tjekket på navn og adresse, da sanktionslisterne ikke indeholder CVR-numre.</div>
           </div>
         </div>
 
@@ -802,7 +805,7 @@
           <div class="section-title">Konkurs og tvangsopløsning
             <span class="title-right">
               <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
           </div>
           <div class="verified-block">
@@ -836,7 +839,7 @@
           <div class="section-title">Regnskaber
             <span class="title-right">
               <a class="kildeknap" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">Åbn regnskaber.virk.dk</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på CVR-nr.</span>
             </span>
           </div>
           <table>
@@ -856,7 +859,7 @@
             <span class="title-right">
               <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
               <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
-              <span class="badge verified">Verificeret</span>
+              <span class="badge verified">Verificeret på adresse</span>
             </span>
           </div>
           <table>
@@ -881,7 +884,7 @@
             <span class="title-right">
               <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
               <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
-              <span class="badge unverified">Ubekræftet</span>
+              <span class="badge unverified">Ubekræftet, kun navnematch</span>
             </span>
           </div>
           <div class="unverified-block">
@@ -894,7 +897,7 @@
         </div>
 
         <div class="section sec-profiler">
-          <div class="section-title">Profiler og hjemmesider <span class="badge unverified">Ubekræftet</span></div>
+          <div class="section-title">Profiler og hjemmesider <span class="badge unverified">Ubekræftet, kun navnematch</span></div>
           <div class="unverified-block">
             <span class="unverified-label">Mulige profiler</span>
             Fundet på firmanavn. Kan ikke bindes til CVR-nummer.
@@ -913,7 +916,7 @@
           <div class="section-title">Kundeanmeldelser
             <span class="title-right">
               <a class="kildeknap" href="https://dk.trustpilot.com/" target="_blank" rel="noopener">Åbn Trustpilot</a>
-              <span class="badge unverified">Ubekræftet</span>
+              <span class="badge unverified">Ubekræftet, kun firmanavn</span>
             </span>
           </div>
           <div class="unverified-block">
