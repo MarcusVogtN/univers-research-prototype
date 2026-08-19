@@ -111,7 +111,6 @@
   .check-row .cdesc { font-size: 12px; color: var(--muted); }
   .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
   .optional { font-weight: 400; color: var(--muted); font-size: 12px; }
-  .format-hint { font-size: 12px; color: var(--muted); margin: -2px 0 5px; }
   button.primary {
     background: var(--navy);
     color: #fff;
@@ -301,15 +300,13 @@
             <input type="text" id="fname" value="Bjørn Kjeldsen">
           </div>
           <div class="field">
-            <label>Fødselsdato <span class="optional">(valgfrit)</span></label>
-            <div class="format-hint">dd-mm-åååå</div>
+            <label>Fødselsdato <span class="optional">(dd-mm-åååå, valgfrit)</span></label>
             <input type="text" id="fdob" placeholder="dd-mm-åååå" value="14-03-1971">
           </div>
         </div>
         <div class="row">
           <div class="field">
-            <label>Adresse <span class="optional">(valgfrit)</span></label>
-            <div class="format-hint">Gade/vej og nr., postnr. og by</div>
+            <label>Adresse <span class="optional">(gade/vej og nr., postnr. og by, valgfrit)</span></label>
             <input type="text" id="faddress" placeholder="Gade/vej og nr., postnr. og by" value="Kastanievej 22, 8000 Aarhus C">
             <div class="hint">Bruges til at undgå forveksling ved almindelige navne, bl.a. hos Statstidende og Krak.dk.</div>
           </div>
