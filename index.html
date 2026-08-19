@@ -6,10 +6,12 @@
 <title>Univers Advokater — Research (prototype)</title>
 <style>
   :root {
-    --navy: #0f2438;
-    --navy-light: #1c3a58;
-    --gold: #b08d3e;
-    --bg: #f4f5f3;
+    /* Farverne er taget fra universadvokater.dk: #2C3136 er sidens mørke
+       baggrund (hedder .darkBlueSection i deres CSS), #6e805b er accentfarven. */
+    --navy: #2c3136;
+    --navy-light: #434c55;
+    --gold: #6e805b;
+    --bg: #f4f6f7;
     --card: #ffffff;
     --border: #dfe2e6;
     --text: #1a1a1a;
@@ -31,7 +33,7 @@
   header {
     background: var(--navy);
     color: #fff;
-    padding: 18px 32px;
+    padding: 16px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -45,7 +47,7 @@
     letter-spacing: 0.3px;
   }
   header .brand img {
-    height: 30px;
+    height: 46px;
     width: auto;
     display: block;
   }
@@ -353,7 +355,7 @@
   .toc {
     display: none;
     position: fixed;
-    top: 96px;
+    top: 110px;
     left: calc(50% - 450px - 236px);
     width: 220px;
     max-height: calc(100vh - 130px);
