@@ -442,14 +442,8 @@
     cursor: pointer;
     transition: background 120ms ease, border-color 120ms ease;
   }
-  .toc-actions .primaer {
-    background: var(--brand-dark);
-    color: #fff;
-    border: 1px solid var(--brand-dark);
-  }
-  .toc-actions .primaer:hover { background: #123024; }
   .toc-actions .sekundaer {
-    background: none;
+    background: #fff;
     color: var(--text);
     border: 1px solid #ccc;
   }
@@ -685,7 +679,8 @@
           <div class="meta">Født 14-03-1971 &middot; Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div class="knapper">
-          <button class="secondary" onclick="window.print()">Print eller gem som PDF</button>
+          <button class="secondary" onclick="window.print()">Udskriv</button>
+          <button class="secondary" onclick="gemSomPdf()">Gem som PDF</button>
           <button class="secondary" onclick="resetDemo()">Ny søgning</button>
         </div>
       </div>
@@ -897,7 +892,8 @@
           <div class="meta">CVR 29876543 &middot; Industrivej 8, 8210 Aarhus V &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div class="knapper">
-          <button class="secondary" onclick="window.print()">Print eller gem som PDF</button>
+          <button class="secondary" onclick="window.print()">Udskriv</button>
+          <button class="secondary" onclick="gemSomPdf()">Gem som PDF</button>
           <button class="secondary" onclick="resetDemo()">Ny søgning</button>
         </div>
       </div>
@@ -1347,7 +1343,8 @@
     const handlinger = document.createElement('div');
     handlinger.className = 'toc-actions';
     handlinger.innerHTML =
-      '<button type="button" class="primaer" onclick="window.print()">Print eller gem som PDF</button>' +
+      '<button type="button" class="sekundaer" onclick="window.print()">Udskriv</button>' +
+      '<button type="button" class="sekundaer" onclick="gemSomPdf()">Gem som PDF</button>' +
       '<button type="button" class="sekundaer" onclick="resetDemo()">Ny søgning</button>';
     toc.appendChild(handlinger);
     toc.classList.add('har-indhold');
@@ -1362,6 +1359,15 @@
     setTimeout(() => el.classList.remove('fremhaev'), 2800);
     document.querySelectorAll('#toc a').forEach(a => a.classList.remove('aktiv'));
     link.classList.add('aktiv');
+  }
+
+  // En browser kan ikke gemme en PDF direkte. Den vej går gennem udskriv-dialogen,
+  // hvor man vælger "Gem som PDF" som destination. I det færdige værktøj bør filen
+  // i stedet dannes på serveren, så advokaten får den med ét klik.
+  function gemSomPdf() {
+    alert('Vælg "Gem som PDF" som printer i dialogen, der åbner nu.\n\n' +
+          'I det færdige værktøj dannes PDF-filen direkte, uden dette mellemled.');
+    window.print();
   }
 
   function hideToc() {
