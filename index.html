@@ -11,6 +11,7 @@
     --navy: #2c3136;
     --navy-light: #434c55;
     --gold: #6e805b;
+    --brand-dark: #05170f;
     --bg: #f4f6f7;
     --card: #ffffff;
     --border: #dfe2e6;
@@ -31,7 +32,7 @@
     color: var(--text);
   }
   header {
-    background: var(--gold);
+    background: var(--brand-dark);
     color: #fff;
     padding: 16px 32px;
     display: flex;
@@ -51,10 +52,10 @@
     width: auto;
     display: block;
   }
-  header .brand .divider { color: #cfd8c8; }
+  header .brand .divider { color: #6f8579; }
   header .tag {
     font-size: 12px;
-    color: #e2e8dc;
+    color: #b7c4bb;
   }
   main {
     max-width: 900px;
@@ -153,7 +154,7 @@
   .suggestions div:hover { background: #eef2f6; }
   .addr-ok { color: var(--green); }
   button.primary {
-    background: var(--gold);
+    background: var(--brand-dark);
     color: #fff;
     border: none;
     padding: 12px 26px;
@@ -162,7 +163,7 @@
     font-weight: 600;
     cursor: pointer;
   }
-  button.primary:hover { background: #5b6a4b; }
+  button.primary:hover { background: #123024; }
   button.secondary {
     background: none;
     border: 1px solid #ccc;
@@ -373,8 +374,8 @@
     display: none;
     position: fixed;
     top: 110px;
-    left: calc(50% - 450px - 236px);
-    width: 220px;
+    left: calc(50% - 450px - 206px);
+    width: 190px;
     max-height: calc(100vh - 130px);
     overflow-y: auto;
     background: var(--card);
@@ -421,7 +422,7 @@
     border-radius: 3px;
     background: var(--sw);
   }
-  @media (min-width: 1420px) { .toc.har-indhold { display: block; } }
+  @media (min-width: 1340px) { .toc.har-indhold { display: block; } }
   /* Fremhævning, når man springer til et afsnit fra oversigten. Outline bruges
      frem for border, fordi den ikke flytter rundt på indholdet. */
   .section.fremhaev {
@@ -444,6 +445,24 @@
     margin-top: 20px;
   }
   a { color: var(--navy-light); }
+  .fejl {
+    color: var(--red);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    min-height: 18px;
+  }
+  /* Print: rapporten skal kunne lægges i sagen. Navigation og knapper udelades,
+     men kladde-forbeholdet skal stå med, også på papir. */
+  @media print {
+    header, .toc, .kilde-intro, .report-header button, .kildeknap { display: none !important; }
+    body { background: #fff; }
+    main { max-width: 100%; padding: 0; }
+    .card { border: none; padding: 0; }
+    .group { page-break-inside: auto; }
+    .section { page-break-inside: avoid; }
+    a { text-decoration: none; }
+  }
   .type-toggle {
     display: flex;
     gap: 8px;
@@ -584,6 +603,7 @@
         </div>
       </fieldset>
 
+      <div id="formFejl" class="fejl"></div>
       <button class="primary" onclick="startSearch()">Find oplysninger</button>
     </form>
   </div>
@@ -611,6 +631,7 @@
           <div class="meta">Født 14-03-1971 &middot; Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div>
+          <button class="secondary" onclick="window.print()">Print eller gem som PDF</button>
           <button class="secondary" onclick="resetDemo()">Ny søgning</button>
         </div>
       </div>
@@ -822,6 +843,7 @@
           <div class="meta">CVR 29876543 &middot; Industrivej 8, 8210 Aarhus V &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div>
+          <button class="secondary" onclick="window.print()">Print eller gem som PDF</button>
           <button class="secondary" onclick="resetDemo()">Ny søgning</button>
         </div>
       </div>
@@ -1189,6 +1211,55 @@
   }
   setType('person');
 
+  // Hvilke afsnit hvert område i formularen dækker. Uden det ville rapporten
+  // vise alt, uanset hvad advokaten har valgt, og demoen ville være misvisende.
+  const omraadeSektioner = {
+    c1: ['sec-pep'],
+    c2: ['sec-sanktion', 'sec-konkurs'],
+    c3: ['sec-parter', 'sec-roller'],
+    c4: ['sec-regnskab'],
+    c5: ['sec-kontakt', 'sec-ejendom', 'sec-presse', 'sec-profiler', 'sec-anmeldelse']
+  };
+  const altidMed = ['sec-stamdata'];
+
+  function anvendOmraader(rootId) {
+    const root = document.getElementById(rootId);
+    const tilladt = new Set(altidMed);
+    areaIds.forEach(id => {
+      if (document.getElementById(id).checked) {
+        omraadeSektioner[id].forEach(c => tilladt.add(c));
+      }
+    });
+    root.querySelectorAll('.section').forEach(s => {
+      const med = Array.from(s.classList).some(c => tilladt.has(c));
+      s.style.display = med ? '' : 'none';
+    });
+    root.querySelectorAll('.group').forEach(g => {
+      const synlig = Array.from(g.querySelectorAll('.section'))
+        .some(s => s.style.display !== 'none');
+      g.style.display = synlig ? '' : 'none';
+    });
+  }
+
+  // Datoerne i demoen skrives om til i dag, så rapporten ikke ser forældet ud.
+  function saetDato(rootId) {
+    const nu = new Date();
+    const p = n => String(n).padStart(2, '0');
+    const dato = p(nu.getDate()) + '-' + p(nu.getMonth() + 1) + '-' + nu.getFullYear();
+    const klokken = p(nu.getHours()) + '.' + p(nu.getMinutes());
+    const walker = document.createTreeWalker(
+      document.getElementById(rootId), NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeValue.indexOf('17-08-2026') !== -1) {
+        node.nodeValue = node.nodeValue.split('17-08-2026').join(dato);
+      }
+      if (node.nodeValue.indexOf('kl. 14.02') !== -1) {
+        node.nodeValue = node.nodeValue.split('kl. 14.02').join('kl. ' + klokken);
+      }
+    }
+  }
+
   // Bygger indholdsoversigten ud fra den rapport, der vises. Farverne hentes fra
   // sektionens egen --sec, så oversigt og rapport aldrig kan komme ud af trit.
   function buildToc(rootId) {
@@ -1197,7 +1268,9 @@
     toc.innerHTML = '<div class="toc-title">Indhold</div>';
     let n = 0;
     root.querySelectorAll('.group-title, .section').forEach(el => {
+      if (el.style.display === 'none') return;
       if (el.classList.contains('group-title')) {
+        if (el.parentElement.style.display === 'none') return;
         const h = document.createElement('div');
         h.className = 'toc-group';
         h.textContent = el.textContent.trim();
@@ -1238,6 +1311,19 @@
   }
 
   function startSearch() {
+    const navnEl = document.getElementById(
+      currentType === 'company' ? 'fcompanyname' : 'fname');
+    const fejl = document.getElementById('formFejl');
+    if (!navnEl.value.trim()) {
+      fejl.textContent = 'Navn skal udfyldes. Det er det eneste obligatoriske felt.';
+      navnEl.focus();
+      return;
+    }
+    if (!areaIds.some(id => document.getElementById(id).checked)) {
+      fejl.textContent = 'Vælg mindst ét område at søge i.';
+      return;
+    }
+    fejl.textContent = '';
     document.getElementById('inputView').style.display = 'none';
     document.getElementById('loadingView').style.display = 'block';
     const steps = (currentType === 'company') ? stepsCompany : stepsPerson;
@@ -1253,6 +1339,8 @@
         document.getElementById('loadingView').style.display = 'none';
         const targetId = (currentType === 'company') ? 'reportViewCompany' : 'reportViewPerson';
         document.getElementById(targetId).style.display = 'block';
+        anvendOmraader(targetId);
+        saetDato(targetId);
         buildToc(targetId);
         window.scrollTo(0,0);
       }
