@@ -165,13 +165,26 @@
   }
   button.primary:hover { background: #123024; }
   button.secondary {
-    background: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
     border: 1px solid #ccc;
     padding: 12px 20px;
     border-radius: 6px;
     font-size: 14px;
     cursor: pointer;
     margin-right: 10px;
+  }
+  button.secondary svg {
+    flex: 0 0 auto;
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   #loadingView { display: none; text-align: center; padding: 60px 0; }
   #loadingView .spinner {
@@ -374,8 +387,10 @@
     display: none;
     position: fixed;
     top: 110px;
-    left: calc(50% - 450px - 206px);
-    width: 190px;
+    /* Bredden sættes efter det længste punkt, så ingen titel brydes over to
+       linjer. Placeringen regnes ud i JS, fordi bredden først kendes der. */
+    left: -9999px;
+    width: max-content;
     max-height: calc(100vh - 130px);
     overflow-y: auto;
     background: var(--card);
@@ -383,7 +398,6 @@
     border-radius: 12px;
     padding: 18px 16px;
     z-index: 10;
-    overflow-wrap: anywhere;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   }
   .toc.visible { display: block; }
@@ -410,9 +424,10 @@
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--text);
     text-decoration: none;
+    white-space: nowrap;
     padding: 6px 8px;
     border-radius: 6px;
     line-height: 1.3;
@@ -434,13 +449,27 @@
   }
   .toc-actions button {
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 9px;
     border-radius: 8px;
-    padding: 10px 10px;
+    padding: 9px 11px;
     font-size: 13px;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
+    white-space: nowrap;
     transition: background 120ms ease, border-color 120ms ease;
+  }
+  .toc-actions svg {
+    flex: 0 0 auto;
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   .toc-actions .sekundaer {
     background: #fff;
@@ -456,21 +485,11 @@
     border-radius: 3px;
     background: var(--sw);
   }
-  /* Lange ord som "Virksomhedstilknytninger" skal brydes, ikke løbe ud over
-     kanten. min-width:0 er nødvendig, ellers nægter flex-elementet at krympe. */
-  .toc-tekst {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    hyphens: auto;
-  }
+  .toc-tekst { flex: 0 0 auto; }
   /* Når sidemenuen er fremme, ligger knapperne der. Er skærmen for smal til
      menuen, falder de tilbage til rapportens hjørne, så de aldrig forsvinder helt. */
-  @media (min-width: 1340px) {
-    .toc.har-indhold { display: block; }
-    .report-header .knapper { display: none; }
-  }
+  .toc.vis { display: block; }
+  body.har-sidemenu .report-header .knapper { display: none; }
   /* Fremhævning, når man springer til et afsnit fra oversigten. Outline bruges
      frem for border, fordi den ikke flytter rundt på indholdet. */
   .section.fremhaev {
@@ -679,9 +698,9 @@
           <div class="meta">Født 14-03-1971 &middot; Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div class="knapper">
-          <button class="secondary" onclick="window.print()">Udskriv</button>
-          <button class="secondary" onclick="gemSomPdf()">Gem som PDF</button>
-          <button class="secondary" onclick="resetDemo()">Ny søgning</button>
+          <button class="secondary" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Udskriv</button>
+          <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
+          <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Ny søgning</button>
         </div>
       </div>
 
@@ -892,9 +911,9 @@
           <div class="meta">CVR 29876543 &middot; Industrivej 8, 8210 Aarhus V &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div class="knapper">
-          <button class="secondary" onclick="window.print()">Udskriv</button>
-          <button class="secondary" onclick="gemSomPdf()">Gem som PDF</button>
-          <button class="secondary" onclick="resetDemo()">Ny søgning</button>
+          <button class="secondary" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Udskriv</button>
+          <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
+          <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Ny søgning</button>
         </div>
       </div>
 
@@ -1261,6 +1280,13 @@
   }
   setType('person');
 
+  // Ikonerne ligger som inline SVG, så filen bliver ved med at være selvstændig.
+  const IKON = {
+    printer: '<svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>',
+    download: '<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>',
+    soeg: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
+  };
+
   // Hvilke afsnit hvert område i formularen dækker. Uden det ville rapporten
   // vise alt, uanset hvad advokaten har valgt, og demoen ville være misvisende.
   const omraadeSektioner = {
@@ -1343,12 +1369,33 @@
     const handlinger = document.createElement('div');
     handlinger.className = 'toc-actions';
     handlinger.innerHTML =
-      '<button type="button" class="sekundaer" onclick="window.print()">Udskriv</button>' +
-      '<button type="button" class="sekundaer" onclick="gemSomPdf()">Gem som PDF</button>' +
-      '<button type="button" class="sekundaer" onclick="resetDemo()">Ny søgning</button>';
+      '<button type="button" class="sekundaer" onclick="window.print()">' + IKON.printer + 'Udskriv</button>' +
+      '<button type="button" class="sekundaer" onclick="gemSomPdf()">' + IKON.download + 'Gem som PDF</button>' +
+      '<button type="button" class="sekundaer" onclick="resetDemo()">' + IKON.soeg + 'Ny søgning</button>';
     toc.appendChild(handlinger);
-    toc.classList.add('har-indhold');
+    toc.classList.add('vis');
+    placerToc();
   }
+
+  // Menuen placeres til venstre for rapporten. Er der ikke plads til hele
+  // bredden, skjules den, og knapperne falder tilbage til rapportens hjørne.
+  function placerToc() {
+    const toc = document.getElementById('toc');
+    if (!toc.classList.contains('vis')) return;
+    const bredde = toc.offsetWidth;
+    const plads = window.innerWidth / 2 - 450 - bredde - 24;
+    if (plads >= 8) {
+      toc.style.left = plads + 'px';
+      toc.style.visibility = 'visible';
+      document.body.classList.add('har-sidemenu');
+    } else {
+      toc.style.left = '-9999px';
+      toc.style.visibility = 'hidden';
+      document.body.classList.remove('har-sidemenu');
+    }
+  }
+
+  window.addEventListener('resize', placerToc);
 
   function goToSection(id, link) {
     const el = document.getElementById(id);
@@ -1372,8 +1419,10 @@
 
   function hideToc() {
     const toc = document.getElementById('toc');
-    toc.classList.remove('har-indhold');
+    toc.classList.remove('vis');
     toc.innerHTML = '';
+    toc.style.left = '-9999px';
+    document.body.classList.remove('har-sidemenu');
   }
 
   function startSearch() {
