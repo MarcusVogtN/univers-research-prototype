@@ -321,11 +321,6 @@
   a.ext { color: var(--navy-light); text-decoration: underline; }
   a.ext::after { content: " \2197"; font-size: 10px; }
   .src a { color: inherit; text-decoration: underline; }
-  .kilde-intro {
-    font-size: 13px;
-    color: var(--muted);
-    margin: -8px 0 22px;
-  }
   .section-title {
     display: flex;
     justify-content: space-between;
@@ -539,7 +534,7 @@
   /* Print: rapporten skal kunne lægges i sagen. Navigation og knapper udelades,
      men kladde-forbeholdet skal stå med, også på papir. */
   @media print {
-    header, .toc, .kilde-intro, .report-header button, .kildeknap { display: none !important; }
+    header, .toc, .report-header button, .kildeknap { display: none !important; }
     body { background: #fff; }
     main { max-width: 100%; padding: 0; }
     .card { border: none; padding: 0; }
@@ -728,12 +723,6 @@
           <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
           <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Ny søgning</button>
         </div>
-      </div>
-
-      <div class="kilde-intro">
-        Alle kilder kan åbnes direkte. Klik på kildeknappen ved hvert afsnit for at gå til kilden
-        og kontrollere fundet selv. Mærkatet ved hvert afsnit viser, hvilken oplysning fundet er
-        bundet til, og dermed hvor sikkert det er.
       </div>
 
       <div class="section kontakt-top sec-kontakt">
@@ -941,12 +930,6 @@
           <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
           <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Ny søgning</button>
         </div>
-      </div>
-
-      <div class="kilde-intro">
-        Alle kilder kan åbnes direkte. Klik på kildeknappen ved hvert afsnit for at gå til kilden
-        og kontrollere fundet selv. Mærkatet ved hvert afsnit viser, hvilken oplysning fundet er
-        bundet til, og dermed hvor sikkert det er.
       </div>
 
       <div class="section kontakt-top sec-kontakt">
