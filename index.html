@@ -289,14 +289,17 @@
   /* Det farvede banner dækker titel og kildeknapper og stopper lige før mærkatet
      for verificeret/ubekræftet, så det står på hvid baggrund og er let at skelne. */
   .tbar {
-    display: inline-flex;
+    flex: 1 1 auto;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
     background: var(--sec);
     border-radius: 6px;
     padding: 7px 14px;
   }
+  .tbar .kildeknap:first-of-type { margin-left: auto; }
   .tchip {
     color: #fff;
     font-size: 15px;
