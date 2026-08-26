@@ -951,6 +951,13 @@
     background: var(--surface);
     border-bottom-color: var(--line);
   }
+  /* Boksens hvide bund lå som standard også under dens egen ramme. Langs
+     navnelinjen, der er mørk, stak den hvide bund derfor ud som en tydelig
+     lys kant hele vejen rundt om banneret, og virksomhedsboksene så anderledes
+     ud end de øvrige hvide bokse i rapporten. Med padding-box males bunden
+     kun indenfor rammen, så rammen bliver den samme svage streg som alle
+     andre steder. */
+  body.feltboks .virkblok { background-clip: padding-box; }
   body.feltboks .virkblok .virknavn { color: var(--text); }
   body.feltboks .virkblok .virkcvr { color: var(--dim); }
   body.feltboks .virkblok button.virk-soeg { color: var(--dim); border-color: var(--line-2); }
