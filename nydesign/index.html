@@ -191,12 +191,17 @@
   .subtitle { color: var(--bg-dim); font-size: 14px; margin-bottom: 24px; }
   a { color: var(--accent-lys); }
 
-  /* ---------- Typevælger ---------- */
+  /* ---------- Typevælger ----------
+     Grå og hvid i stedet for temaets accentfarve. Farverne er faste og følger
+     ikke temaet: vælgeren er et betjeningselement, ikke indhold, og skal se ens
+     ud, uanset hvilket farveskema der er valgt. Det valgte felt er hvidt og
+     løftet med en skygge, resten er den grå bane, så det kan ses på afstand,
+     hvad der er slået til. */
   .type-toggle {
     display: inline-flex;
     gap: 3px;
-    background: var(--surface);
-    border: 1px solid var(--line);
+    background: #e6e8e9;
+    border: 1px solid #d2d6d8;
     border-radius: 999px;
     padding: 4px;
     margin: 0;
@@ -209,14 +214,17 @@
     cursor: pointer;
     text-align: left;
     font-family: inherit;
-    color: var(--dim);
+    color: #5c6366;
     transition: background 150ms ease, color 150ms ease;
   }
-  .type-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  .type-btn:hover { background: rgba(255,255,255,0.55); color: #23292b; }
   .type-btn .ttitle { font-size: 13.5px; font-weight: 600; }
   .type-btn .tdesc { display: none; }
-  .type-btn.active { background: var(--accent); }
-  .type-btn.active .ttitle { color: var(--accent-ink); }
+  .type-btn.active {
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.16);
+  }
+  .type-btn.active .ttitle { color: #1b2022; }
 
   /* ---------- Paneler ---------- */
   /* Ét udseende for alle segmenter, på begge sider af værktøjet: samme flade,
@@ -728,6 +736,22 @@
   a.ext::after { content: " \2197"; font-size: 10px; }
   .src a { color: inherit; text-decoration: underline; }
 
+  /* Punktliste inde i en tabelcelle. Bruges til virksomhedstilknytningerne,
+     som chefen bad om at få under hinanden i stedet for på én linje. */
+  .punktliste { list-style: none; margin: 0; padding: 0; }
+  .punktliste li { position: relative; padding-left: 15px; margin: 0 0 4px; }
+  .punktliste li:last-child { margin-bottom: 0; }
+  .punktliste li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--dim);
+  }
+
   /* ---------- Kildelinjer ----------
      Kilderne stod som lille grå tekst og var svære både at se og at ramme.
      Linjen har nu en skillestreg over sig, og hvert kildelink er en klikbar
@@ -1019,10 +1043,10 @@
   .toc {
     display: none;
     position: fixed;
-    top: 110px;
+    top: 166px;
     left: -9999px;
     width: max-content;
-    max-height: calc(100vh - 130px);
+    max-height: calc(100vh - 186px);
     overflow-y: auto;
     background: var(--surface);
     border: 1px solid var(--line);
@@ -1032,29 +1056,40 @@
     box-shadow: var(--skygge-2);
   }
   .toc.visible, .toc.vis { display: block; }
-  /* Vejen tilbage. Ligger øverst, adskilt fra Udskriv og Gem som PDF, som
-     er handlinger på rapporten og bliver stående nederst. */
+  /* Vejen tilbage står som en selvstændig knap over indholdsoversigten og er
+     ikke længere en del af den. Den fører væk fra rapporten og hører derfor
+     ikke sammen med oversigten over rapportens egne afsnit. Venstrekant og
+     bredde sættes af placerToc(), så de to følges ad. */
   .toc-tilbage {
-    display: flex;
+    display: none;
+    position: fixed;
+    top: 110px;
+    left: -9999px;
+    box-sizing: border-box;
     align-items: center;
     gap: 8px;
-    width: 100%;
     font-family: inherit;
     font-size: 12.5px;
     font-weight: 600;
     color: var(--dim);
-    background: transparent;
+    background: var(--surface);
     border: 1px solid var(--line-2);
     border-radius: 999px;
-    padding: 8px 14px;
-    margin-bottom: 16px;
+    padding: 11px 16px;
     cursor: pointer;
     text-align: left;
+    z-index: 10;
+    box-shadow: var(--skygge-2);
     transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
   }
+  .toc-tilbage.vis { display: flex; }
+  /* Hover må ikke være en halvgennemsigtig accentfarve her. Knappen ligger nu
+     direkte på siden og ikke inde i oversigten, så et gennemsigtigt lag blandes
+     med den hvide side og bliver næsten hvidt. Den lyse tekst forsvandt i det.
+     Hover er derfor et trin op i temaets egne flader, som er uigennemsigtigt. */
   .toc-tilbage:hover {
-    background: var(--accent-blod);
-    color: var(--accent-lys);
+    background: var(--surface-2);
+    color: var(--text);
     border-color: var(--accent);
   }
   .toc-tilbage:focus-visible { outline: 2px solid var(--accent-lys); outline-offset: 2px; }
@@ -1208,7 +1243,7 @@
     }
     /* Univers-temaet lægger blå farver på rapporten gennem et eget stylesheet.
        Det ryddes her, så rapporten også bliver hvid i det tema. */
-    #reportViewPerson, #reportViewCompany, #toc {
+    #reportViewPerson, #reportViewCompany, #toc, #tocTilbage {
       --nuance-1: #ffffff !important;
       --nuance-2: #ffffff !important;
       --nuance-3: #ffffff !important;
@@ -1235,7 +1270,7 @@
       --accent-ink: #ffffff !important;
     }
 
-    header, .toc, .report-header button, .kildeknap, button.virk-soeg, #temavaelger { display: none !important; }
+    header, .toc, .toc-tilbage, .report-header button, .kildeknap, button.virk-soeg, #temavaelger { display: none !important; }
     html, body { background: #ffffff !important; color: #141816 !important; }
     main { max-width: 100%; padding: 0; }
 
@@ -1278,6 +1313,7 @@
   <div class="tag">Internt prototypeeksempel</div>
 </header>
 
+<button type="button" id="tocTilbage" class="toc-tilbage" onclick="resetDemo()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Tilbage til forsiden</button>
 <nav id="toc" class="toc"></nav>
 
 <main>
@@ -1293,7 +1329,7 @@
         <h1>Ny søgning</h1>
         <div class="type-toggle">
           <button type="button" class="type-btn active" id="typeBtnPerson" onclick="setType('person')">
-            <div class="ttitle">Privatperson</div>
+            <div class="ttitle">Person</div>
             <div class="tdesc">Navn og fødselsdato</div>
           </button>
           <button type="button" class="type-btn" id="typeBtnCompany" onclick="setType('company')">
@@ -1315,8 +1351,7 @@
          søgningen sættes i gang. -->
     <div class="forbehold forbehold-top">
       Alle søgeresultater er forbundet med større eller mindre usikkerhed og bør uden
-      efterprøvelse kun anvendes til foreløbig orientering. Det er ikke hvidvaskdokumentation,
-      og alle fund skal gennemgås og vurderes manuelt.
+      efterprøvelse kun anvendes til foreløbig orientering.
     </div>
 
     <form id="researchForm" onsubmit="return false;">
@@ -1357,8 +1392,7 @@
         <div class="row">
           <div class="field" id="feltTilknytning">
             <label>Eventuel virksomhedstilknytning</label>
-            <input type="text" id="fpersoncompany" placeholder="Enten firmanavn eller CVR-nummer">
-            <div class="hint">Skelner personer med samme navn og finder roller i virksomheder.</div>
+            <input type="text" id="fpersoncompany" placeholder="Firmanavn eller CVR-nummer">
           </div>
           <div class="field">
             <label>Adresse</label>
@@ -1425,16 +1459,13 @@
   <div id="reportViewPerson">
     <div class="card">
       <!-- Forbeholdet står øverst, før navnet, så det læses før resultaterne og
-           ikke kan overses. Sidste afsnit om hjemmel til modparter og tredjemænd
-           står stadig, fordi spørgsmålet ikke er afklaret endnu. Se §5 i kildelisten. -->
+           ikke kan overses. Chefen bad 2026-09-01 om, at kun første sætning står.
+           De to øvrige afsnit, om at rapporten ikke er hvidvaskdokumentation og om
+           uafklaret hjemmel til modparter og tredjemænd, er derfor taget ud. Begge
+           punkter er stadig åbne, se §5 i kildelisten og CLAUDE.md. -->
       <div class="kladde-banner">
         Alle søgeresultater er forbundet med større eller mindre usikkerhed og bør uden
-        efterprøvelse kun anvendes til foreløbig orientering. Det er ikke hvidvaskdokumentation,
-        og alle fund skal gennemgås og vurderes manuelt.
-        <div style="font-weight:400; margin-top:6px;">
-          Bruges værktøjet på andre end egne klienter, fx modparter eller tredjemænd, er hjemlen
-          hertil endnu ikke juridisk afklaret. Se §5 i kildelisten.
-        </div>
+        efterprøvelse kun anvendes til foreløbig orientering.
       </div>
       <div class="report-header">
         <div class="venstre">
@@ -1442,22 +1473,33 @@
                .portraet-wrap ind her igen med sin ubekræftet-markering. -->
           <div>
             <h1>Bjørn Kjeldsen</h1>
-            <div class="meta">Født 14-03-1971 &middot; Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
+            <!-- "Bopæl:" står med, fordi adressen uden mærkat kunne læses som fødested. -->
+            <div class="meta">Født: 14-03-1971 &middot; Bopæl: Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
           </div>
         </div>
         <div class="knapper">
           <button class="secondary" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Udskriv</button>
           <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
-          <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Ny søgning</button>
+          <!-- Knappen fører tilbage til søgesiden med felterne, som de stod.
+               Den hed "Ny søgning", men chefen bad om, at vejen tilbage til
+               forsiden fremgår tydeligt af teksten. -->
+          <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Tilbage til forsiden</button>
         </div>
       </div>
 
       <!-- Forklaring på farveprikkerne. Står før første afsnit, så signalet kan
-           læses uden at man skal gætte. -->
+           læses uden at man skal gætte.
+           Betegnelserne er chefens egne, valgt af ansvarsmæssige grunde 2026-09-01.
+           Rækkefølgen er rød, gul, grøn som en lyskurv, sådan som han listede dem.
+           Gul indgår, selv om ingen kilde i prototypen bruger den.
+           Hjælpeteksten på hver prik siger "entydigt match" og ikke "verificeret".
+           Ordet er fjernet af de samme ansvarsmæssige grunde som betegnelserne
+           ovenfor: værktøjet binder et træf til en identitetsnøgle, det verificerer
+           ikke noget. Sæt det ikke tilbage. -->
       <div class="signalforklaring">
-        <span title="Bundet på CVR-nr., navn og fødselsdato, eller navn og adresse"><span class="signal groen"></span> Verificeret</span>
-        <span title="Snævret ind på mere end navn, men ikke bundet entydigt"><span class="signal gul"></span> Delvist bekræftet</span>
-        <span title="Fundet på navn alene, kan ikke bindes entydigt"><span class="signal roed"></span> Kun navnematch</span>
+        <span title="Fundet på navn alene, kan ikke bindes entydigt"><span class="signal roed"></span> Lav sikkerhed</span>
+        <span title="Snævret ind på mere end navn, men ikke bundet entydigt"><span class="signal gul"></span> Middel sikkerhed</span>
+        <span title="Bundet på CVR-nr., navn og fødselsdato, eller navn og adresse"><span class="signal groen"></span> Høj sikkerhed</span>
       </div>
 
       <div class="section sec-kontakt">
@@ -1465,13 +1507,23 @@
             <span class="tbar"><span class="tchip">Kontaktoplysninger</span>
               <a class="kildeknap" href="https://www.krak.dk/" target="_blank" rel="noopener">Åbn Krak.dk</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på navn og adresse" aria-label="Verificeret på navn og adresse"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på navn og adresse" aria-label="Høj sikkerhed: entydigt match på navn og adresse"></span>
           </div>
         <table>
           <tr><th>Telefon</th><td>20 XX XX XX <span class="src">(Krak.dk)</span></td></tr>
           <tr><th>Adresse</th><td>Kastanievej 22, 8000 Aarhus C <span class="src">(Krak.dk)</span></td></tr>
           <tr><th>Mail</th><td><em style="color:var(--muted);">Intet fundet.</em></td></tr>
-          <tr><th>Virksomheder</th><td>Kjeldsen Byggeservice ApS, Nordvang Byg ApS, Nordvang Ejendomme ApS <span class="src">(CVR, se afsnittet nedenfor)</span></td></tr>
+          <!-- Virksomhederne står under hinanden og linker direkte til enhedens
+               side i CVR, så advokaten kan gå videre uden selv at søge.
+               Kilden vises som knap ligesom de øvrige kilder på siden. -->
+          <tr><th>Virksomhedstilknytninger</th><td>
+            <ul class="punktliste">
+              <li><a class="ext" href="https://datacvr.virk.dk/enhed/virksomhed/31234567" target="_blank" rel="noopener">Kjeldsen Byggeservice ApS</a></li>
+              <li><a class="ext" href="https://datacvr.virk.dk/enhed/virksomhed/29876543" target="_blank" rel="noopener">Nordvang Byg ApS</a></li>
+              <li><a class="ext" href="https://datacvr.virk.dk/enhed/virksomhed/33445566" target="_blank" rel="noopener">Nordvang Ejendomme ApS</a></li>
+            </ul>
+            <div class="src">Kilde: <a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></div>
+          </td></tr>
         </table>
       </div>
 
@@ -1483,11 +1535,11 @@
             <span class="tbar"><span class="tchip">PEP-tjek</span>
               <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på navn og fødselsdato" aria-label="Verificeret på navn og fødselsdato"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på navn og fødselsdato" aria-label="Høj sikkerhed: entydigt match på navn og fødselsdato"></span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ikke fundet på PEP-liste</span>
-            Ingen træf på navn og fødselsdato i Finanstilsynets liste over politisk eksponerede personer.
+            Intet match på navn og fødselsdato i Finanstilsynets liste over politisk eksponerede personer.
             <div class="src">Kilde: <a class="ext" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Finanstilsynets PEP-liste</a>, hentet 17-08-2026. Dækker kun danske PEP'er.</div>
           </div>
         </div>
@@ -1498,12 +1550,12 @@
               <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
               <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på navn og fødselsdato" aria-label="Verificeret på navn og fødselsdato"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på navn og fødselsdato" aria-label="Høj sikkerhed: entydigt match på navn og fødselsdato"></span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sanktionstræf</span>
             Intet match på navn og fødselsdato i EU's og FN's konsoliderede sanktionslister.
-            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU Sanctions Map</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.</div>
+            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU's sanktionsliste</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.</div>
           </div>
         </div>
 
@@ -1512,7 +1564,7 @@
             <span class="tbar"><span class="tchip">Insolvens og dødsbo</span>
               <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på navn og adresse" aria-label="Verificeret på navn og adresse"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på navn og adresse" aria-label="Høj sikkerhed: entydigt match på navn og adresse"></span>
           </div>
           <div class="verified-block">
             <span class="verified-label">Ingen sager</span>
@@ -1520,15 +1572,10 @@
             konkurs, rekonstruktion, gældssanering, dødsbo og proklama.
             <div class="src">Kilde: <a class="ext" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Statstidende</a>, hentet 17-08-2026.</div>
           </div>
-          <!-- Konkurskarantæne kan ikke slås op i en åben kilde. Feltet vises alligevel,
-               efter samme princip som mailadresse: vis at der er søgt, i stedet for at
-               udelade feltet i stilhed. Se KILDELISTE.md §1h. -->
-          <div class="empty-note">
-            Konkurskarantæne kan ikke slås op. Registret hos Erhvervsstyrelsen er lukket for
-            andre end skifteretter, kuratorer, Skatteforvaltningen og politiet, og karantænen
-            offentliggøres ikke i Statstidende. Lovforslag L 114 vil gøre aktive karantæner
-            offentligt søgbare i CVR, og feltet kan udfyldes, hvis det vedtages.
-          </div>
+          <!-- Noten om konkurskarantæne er fjernet 2026-09-01 efter chefens ønske.
+               Begrænsningen står stadig i KILDELISTE.md §1h: registret hos
+               Erhvervsstyrelsen er lukket, og feltet kan først udfyldes, hvis
+               lovforslag L 114 vedtages. -->
         </div>
       </div>
       <div class="group">
@@ -1545,7 +1592,7 @@
             <span class="tbar"><span class="tchip">Virksomhedstilknytninger</span>
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på CVR-nr." aria-label="Verificeret på CVR-nr."></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på CVR-nr." aria-label="Høj sikkerhed: entydigt match på CVR-nr."></span>
           </div>
 
           <div class="virkliste">
@@ -1574,7 +1621,7 @@
                   <div class="vf-vaerdi">Revideret<span class="adskil">·</span>ingen forbehold<span class="adskil">·</span>væsentlig usikkerhed om fortsat drift</div>
                 </div>
                 <div class="vf" data-omraade="c5">
-                  <div class="vf-navn"><span class="signal roed" role="img" title="Kun navnematch, ikke bundet til CVR-nummer" aria-label="Kun navnematch, ikke bundet til CVR-nummer"></span>Kundeanmeldelser</div>
+                  <div class="vf-navn"><span class="signal roed" role="img" title="Lav sikkerhed: kun navnematch, ikke bundet til CVR-nummer" aria-label="Lav sikkerhed: kun navnematch, ikke bundet til CVR-nummer"></span>Kundeanmeldelser</div>
                   <div class="vf-vaerdi">3,4 af 5<span class="adskil">·</span>46 anmeldelser<span class="adskil">·</span><a class="ext" href="https://dk.trustpilot.com/" target="_blank" rel="noopener">Trustpilot</a></div>
                 </div>
                 <div class="vf bred" data-omraade="c3">
@@ -1608,7 +1655,7 @@
                   <div class="vf-vaerdi">Revideret<span class="adskil">·</span>ingen forbehold</div>
                 </div>
                 <div class="vf" data-omraade="c5">
-                  <div class="vf-navn"><span class="signal roed" role="img" title="Kun navnematch, ikke bundet til CVR-nummer" aria-label="Kun navnematch, ikke bundet til CVR-nummer"></span>Kundeanmeldelser</div>
+                  <div class="vf-navn"><span class="signal roed" role="img" title="Lav sikkerhed: kun navnematch, ikke bundet til CVR-nummer" aria-label="Lav sikkerhed: kun navnematch, ikke bundet til CVR-nummer"></span>Kundeanmeldelser</div>
                   <div class="vf-vaerdi">4,6 af 5<span class="adskil">·</span>12 anmeldelser<span class="adskil">·</span><a class="ext" href="https://dk.trustpilot.com/" target="_blank" rel="noopener">Trustpilot</a></div>
                 </div>
                 <div class="vf bred" data-omraade="c3">
@@ -1642,7 +1689,7 @@
                   <div class="vf-vaerdi"><span class="tom">Revision fravalgt, ingen påtegning</span></div>
                 </div>
                 <div class="vf" data-omraade="c5">
-                  <div class="vf-navn"><span class="signal roed" role="img" title="Kun navnematch, ikke bundet til CVR-nummer" aria-label="Kun navnematch, ikke bundet til CVR-nummer"></span>Kundeanmeldelser</div>
+                  <div class="vf-navn"><span class="signal roed" role="img" title="Lav sikkerhed: kun navnematch, ikke bundet til CVR-nummer" aria-label="Lav sikkerhed: kun navnematch, ikke bundet til CVR-nummer"></span>Kundeanmeldelser</div>
                   <div class="vf-vaerdi"><span class="tom">Ingen anmeldelser fundet</span></div>
                 </div>
                 <div class="vf bred" data-omraade="c3">
@@ -1654,9 +1701,10 @@
 
           </div>
 
-          <!-- Låst beslutning i CLAUDE.md: værktøjet afgør ikke interessekonflikter.
-               Listen over parter er kun til manuelt opslag i kontorets sagssystem. -->
-          <div class="hint" style="margin-top:10px;" data-omraade="c3">Værktøjet vurderer ikke selv interessekonflikt. Slå de øvrige parter op i sagssystemet.</div>
+          <!-- Sætningen om, at værktøjet ikke selv vurderer interessekonflikt, er
+               fjernet 2026-09-01 efter chefens ønske. Selve beslutningen står ved
+               magt, se CLAUDE.md: værktøjet afgør ikke interessekonflikter, og
+               listen over parter er kun til manuelt opslag i sagssystemet. -->
 
           <!-- Hver kilde er mærket med sit område. Er Økonomi eller Baggrundstjek
                fravalgt, må linjen ikke blive ved med at påstå, at regnskaber og
@@ -1679,7 +1727,7 @@
               <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
               <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på adresse" aria-label="Verificeret på adresse"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på adresse" aria-label="Høj sikkerhed: entydigt match på adresse"></span>
           </div>
           <table>
             <tr><th>Adresse</th><th>Ejendomsvurdering</th><th>Seneste handel</th></tr>
@@ -1693,8 +1741,8 @@
       <div class="group unverified-zone">
         <div class="group-title">Ubekræftede spor</div>
         <div class="zone-intro">
-          <span class="signal roed" role="img" title="Kun navnematch, ikke bundet entydigt" aria-label="Kun navnematch, ikke bundet entydigt"></span>
-          Eventuelle fund herunder kan ikke bindes entydigt til personen. De er ikke fakta, men mulige spor.
+          <span class="signal roed" role="img" title="Lav sikkerhed: kun navnematch, ikke bundet entydigt" aria-label="Lav sikkerhed: kun navnematch, ikke bundet entydigt"></span>
+          Eventuelle fund herunder kan ikke nødvendigvis bindes entydigt til personen. De er ikke fakta, men mulige spor.
         </div>
 
         <div class="section sec-presse">
@@ -1703,7 +1751,7 @@
               <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
               <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
             </span>
-            <span class="signal roed" role="img" title="Ubekræftet, kun navnematch" aria-label="Ubekræftet, kun navnematch"></span>
+            <span class="signal roed" role="img" title="Lav sikkerhed: ubekræftet, kun navnematch" aria-label="Lav sikkerhed: ubekræftet, kun navnematch"></span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Muligt navnematch</span>
@@ -1711,13 +1759,12 @@
             bindes entydigt til denne person, da artiklen ikke oplyser fødselsdato.
             <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
           </div>
-          <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata. Infomedia er ikke søgt, kræver institutionsabonnement, se §3 i kildelisten.</div>
         </div>
 
         <div class="section sec-profiler">
           <div class="section-title">
             <span class="tbar"><span class="tchip">Profiler og hjemmesider</span></span>
-            <span class="signal roed" role="img" title="Ubekræftet, kun navnematch" aria-label="Ubekræftet, kun navnematch"></span>
+            <span class="signal roed" role="img" title="Lav sikkerhed: ubekræftet, kun navnematch" aria-label="Lav sikkerhed: ubekræftet, kun navnematch"></span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Mulige profiler</span>
@@ -1738,13 +1785,12 @@
             <span class="tbar"><span class="tchip">Generel websøgning</span>
               <a class="kildeknap" href="https://www.google.com/" target="_blank" rel="noopener">Åbn søgningen</a>
             </span>
-            <span class="signal roed" role="img" title="Ubekræftet, kun navnematch" aria-label="Ubekræftet, kun navnematch"></span>
+            <span class="signal roed" role="img" title="Lav sikkerhed: ubekræftet, kun navnematch" aria-label="Lav sikkerhed: ubekræftet, kun navnematch"></span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Bredt søgt på navn</span>
-            Der er søgt bredt på navnet kombineret med fødselsdato, adresse og de fundne
-            virksomheder. Herunder står de træf, der ikke hører under en af de navngivne
-            kilder ovenfor.
+            Der er søgt bredt på navnet kombineret med eventuel fødselsdato, adresse og
+            fundne virksomheder.
             <table style="margin-top:10px;">
               <tr><th>Træf</th><th>Hvor</th></tr>
               <tr><td>Omtalt som oplægsholder på et branchearrangement om byggeaffald</td><td><a class="ext" href="#">byggeriforum-eksempel.dk</a></td></tr>
@@ -1757,8 +1803,7 @@
             </div>
           </div>
           <div class="empty-note">
-            Søgningen dækker det, der er frit indekseret. Artikler bag betalingsmur,
-            for eksempel hos Politiken, kommer ikke nødvendigvis med.
+            Artikler bag betalingsmure, fx nyhedsmediers, oplistes normalt ikke.
           </div>
         </div>
       </div>
@@ -1770,35 +1815,42 @@
   <div id="reportViewCompany">
     <div class="card">
       <!-- Forbeholdet står øverst, før navnet, så det læses før resultaterne og
-           ikke kan overses. Sidste afsnit om hjemmel til modparter og tredjemænd
-           står stadig, fordi spørgsmålet ikke er afklaret endnu. Se §5 i kildelisten. -->
+           ikke kan overses. Chefen bad 2026-09-01 om, at kun første sætning står.
+           De to øvrige afsnit, om at rapporten ikke er hvidvaskdokumentation og om
+           uafklaret hjemmel til modparter og tredjemænd, er derfor taget ud. Begge
+           punkter er stadig åbne, se §5 i kildelisten og CLAUDE.md. -->
       <div class="kladde-banner">
         Alle søgeresultater er forbundet med større eller mindre usikkerhed og bør uden
-        efterprøvelse kun anvendes til foreløbig orientering. Det er ikke hvidvaskdokumentation,
-        og alle fund skal gennemgås og vurderes manuelt.
-        <div style="font-weight:400; margin-top:6px;">
-          Bruges værktøjet på andre end egne klienter, fx modparter eller tredjemænd, er hjemlen
-          hertil endnu ikke juridisk afklaret. Se §5 i kildelisten.
-        </div>
+        efterprøvelse kun anvendes til foreløbig orientering.
       </div>
       <div class="report-header">
         <div>
           <h1>Nordvang Byg ApS</h1>
-          <div class="meta">CVR 29876543 &middot; Industrivej 8, 8210 Aarhus V &middot; Research udført 17-08-2026 kl. 14.02</div>
+          <div class="meta">CVR: 29876543 &middot; Adresse: Industrivej 8, 8210 Aarhus V &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div class="knapper">
           <button class="secondary" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Udskriv</button>
           <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
-          <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Ny søgning</button>
+          <!-- Knappen fører tilbage til søgesiden med felterne, som de stod.
+               Den hed "Ny søgning", men chefen bad om, at vejen tilbage til
+               forsiden fremgår tydeligt af teksten. -->
+          <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Tilbage til forsiden</button>
         </div>
       </div>
 
       <!-- Forklaring på farveprikkerne. Står før første afsnit, så signalet kan
-           læses uden at man skal gætte. -->
+           læses uden at man skal gætte.
+           Betegnelserne er chefens egne, valgt af ansvarsmæssige grunde 2026-09-01.
+           Rækkefølgen er rød, gul, grøn som en lyskurv, sådan som han listede dem.
+           Gul indgår, selv om ingen kilde i prototypen bruger den.
+           Hjælpeteksten på hver prik siger "entydigt match" og ikke "verificeret".
+           Ordet er fjernet af de samme ansvarsmæssige grunde som betegnelserne
+           ovenfor: værktøjet binder et træf til en identitetsnøgle, det verificerer
+           ikke noget. Sæt det ikke tilbage. -->
       <div class="signalforklaring">
-        <span title="Bundet på CVR-nr., navn og fødselsdato, eller navn og adresse"><span class="signal groen"></span> Verificeret</span>
-        <span title="Snævret ind på mere end navn, men ikke bundet entydigt"><span class="signal gul"></span> Delvist bekræftet</span>
-        <span title="Fundet på navn alene, kan ikke bindes entydigt"><span class="signal roed"></span> Kun navnematch</span>
+        <span title="Fundet på navn alene, kan ikke bindes entydigt"><span class="signal roed"></span> Lav sikkerhed</span>
+        <span title="Snævret ind på mere end navn, men ikke bundet entydigt"><span class="signal gul"></span> Middel sikkerhed</span>
+        <span title="Bundet på CVR-nr., navn og fødselsdato, eller navn og adresse"><span class="signal groen"></span> Høj sikkerhed</span>
       </div>
 
       <div class="section sec-kontakt">
@@ -1806,7 +1858,7 @@
             <span class="tbar"><span class="tchip">Kontaktoplysninger</span>
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på CVR-nr." aria-label="Verificeret på CVR-nr."></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på CVR-nr." aria-label="Høj sikkerhed: entydigt match på CVR-nr."></span>
           </div>
         <table>
           <tr><th>Telefon</th><td>87 XX XX XX <span class="src">(CVR)</span></td></tr>
@@ -1824,7 +1876,7 @@
             <span class="tbar"><span class="tchip">Selskabet</span>
               <a class="kildeknap" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">Åbn CVR</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på CVR-nr." aria-label="Verificeret på CVR-nr."></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på CVR-nr." aria-label="Høj sikkerhed: entydigt match på CVR-nr."></span>
           </div>
           <table>
             <tr><th>Branche</th><td>412000 &middot; Opførelse af bygninger</td></tr>
@@ -1844,11 +1896,11 @@
             <span class="tbar"><span class="tchip">PEP-tjek af reelle ejere</span>
               <a class="kildeknap" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Åbn PEP-listen</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på navn og fødselsdato" aria-label="Verificeret på navn og fødselsdato"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på navn og fødselsdato" aria-label="Høj sikkerhed: entydigt match på navn og fødselsdato"></span>
           </div>
           <div class="verified-block">
-            <span class="verified-label">Ingen PEP-træf</span>
-            Ingen af de registrerede reelle ejere findes på Finanstilsynets PEP-liste.
+            <span class="verified-label">Intet match</span>
+            Intet match på selskabets registrerede reelle ejere i Finanstilsynets liste over politisk eksponerede personer.
             <div class="src">Kilde: <a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR (reelle ejere)</a>, <a class="ext" href="https://www.finanstilsynet.dk/tal-og-fakta/pep-listen" target="_blank" rel="noopener">Finanstilsynets PEP-liste</a>, hentet 17-08-2026.</div>
           </div>
         </div>
@@ -1859,12 +1911,12 @@
               <a class="kildeknap" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">Åbn EU-listen</a>
               <a class="kildeknap" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">Åbn FN-listen</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på navn og fødselsdato" aria-label="Verificeret på navn og fødselsdato"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på navn og fødselsdato" aria-label="Høj sikkerhed: entydigt match på navn og fødselsdato"></span>
           </div>
           <div class="verified-block">
-            <span class="verified-label">Ingen sanktionstræf</span>
+            <span class="verified-label">Intet match</span>
             Intet match på selskabet eller dets reelle ejere i EU's og FN's konsoliderede sanktionslister.
-            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU Sanctions Map</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.
+            <div class="src">Kilde: <a class="ext" href="https://www.sanctionsmap.eu/" target="_blank" rel="noopener">EU's sanktionsliste</a>, <a class="ext" href="https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list" target="_blank" rel="noopener">FN's sanktionsliste</a>, hentet 17-08-2026.
             De reelle ejere er tjekket på navn og fødselsdato. Selve selskabet er tjekket på navn og adresse, da sanktionslisterne ikke indeholder CVR-numre.</div>
           </div>
         </div>
@@ -1874,11 +1926,11 @@
             <span class="tbar"><span class="tchip">Konkurs og tvangsopløsning</span>
               <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på CVR-nr." aria-label="Verificeret på CVR-nr."></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på CVR-nr." aria-label="Høj sikkerhed: entydigt match på CVR-nr."></span>
           </div>
           <div class="verified-block">
-            <span class="verified-label">Ingen sager</span>
-            Ingen aktive eller afsluttede sager i Statstidende under dette CVR-nummer.
+            <span class="verified-label">Intet match</span>
+            Intet match på CVR-nummeret i Statstidende, hverken aktive eller afsluttede sager.
             <div class="src">Kilde: <a class="ext" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Statstidende</a>, hentet 17-08-2026.</div>
           </div>
         </div>
@@ -1900,7 +1952,6 @@
             <tr><td>Mette Kjeldsen</td><td>Reel ejer</td><td>40%</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
             <tr><td>Nordvang Ejendomme ApS</td><td>Bestyrelse (fælles medlem)</td><td>&ndash;</td><td><a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR</a></td></tr>
           </table>
-          <div class="hint">Værktøjet vurderer ikke selv interessekonflikt. Slå listen op i sagssystemet.</div>
         </div>
 
         <div class="section sec-regnskab">
@@ -1908,7 +1959,7 @@
             <span class="tbar"><span class="tchip">Regnskaber</span>
               <a class="kildeknap" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">Åbn regnskaber.virk.dk</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på CVR-nr." aria-label="Verificeret på CVR-nr."></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på CVR-nr." aria-label="Høj sikkerhed: entydigt match på CVR-nr."></span>
           </div>
           <table>
             <tr><th>Regnskabsår</th><th>Resultat</th><th>Egenkapital</th><th>Revisorforbehold</th></tr>
@@ -1928,7 +1979,7 @@
               <a class="kildeknap" href="https://ois.dk/" target="_blank" rel="noopener">Åbn OIS</a>
               <a class="kildeknap" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Åbn Tinglysning</a>
             </span>
-            <span class="signal groen" role="img" title="Verificeret på adresse" aria-label="Verificeret på adresse"></span>
+            <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på adresse" aria-label="Høj sikkerhed: entydigt match på adresse"></span>
           </div>
           <table>
             <tr><th>Adresse</th><th>Type</th><th>Ejendomsvurdering</th></tr>
@@ -1943,8 +1994,8 @@
       <div class="group unverified-zone">
         <div class="group-title">Ubekræftede spor</div>
         <div class="zone-intro">
-          <span class="signal roed" role="img" title="Kun navnematch, ikke bundet entydigt" aria-label="Kun navnematch, ikke bundet entydigt"></span>
-          Eventuelle fund herunder kan ikke bindes entydigt til CVR-nummeret. De er ikke fakta, men mulige spor.
+          <span class="signal roed" role="img" title="Lav sikkerhed: kun navnematch, ikke bundet entydigt" aria-label="Lav sikkerhed: kun navnematch, ikke bundet entydigt"></span>
+          Eventuelle fund herunder kan ikke nødvendigvis bindes entydigt til CVR-nummeret. De er ikke fakta, men mulige spor.
         </div>
 
         <div class="section sec-presse">
@@ -1953,7 +2004,7 @@
               <a class="kildeknap" href="https://news.google.com/" target="_blank" rel="noopener">Åbn Google News</a>
               <a class="kildeknap" href="https://www2.statsbiblioteket.dk/mediestream/" target="_blank" rel="noopener">Åbn Mediestream</a>
             </span>
-            <span class="signal roed" role="img" title="Ubekræftet, kun navnematch" aria-label="Ubekræftet, kun navnematch"></span>
+            <span class="signal roed" role="img" title="Lav sikkerhed: ubekræftet, kun navnematch" aria-label="Lav sikkerhed: ubekræftet, kun navnematch"></span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Muligt navnematch</span>
@@ -1961,13 +2012,12 @@
             entydigt uden yderligere kontekst.
             <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
           </div>
-          <div class="empty-note">Mediestream (Det Kgl. Bibliotek): ingen fund i frit tilgængelige metadata. Infomedia er ikke søgt, kræver institutionsabonnement, se §3 i kildelisten.</div>
         </div>
 
         <div class="section sec-profiler">
           <div class="section-title">
             <span class="tbar"><span class="tchip">Profiler og hjemmesider</span></span>
-            <span class="signal roed" role="img" title="Ubekræftet, kun navnematch" aria-label="Ubekræftet, kun navnematch"></span>
+            <span class="signal roed" role="img" title="Lav sikkerhed: ubekræftet, kun navnematch" aria-label="Lav sikkerhed: ubekræftet, kun navnematch"></span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Mulige profiler</span>
@@ -1977,7 +2027,7 @@
               <tr><th>Facebook</th><td><a class="ext" href="#">facebook.com/nordvangbyg.eksempel</a></td></tr>
               <tr><th>Instagram</th><td><a class="ext" href="#">instagram.com/nordvangbyg_eksempel</a></td></tr>
               <tr><th>Hjemmeside</th><td><a class="ext" href="#">nordvangbyg-eksempel.dk</a></td></tr>
-              <tr><th>Øvrige</th><td><em style="color:var(--muted);">Ingen yderligere profiler fundet</em></td></tr>
+              <tr><th>Øvrige</th><td><em style="color:var(--muted);">Intet match</em></td></tr>
             </table>
           </div>
         </div>
@@ -1987,7 +2037,7 @@
             <span class="tbar"><span class="tchip">Kundeanmeldelser</span>
               <a class="kildeknap" href="https://dk.trustpilot.com/" target="_blank" rel="noopener">Åbn Trustpilot</a>
             </span>
-            <span class="signal roed" role="img" title="Ubekræftet, kun firmanavn" aria-label="Ubekræftet, kun firmanavn"></span>
+            <span class="signal roed" role="img" title="Lav sikkerhed: ubekræftet, kun firmanavn" aria-label="Lav sikkerhed: ubekræftet, kun firmanavn"></span>
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Trustpilot og Google</span>
@@ -2258,13 +2308,11 @@
   function buildToc(rootId) {
     const root = document.getElementById(rootId);
     const toc = document.getElementById('toc');
-    // Ny søgning står øverst som en tilbageknap, over indholdsoversigten,
-    // fordi det er vejen tilbage og ikke en handling på rapporten.
-    toc.innerHTML =
-      '<button type="button" class="toc-tilbage" onclick="resetDemo()">' +
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>' +
-      'Ny søgning</button>' +
-      '<div class="toc-title">Indhold</div>';
+    // Tilbageknappen ligger uden for oversigten som sit eget element, fordi den
+    // fører væk fra rapporten og ikke er et punkt i den. Teksten er ændret fra
+    // "Ny søgning" 2026-09-01, så det fremgår, at den fører til forsiden.
+    document.getElementById('tocTilbage').classList.add('vis');
+    toc.innerHTML = '<div class="toc-title">Indhold</div>';
     let n = 0;
     root.querySelectorAll('.group-title, .section').forEach(el => {
       if (el.style.display === 'none') return;
@@ -2306,18 +2354,26 @@
 
   // Menuen placeres til venstre for rapporten. Er der ikke plads til hele
   // bredden, skjules den, og knapperne falder tilbage til rapportens hjørne.
+  // Tilbageknappen står over menuen og får samme venstrekant og bredde, så de
+  // to læses som én søjle, selv om de er hver sin boks.
   function placerToc() {
     const toc = document.getElementById('toc');
+    const tilbage = document.getElementById('tocTilbage');
     if (!toc.classList.contains('vis')) return;
     const bredde = toc.offsetWidth;
     const plads = window.innerWidth / 2 - 450 - bredde - 24;
     if (plads >= 8) {
       toc.style.left = plads + 'px';
       toc.style.visibility = 'visible';
+      tilbage.style.left = plads + 'px';
+      tilbage.style.width = bredde + 'px';
+      tilbage.style.visibility = 'visible';
       document.body.classList.add('har-sidemenu');
     } else {
       toc.style.left = '-9999px';
       toc.style.visibility = 'hidden';
+      tilbage.style.left = '-9999px';
+      tilbage.style.visibility = 'hidden';
       document.body.classList.remove('har-sidemenu');
     }
   }
@@ -2346,9 +2402,12 @@
 
   function hideToc() {
     const toc = document.getElementById('toc');
+    const tilbage = document.getElementById('tocTilbage');
     toc.classList.remove('vis');
     toc.innerHTML = '';
     toc.style.left = '-9999px';
+    tilbage.classList.remove('vis');
+    tilbage.style.left = '-9999px';
     document.body.classList.remove('har-sidemenu');
   }
 
@@ -2433,20 +2492,31 @@
      ikke i noget tema, fordi de betyder noget bestemt.
      ============================================================ -->
 <style>
+  /* Temavælgeren er grå og står uden for temaerne. Den er værktøjets eget
+     betjeningspanel, ikke en del af rapporten, og skal se ens ud, uanset hvilket
+     farveskema den lige er ved at skifte til. Farverne er derfor faste og
+     samlet her, så de kun står ét sted. */
   #temavaelger {
     position: fixed;
     right: 18px;
     bottom: 18px;
     z-index: 200;
     font-family: "Open Sans", "Segoe UI", Arial, sans-serif;
+    --tv-flade: #f3f4f5;
+    --tv-flade-2: #e6e8e9;
+    --tv-kant: #d2d6d8;
+    --tv-kant-2: #b6bcbf;
+    --tv-tekst: #1b2022;
+    --tv-dim: #5c6366;
+    --tv-faint: #7b8285;
   }
   #temaKnap {
     display: flex;
     align-items: center;
     gap: 9px;
-    background: var(--surface);
-    color: var(--text);
-    border: 1px solid var(--line-2);
+    background: var(--tv-flade);
+    color: var(--tv-tekst);
+    border: 1px solid var(--tv-kant);
     border-radius: 999px;
     padding: 10px 17px;
     font-size: 12.5px;
@@ -2455,14 +2525,15 @@
     cursor: pointer;
     box-shadow: var(--skygge-2);
   }
-  #temaKnap:hover { border-color: var(--accent); }
+  #temaKnap:hover { background: var(--tv-flade-2); border-color: var(--tv-kant-2); }
   #temaKnap .prikker { display: flex; gap: 4px; }
-  #temaKnap .prikker i { width: 9px; height: 9px; border-radius: 50%; display: block; border: 1px solid var(--line-2); }
+  #temaKnap .prikker i { width: 9px; height: 9px; border-radius: 50%; display: block; border: 1px solid var(--tv-kant-2); }
   #temaPanel {
     display: none;
     width: 268px;
-    background: var(--surface);
-    border: 1px solid var(--line-2);
+    background: var(--tv-flade);
+    color: var(--tv-tekst);
+    border: 1px solid var(--tv-kant);
     border-radius: var(--radius-m);
     padding: 15px 15px 13px;
     margin-bottom: 10px;
@@ -2474,7 +2545,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.4px;
-    color: var(--faint);
+    color: var(--tv-faint);
     margin: 0 0 9px;
   }
   #temaPanel .valg { display: flex; flex-direction: column; gap: 4px; }
@@ -2490,12 +2561,18 @@
     padding: 7px 9px;
     font-size: 12.5px;
     font-family: inherit;
-    color: var(--dim);
+    color: var(--tv-dim);
     cursor: pointer;
   }
-  #temaPanel button.valgknap:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-  #temaPanel button.valgknap.aktiv { border-color: var(--accent); color: var(--text); font-weight: 600; }
-  #temaPanel .swatch { display: flex; flex: 0 0 auto; border-radius: 5px; overflow: hidden; border: 1px solid var(--line); }
+  #temaPanel button.valgknap:hover { background: rgba(0,0,0,0.06); color: var(--tv-tekst); }
+  /* Det valgte står hvidt og med mørk kant, så det kan ses uden en accentfarve. */
+  #temaPanel button.valgknap.aktiv {
+    background: #ffffff;
+    border-color: var(--tv-kant-2);
+    color: var(--tv-tekst);
+    font-weight: 600;
+  }
+  #temaPanel .swatch { display: flex; flex: 0 0 auto; border-radius: 5px; overflow: hidden; border: 1px solid var(--tv-kant); }
   #temaPanel .swatch i { width: 11px; height: 18px; display: block; }
   #temaPanel .bund {
     display: flex;
@@ -2504,30 +2581,32 @@
     gap: 10px;
     margin-top: 13px;
     padding-top: 11px;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--tv-kant);
   }
-  #temaPanel .note { font-size: 10px; color: var(--faint); line-height: 1.4; }
+  #temaPanel .note { font-size: 10px; color: var(--tv-faint); line-height: 1.4; }
   #temaPanel .nulstil {
     background: none;
     border: none;
     font-family: inherit;
     font-size: 11.5px;
-    color: var(--dim);
+    color: var(--tv-dim);
     text-decoration: underline;
     cursor: pointer;
     padding: 0;
     white-space: nowrap;
   }
-  #temaPanel .ph.skil { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  #temaPanel .ph.skil { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--tv-kant); }
   #temaPanel .valg.raekke { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  /* Baggrundsprøverne beholder deres egne farver, for de er selve prøven.
+     Kun rammen om den valgte er lagt om til gråt. */
   #temaPanel button.bgknap {
     width: 30px; height: 30px; padding: 0;
     border-radius: 8px;
-    border: 1px solid var(--line-2);
+    border: 1px solid var(--tv-kant-2);
     cursor: pointer;
   }
-  #temaPanel button.bgknap:hover { border-color: var(--dim); }
-  #temaPanel button.bgknap.aktiv { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-blod); }
+  #temaPanel button.bgknap:hover { border-color: var(--tv-dim); }
+  #temaPanel button.bgknap.aktiv { border-color: var(--tv-tekst); box-shadow: 0 0 0 2px rgba(0,0,0,0.18); }
   @media print { #temavaelger { display: none; } }
 </style>
 
@@ -2588,7 +2667,7 @@
            '--accent':'#6fb3d9','--accent-lys':'#93cbea','--accent-blod':'rgba(111,179,217,0.15)','--accent-ink':'#08121a','--felt':'#1e2a36','--felt-fokus':'#25333f','--felt-tekst':'#e6eef5','--felt-faint':'#748493','--titel':'#ffffff','--advarsel-bg':'rgba(226,105,92,0.09)','--advarsel-kant':'rgba(226,105,92,0.28)','--advarsel-tekst':'#f0c0ba' } }
   ];
 
-  let valgtTema = 'skovgroen';
+  let valgtTema = 'kontor';
 
   function saetTema(id, gem) {
     const t = TEMAER.find(x => x.id === id) || TEMAER[0];
@@ -2615,7 +2694,7 @@
         d += '--dim:' + loeft(t.vr['--dim'], fr, tr, 4.5) + ';';
         d += '--accent-lys:' + loeft(t.vr['--accent-lys'], fr, kant(fr), 4.0) + ';';
       }
-      rs.textContent = '#reportViewPerson, #reportViewCompany, #toc {' + d + '}';
+      rs.textContent = '#reportViewPerson, #reportViewCompany, #toc, #tocTilbage {' + d + '}';
     } else {
       rs.textContent = '';
     }
@@ -2633,7 +2712,7 @@
   }
 
   // Nulstil sætter tilbage til standardopsætningen, ikke til temaets egne flader.
-  function nulstilTema() { saetTema('skovgroen', false); saetBaggrund('skovgroen', false); saetFelt('hvid', false); saetNuancer('ens', false); gemOpsaetning(); }
+  function nulstilTema() { saetTema('kontor', false); saetBaggrund('hvid', false); saetFelt('hvid', false); saetNuancer('ens', false); gemOpsaetning(); }
 
   function toggleTemaPanel() {
     document.getElementById('temaPanel').classList.toggle('aaben');
@@ -2738,9 +2817,11 @@
      der er valgt til hvid bund, holder ikke hele vejen ned ad trappen. */
   function trin(grund) { return lyshed(grund) > 0.55 ? 0.028 : 0.045; }
 
-  /* Standardopsætningen er den, chefen valgte 2026-08-26: skovgrøn nat,
-     mørk skovgrøn baggrund, hvide inputfelter, samme nuance på blokkene. */
-  let valgtBaggrund = 'skovgroen';
+  /* Standardopsætningen er den, chefen valgte: kontorets gamle farveskema med
+     hvid baggrund og hvide felter. Han bekræftede 2026-09-01, at "hvid
+     baggrund" betyder selve siden, ikke et helt lyst skema, så blokkene
+     beholder temaets egne farver. */
+  let valgtBaggrund = 'hvid';
   let valgtFelt = 'hvid';
   let nuanceTilstand = 'ens';
 
@@ -2993,7 +3074,7 @@
   /* Nøglen er bumpet, fordi standardopsætningen er ændret. Ellers ville en
      browser, der havde set en tidligere udgave, blive ved med at vise den
      gamle opsætning i stedet for den nye standard. */
-  const TEMA_NOEGLE = 'uaTemaNy3';
+  const TEMA_NOEGLE = 'uaTemaNy5';
 
   function gemOpsaetning() {
     try {
@@ -3043,7 +3124,7 @@
 
     let gemt = null;
     try { gemt = localStorage.getItem(TEMA_NOEGLE); } catch (e) {}
-    let o = { tema: 'skovgroen', baggrund: 'skovgroen', felt: 'hvid', nuancer: 'ens' };
+    let o = { tema: 'kontor', baggrund: 'hvid', felt: 'hvid', nuancer: 'ens' };
     if (gemt && gemt.charAt(0) === '{') {
       try { o = Object.assign(o, JSON.parse(gemt)); } catch (e) {}
     }
