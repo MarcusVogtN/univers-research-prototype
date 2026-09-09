@@ -3,68 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Univers Advokater — Research (prototype)</title>
-<!-- Kontorets egne skrifter fra FARVESKEMA.md: Lora til overskrifter, Open Sans
-     til brødtekst. Begge har en fallback, så siden også holder uden netværk. -->
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>universadvokater, research (prototype)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Open+Sans:wght@300;400;600;700&display=swap">
 <style>
-  /* ============================================================
-     NYT DESIGN — mørkt som udgangspunkt, ét tema hele vejen igennem.
-
-     Forskellen fra den nuværende prototype er princippet bag farven:
-     før var inputsiden olivengrøn og rapporten blå, altså to temaer.
-     Her er der ét sæt flader (--surface) og én accentfarve (--accent),
-     som bruges begge steder. Farve bruges ikke længere til at gruppere.
-     Dybden kommer fra lag og hårfine kanter i stedet for fyldte felter,
-     og signalprikkerne er dermed det eneste sted, farve betyder noget.
-     ============================================================ */
   :root {
     color-scheme: dark;
 
-    /* Flader, fra baggrund og opefter. */
     --bg: #0d1411;
     --bg-dyb: #080d0b;
     --surface: #161f1b;
     --surface-2: #1c2723;
     --surface-3: #24302b;
 
-    /* Kanter. Hårfine linjer i stedet for streger og skygger. */
     --line: rgba(255,255,255,0.08);
     --line-2: rgba(255,255,255,0.16);
 
-    /* Tekst i tre styrker. */
     --text: #e9efeb;
     --dim: #a1afa7;
     --faint: #76847d;
 
-    /* Én accent. Kontorets skovgrøn, løftet så den kan læses på mørk bund. */
     --accent: #9db884;
     --accent-lys: #b8d0a1;
     --accent-blod: rgba(157,184,132,0.14);
     --accent-ink: #101815;
 
-    /* Overskriftsfarve og advarselsfelt er egne variabler, så et lyst tema kan
-       vende dem om uden at røre resten. */
-    /* Inputfelterne er en lysere nuance end panelet, ikke en mørkere. */
     --felt: #232f28;
     --felt-fokus: #2a3830;
-    /* Feltets egen tekstfarve, skilt ud fra --text, så et tema kan have hvide
-       inputfelter på farvet bund uden at teksten forsvinder. */
     --felt-tekst: #e9efeb;
     --felt-faint: #76847d;
     --felt-line: rgba(255,255,255,0.16);
     --felt-accent: #b8d0a1;
 
-    /* Bannerlinjen øverst i en virksomhedsboks. Et lag, ikke en farve, så den
-       altid følger boksen. Trinnene til "forskellige nuancer" beregnes i
-       JavaScript; værdierne her er kun et fornuftigt udgangspunkt. */
     --banner-tone: rgba(255,255,255,0.055);
 
-    /* Alt herunder ligger direkte på baggrunden og ikke inde i en blok.
-       Det er skilt ud, så baggrunden kan vælges frit uden at teksten
-       forsvinder. Sættes af temavælgeren ud fra baggrundens lyshed. */
     --bg-tekst: #e9efeb;
     --bg-dim: #a1afa7;
     --bg-faint: #76847d;
@@ -77,13 +51,9 @@
     --advarsel-kant: rgba(226,105,92,0.28);
     --advarsel-tekst: #f0c0ba;
 
-    /* Signalfarverne betyder præcis det samme som i den nuværende version.
-       De er kun justeret i lysstyrke, så de kan ses på mørk baggrund. */
     --sig-groen: #4cc077;
     --sig-gul: #e0b747;
     --sig-roed: #e2695c;
-    /* Fejlbeskeden står direkte på baggrunden, ikke i en blok, og får derfor
-       sin egen farve, der løftes efter baggrundens lyshed. */
     --fejl-tekst: #e2695c;
 
     --radius-s: 10px;
@@ -108,7 +78,6 @@
     min-height: 100vh;
   }
 
-  /* ---------- Header ---------- */
   header {
     display: flex;
     align-items: center;
@@ -144,12 +113,8 @@
     padding: 32px 24px 28px;
   }
 
-  /* Den hvide ramme om siden er væk. .card er beholdt som klasse, så
-     markup'et er uændret, men den tegner ikke længere en boks. */
   .card { background: none; border: none; box-shadow: none; padding: 0; margin: 0; }
 
-  /* ---------- Sidens topline ---------- */
-  /* Overskrift og typevælger står på samme linje, uden for blokkene. */
   .side-top {
     display: flex;
     align-items: center;
@@ -158,8 +123,6 @@
     gap: 18px;
     margin-bottom: 24px;
   }
-  /* Overskrift og typevælger hører sammen i venstre side, søgeknappen står
-     alene i højre. */
   .side-top-venstre {
     display: flex;
     align-items: center;
@@ -191,12 +154,6 @@
   .subtitle { color: var(--bg-dim); font-size: 14px; margin-bottom: 24px; }
   a { color: var(--accent-lys); }
 
-  /* ---------- Typevælger ----------
-     Grå og hvid i stedet for temaets accentfarve. Farverne er faste og følger
-     ikke temaet: vælgeren er et betjeningselement, ikke indhold, og skal se ens
-     ud, uanset hvilket farveskema der er valgt. Det valgte felt er hvidt og
-     løftet med en skygge, resten er den grå bane, så det kan ses på afstand,
-     hvad der er slået til. */
   .type-toggle {
     display: inline-flex;
     gap: 3px;
@@ -226,10 +183,6 @@
   }
   .type-btn.active .ttitle { color: #1b2022; }
 
-  /* ---------- Paneler ---------- */
-  /* Ét udseende for alle segmenter, på begge sider af værktøjet: samme flade,
-     samme hårfine kant, samme radius. Det er her, de to gamle farvetemaer
-     bliver til ét. */
   .inblok,
   .section {
     background: var(--surface);
@@ -242,23 +195,11 @@
     margin-bottom: 12px;
     color: var(--text);
   }
-  /* ---------- Nuancer ----------
-     Som udgangspunkt har alt samme flade, så farve kun betyder noget i
-     signalprikkerne. Slås "forskellige nuancer" til i temavælgeren, sættes
-     klassen på <body>. På inputsiden trapper de tre blokke. I rapporten
-     trapper hver boks: Kontaktoplysninger, PEP-tjek, Sanktionslister og så
-     videre får hver sin nuance. Virksomhedsblokkene ligger inde i en boks og
-     løftes ét trin, ens for dem alle, så listen ser samlet ud.
-     Trinnene beregnes i JavaScript ud fra blokfarven, så de bliver lige
-     store og synlige, uanset om temaet er mørkt eller lyst. */
   body.nuancer .blok1 { background-color: var(--nuance-1); }
   body.nuancer .blok2 { background-color: var(--nuance-2); }
   body.nuancer .blok3 { background-color: var(--nuance-3); }
-  /* Selve farven sættes længere nede, efter feltreglerne, så nuancerne
-     vinder over feltfarven når begge dele er slået til. */
 
   .inblok > .row:last-child .field { margin-bottom: 0; }
-  /* Blokoverskrift: lille versaltekst med en kort accentstreg foran. */
   .blok-titel {
     display: flex;
     align-items: center;
@@ -279,7 +220,6 @@
     flex: 0 0 auto;
   }
 
-  /* ---------- Formularfelter ---------- */
   label {
     display: block;
     font-size: 10.5px;
@@ -318,8 +258,6 @@
   .optional { font-weight: 400; color: var(--faint); font-size: 11px; text-transform: none; letter-spacing: 0; }
   .addr-ok { color: var(--sig-groen); }
 
-  /* Fødselsdato: masken dd-mm-åååå ligger bag feltet og skrives over.
-     Wrapperen har feltets egen bundfarve, så masken kan ses igennem. */
   .dob-wrap { position: relative; background: var(--felt); border-radius: var(--radius-s); }
   .dob-wrap input { display: block; }
   .dob-ghost {
@@ -361,7 +299,6 @@
   .suggestions div:last-child { border-bottom: none; }
   .suggestions div:hover { background: var(--accent-blod); }
 
-  /* ---------- Afkrydsningsrækker ---------- */
   .check-row {
     display: flex;
     align-items: flex-start;
@@ -377,11 +314,6 @@
   .check-row .cdesc { font-size: 12px; color: var(--faint); }
   .check-row.alt-row { border-bottom: 1px solid var(--line); border-radius: 9px 9px 0 0; padding-bottom: 11px; margin-bottom: 4px; }
   .check-row.underomraade { padding-left: 34px; }
-  /* Områderne står i to spalter, så hele formularen kan være på skærmen uden
-     at scrolle. Begge spalter er rykket ind under "Søg alt", så det stadig kan
-     ses, at de hører under den. Indrykningen ligger på blokken og trækkes
-     tilbage igen for overskriften og "Søg alt", så de to bliver stående i
-     blokkens venstre kant. */
   .inblok.blok3 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -394,49 +326,19 @@
     grid-column: 1 / -1;
     margin-left: -34px;
   }
-  /* Indrykningen sidder nu på blokken, så den enkelte række skal ikke også
-     rykke ind. Rækken beholder kun sin egen luft til hover-fladen. */
   .inblok.blok3 > .check-row.underomraade { padding-left: 10px; }
   @media (max-width: 780px) {
     .inblok.blok3 { grid-template-columns: 1fr; }
   }
 
-  /* ---------- Forbehold og fejl ---------- */
-  .forbehold {
-    font-size: 13px;
-    line-height: 1.65;
-    color: var(--bg-dim);
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-left: 3px solid var(--bg-accent);
-    border-radius: var(--radius-m);
-    padding: 13px 17px;
-    margin: 16px 0 0;
-  }
   .fejl {
     color: var(--fejl-tekst);
     font-size: 13px;
     font-weight: 600;
     min-height: 0;
   }
-  /* Forbeholdet står øverst på inputsiden som almindelig tekst med en
-     accentstreg, ikke som en kasse. Så fylder det lidt, men er der hele tiden,
-     og siden kan bruges uden at scrolle. */
-  .forbehold-top {
-    margin: -8px 0 16px;
-    padding: 1px 0 1px 13px;
-    background: none;
-    border: none;
-    border-left: 2px solid var(--bg-accent);
-    border-radius: 0;
-    font-size: 11.5px;
-    line-height: 1.5;
-    max-width: 620px;
-  }
+  .kladde-banner.banner-input { margin: 0 0 18px; }
 
-  /* ---------- Knapper ---------- */
-  /* Hovedknappen: pilleform, ikon foran teksten og en tydelig ring omkring
-     ved hover. Ingen gradient, kun én flade og lys omkring den. */
   button.primary {
     display: inline-flex;
     align-items: center;
@@ -488,9 +390,6 @@
     transition: background 130ms ease, color 130ms ease, border-color 130ms ease;
   }
   button.secondary:hover { background: rgba(255,255,255,0.05); color: var(--text); border-color: var(--line-2); }
-  /* Knapperne i rapportens hoved ligger direkte på baggrunden og ikke i en
-     blok, så de skal bruge baggrundens tekstfarve. Ellers forsvinder de, når
-     baggrunden vælges lysere eller mørkere end temaets egen. */
   .report-header .knapper button.secondary { color: var(--bg-dim); border-color: var(--bg-line); }
   .report-header .knapper button.secondary:hover { color: var(--bg-tekst); }
   button.secondary svg, .toc-actions svg {
@@ -504,7 +403,6 @@
     stroke-linejoin: round;
   }
 
-  /* ---------- Loading ---------- */
   #loadingView { display: none; text-align: center; padding: 110px 0; }
   #loadingView .spinner {
     width: 38px; height: 38px;
@@ -517,7 +415,6 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   #loadingView .step { font-size: 13px; color: var(--bg-dim); margin: 4px 0; letter-spacing: 0.3px; }
 
-  /* ---------- Rapportens top ---------- */
   #reportViewPerson, #reportViewCompany { display: none; }
   .report-header {
     display: flex;
@@ -578,8 +475,6 @@
   .signalforklaring > span { display: flex; align-items: center; gap: 7px; white-space: nowrap; cursor: help; }
   .signalforklaring .signal { width: 10px; height: 10px; box-shadow: none; cursor: default; }
 
-  /* Signalprikken er nu det eneste sted på siden, hvor farve betyder noget.
-     Ringen omkring er panelets egen farve, så prikken står frit. */
   .signal {
     display: inline-block;
     flex: 0 0 auto;
@@ -607,9 +502,6 @@
   }
   .badge.flag { background: rgba(226,105,92,0.15); color: #f0c0ba; border-color: rgba(226,105,92,0.4); }
 
-  /* ---------- Grupper ---------- */
-  /* Gruppeoverskriften er en mikrotekst med en linje ud til højre. Det er den,
-     der grupperer nu, i stedet for at hvert afsnit har sin egen farve. */
   .group { margin: 0 0 34px; }
   .group-title {
     display: flex;
@@ -628,8 +520,6 @@
     height: 1px;
     background: var(--bg-line);
   }
-  /* Den ubekræftede zone er adskilt med luft og med overskriften alene.
-     Ingen ramme, ingen farveflade. */
   .group.unverified-zone { padding-top: 4px; margin-top: 44px; }
   .zone-intro {
     display: flex;
@@ -640,7 +530,6 @@
     margin: -4px 0 16px;
   }
 
-  /* ---------- Afsnit ---------- */
   .section {
     margin-bottom: 14px;
     scroll-margin-top: 20px;
@@ -705,8 +594,6 @@
   .kildeknap:hover { background: var(--accent-blod); color: var(--accent-lys); border-color: rgba(157,184,132,0.4); }
   .kildeknap::after { content: " \2197"; font-size: 10px; }
 
-  /* Indholdet ligger direkte i panelet. Den hvide inderboks er væk, så der
-     kun er én flade pr. afsnit. Wrapperen sættes stadig på af JS. */
   .sec-body { padding: 16px 20px 18px; }
   .sec-body > *:first-child { margin-top: 0; }
   .sec-body table { margin-top: 0; }
@@ -731,13 +618,130 @@
   .src { font-size: 11px; color: var(--faint); line-height: 1.55; }
   .verified-block .src, .unverified-block .src { font-size: 11px; color: var(--faint); margin-top: 5px; }
   .empty-note { font-size: 13px; color: var(--faint); font-style: italic; padding: 10px 0; }
+
+  .kortknap {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--dim);
+    border: 1px solid var(--line-2);
+    background: transparent;
+    padding: 4px 11px;
+    border-radius: 999px;
+    white-space: nowrap;
+    cursor: pointer;
+    margin-left: 10px;
+    vertical-align: 1px;
+    transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+  }
+  .adr-handling { display: inline; }
+  .adr-note {
+    display: block;
+    font-size: 12px;
+    color: var(--faint);
+    line-height: 1.5;
+    margin-top: 6px;
+    max-width: 46em;
+  }
+  body.feltboks .adr-note { color: var(--felt-faint); }
+  .kortknap:hover { background: var(--accent-blod); color: var(--accent-lys); border-color: rgba(157,184,132,0.4); }
+  .kortknap.aktiv { background: var(--accent-blod); color: var(--accent-lys); border-color: rgba(157,184,132,0.55); }
+
+  #kortpanel {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 96px;
+    right: 18px;
+    width: 380px;
+    height: 390px;
+    min-width: 260px;
+    min-height: 240px;
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 100px);
+    z-index: 150;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    box-shadow: var(--skygge-2);
+    padding: 0;
+    overflow: hidden;
+    resize: both;
+  }
+  #kortpanel.vis { display: flex; }
+  #kortpanel .kortpanel-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px 11px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.02);
+    cursor: move;
+    user-select: none;
+  }
+  #kortpanel .kortpanel-titel {
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  #kortpanel .kortpanel-adresse { font-size: 13px; color: var(--text); margin-top: 2px; }
+  #kortpanel .kortpanel-luk {
+    flex: 0 0 auto;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1;
+    color: var(--dim);
+    background: transparent;
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+  }
+  #kortpanel .kortpanel-luk:hover { background: var(--surface-2); color: var(--text); }
+  #kortpanel .kortpanel-krop { flex: 1 1 auto; position: relative; background: var(--surface-2); }
+  #kortpanel .kortpanel-greb {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    cursor: nesw-resize;
+    z-index: 3;
+  }
+  #kortpanel .kortpanel-greb::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    width: 7px;
+    height: 7px;
+    border-left: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  #kortpanel iframe {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  #kortpanel.traekker iframe { pointer-events: none; }
+  #kortpanel .kortpanel-kilde {
+    font-size: 11px;
+    color: var(--faint);
+    padding: 7px 30px 9px 14px;
+    border-top: 1px solid var(--line);
+  }
+  .uddrag { display: block; font-size: 12px; color: var(--faint); line-height: 1.5; margin-top: 3px; }
   a.ext { color: var(--accent-lys); text-decoration: none; border-bottom: 1px solid rgba(184,208,161,0.35); }
   a.ext:hover { border-bottom-color: var(--accent-lys); }
   a.ext::after { content: " \2197"; font-size: 10px; }
   .src a { color: inherit; text-decoration: underline; }
 
-  /* Punktliste inde i en tabelcelle. Bruges til virksomhedstilknytningerne,
-     som chefen bad om at få under hinanden i stedet for på én linje. */
   .punktliste { list-style: none; margin: 0; padding: 0; }
   .punktliste li { position: relative; padding-left: 15px; margin: 0 0 4px; }
   .punktliste li:last-child { margin-bottom: 0; }
@@ -752,11 +756,6 @@
     background: var(--dim);
   }
 
-  /* ---------- Kildelinjer ----------
-     Kilderne stod som lille grå tekst og var svære både at se og at ramme.
-     Linjen har nu en skillestreg over sig, og hvert kildelink er en klikbar
-     pille i stedet for understreget gråt. Samme form som kildeknapperne
-     oppe i afsnitstitlen, så det er tydeligt, at de fører samme sted hen. */
   .src {
     font-size: 11.5px;
     color: var(--faint);
@@ -789,11 +788,6 @@
   }
   .src a::after { content: " \2197"; font-size: 9px; }
 
-  /* ---------- Virksomhedsblokke ----------
-     Én blok pr. virksomhed, indrykket under Virksomhedstilknytninger, så det
-     kan ses, at de hører under afsnittet. Rolle, seneste regnskab, øvrige
-     parter og kundeanmeldelser står på samme række inde i blokken, i stedet
-     for i tre adskilte tabeller, hvor samme virksomhed gik igen. */
   .virkliste {
     margin-top: 13px;
     padding-left: 16px;
@@ -811,10 +805,6 @@
     overflow: hidden;
   }
   .virkblok:hover { border-color: var(--line-2); }
-  /* Navnelinjen er et banner hen over hele boksens bredde. Farven er et
-     halvgennemsigtigt lag oven på boksen selv, så den altid bliver en lysere
-     nuance af præcis den farve, boksen har, uanset tema, baggrund og nuancer.
-     Feltvalget må derfor ikke overskrive den: banneret er ikke et felt. */
   .virkblok-top {
     display: flex;
     align-items: center;
@@ -860,9 +850,6 @@
     stroke: currentColor; fill: none; stroke-width: 2;
     stroke-linecap: round; stroke-linejoin: round;
   }
-  /* Fast gitter, så felterne står i kolonner på tværs af blokkene og ikke
-     ombryder forskelligt fra virksomhed til virksomhed. Øvrige parter er den
-     længste tekst og får derfor hele bredden på sin egen række. */
   .virkfakta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 24px; }
   .vf { min-width: 0; }
   .vf.bred { grid-column: 1 / -1; }
@@ -885,12 +872,6 @@
   .vf-vaerdi .tom { color: var(--faint); font-style: italic; }
   .vf-vaerdi .adskil { color: var(--faint); padding: 0 2px; }
 
-  /* ---------- Felter i rapporten ----------
-     Feltvalget i temavælgeren gælder ikke kun inputfelterne. Vælges "hvide"
-     eller "samme som blokken", lægges indholdet i rapporten også i felter,
-     så fx "Ikke fundet på PEP-liste" står i sin egen boks i stedet for
-     direkte på afsnittets flade. Er "temaets egen" valgt, ser rapporten ud
-     som før, altså uden feltbaggrund. */
   body.feltboks .verified-block,
   body.feltboks .unverified-block,
   body.feltboks .virkblok,
@@ -910,9 +891,6 @@
     border-spacing: 0;
     overflow: hidden;
   }
-  /* Al tekst inde i en feltboks skal følge feltets farver og ikke blokkens.
-     Tabeller kan både stå som boks for sig og inde i en anden boks, så begge
-     dele skal med, ellers står lys tekst på hvid bund i tabellen. */
   body.feltboks .verified-block td,
   body.feltboks .unverified-block td,
   body.feltboks .virkblok td,
@@ -937,14 +915,10 @@
   body.feltboks .virkblok .adskil,
   body.feltboks .virkblok .vf-navn,
   body.feltboks .virkblok .virkcvr { color: var(--felt-faint); }
-  /* Links og streger inde i felterne skal følge feltets farve, ikke blokkens,
-     ellers står lysegrønne links på en hvid bund. */
   body.feltboks .verified-block a.ext,
   body.feltboks .unverified-block a.ext,
   body.feltboks .virkblok a.ext,
   body.feltboks .sec-body > table a.ext { color: var(--felt-accent); border-bottom-color: var(--felt-line); }
-  /* Kildelinjerne findes både inde i en feltboks og direkte på afsnittet.
-     Kun dem inde i en boks må skifte til feltets farver. */
   body.feltboks .verified-block .src a,
   body.feltboks .unverified-block .src a,
   body.feltboks .virkblok .src a,
@@ -956,31 +930,21 @@
   body.feltboks .unverified-block .src,
   body.feltboks .virkblok .src { border-top-color: var(--felt-line); }
   body.feltboks .sec-body > table .src { color: var(--felt-faint); }
+  body.feltboks .uddrag, .unverified-block .uddrag { color: var(--faint); }
   body.feltboks .verified-block th, body.feltboks .verified-block td,
   body.feltboks .unverified-block th, body.feltboks .unverified-block td,
   body.feltboks .sec-body > table th, body.feltboks .sec-body > table td { border-bottom-color: var(--felt-line); }
   body.feltboks .virkblok-top { border-bottom-color: var(--felt-line); }
   body.feltboks button.virk-soeg { color: var(--felt-faint); border-color: var(--felt-line); }
+  body.feltboks .kortknap { color: var(--felt-faint); border-color: var(--felt-line); }
+  body.feltboks .kortknap:hover,
+  body.feltboks .kortknap.aktiv { color: var(--felt-tekst); border-color: var(--felt-faint); background: var(--felt-fokus); }
   body.feltboks button.virk-soeg:hover { color: var(--felt-accent); border-color: var(--felt-accent); }
 
-  /* Er felterne hvide, ligger virksomhedsblokken som en lys boks oven på
-     afsnittets flade. Navnelinjen tager så afsnittets egen farve, altså præcis
-     den samme som titellinjen "Virksomhedstilknytninger" over den. Så læses
-     hver virksomhed som et underafsnit af det afsnit, den ligger i, i stedet
-     for som en løs boks. Reglerne står efter feltreglerne ovenfor, fordi de har
-     samme specificitet og skal vinde: banneret er ikke et felt.
-     Uden hvide felter er blokken selv i afsnittets farve, og banneret bliver
-     ved med at være det lyse lag --banner-tone oven på den. */
   body.feltboks .virkblok-top {
     background: var(--surface);
     border-bottom-color: var(--line);
   }
-  /* Boksens hvide bund lå som standard også under dens egen ramme. Langs
-     navnelinjen, der er mørk, stak den hvide bund derfor ud som en tydelig
-     lys kant hele vejen rundt om banneret, og virksomhedsboksene så anderledes
-     ud end de øvrige hvide bokse i rapporten. Med padding-box males bunden
-     kun indenfor rammen, så rammen bliver den samme svage streg som alle
-     andre steder. */
   body.feltboks .virkblok { background-clip: padding-box; }
   body.feltboks .virkblok .virknavn { color: var(--text); }
   body.feltboks .virkblok .virkcvr { color: var(--dim); }
@@ -990,8 +954,6 @@
     color: var(--accent-lys);
     border-color: var(--accent);
   }
-  /* Er nuancerne slået til, har afsnittet ikke --surface, men sit eget trin.
-     Banneret skal følge præcis det trin, afsnittet står på. */
   body.feltboks.nuancer .section[data-nuance="1"] .virkblok-top { background: var(--nuance-1); }
   body.feltboks.nuancer .section[data-nuance="2"] .virkblok-top { background: var(--nuance-2); }
   body.feltboks.nuancer .section[data-nuance="3"] .virkblok-top { background: var(--nuance-3); }
@@ -999,19 +961,12 @@
   body.feltboks.nuancer .section[data-nuance="5"] .virkblok-top { background: var(--nuance-5); }
   body.feltboks.nuancer .section[data-nuance="6"] .virkblok-top { background: var(--nuance-6); }
 
-  /* Nuancerne på boksene. De står her, efter feltreglerne, fordi de to sæt
-     har samme specificitet: er begge valgt, skal trappen vinde over den
-     ensfarvede feltflade. */
   body.nuancer .section[data-nuance="1"] { background-color: var(--nuance-1); }
   body.nuancer .section[data-nuance="2"] { background-color: var(--nuance-2); }
   body.nuancer .section[data-nuance="3"] { background-color: var(--nuance-3); }
   body.nuancer .section[data-nuance="4"] { background-color: var(--nuance-4); }
   body.nuancer .section[data-nuance="5"] { background-color: var(--nuance-5); }
   body.nuancer .section[data-nuance="6"] { background-color: var(--nuance-6); }
-  /* Virksomhedsblokkene løftes ét trin over deres egen boks, men kun når der
-     ikke er valgt felter. Er felterne hvide, er blokkene allerede skilt ud
-     som felter, og en nuance oven i ville give feltets mørke tekst en mørk
-     bund. */
   body.nuancer:not(.feltboks) .virkblok[data-nuance="1"] { background-color: var(--nuance-1); }
   body.nuancer:not(.feltboks) .virkblok[data-nuance="2"] { background-color: var(--nuance-2); }
   body.nuancer:not(.feltboks) .virkblok[data-nuance="3"] { background-color: var(--nuance-3); }
@@ -1019,7 +974,6 @@
   body.nuancer:not(.feltboks) .virkblok[data-nuance="5"] { background-color: var(--nuance-5); }
   body.nuancer:not(.feltboks) .virkblok[data-nuance="6"] { background-color: var(--nuance-6); }
 
-  /* ---------- Tabeller ---------- */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -1039,7 +993,6 @@
   td { color: var(--text); }
   tbody tr:hover td { background: rgba(255,255,255,0.025); }
 
-  /* ---------- Indholdsoversigt ---------- */
   .toc {
     display: none;
     position: fixed;
@@ -1056,10 +1009,6 @@
     box-shadow: var(--skygge-2);
   }
   .toc.visible, .toc.vis { display: block; }
-  /* Vejen tilbage står som en selvstændig knap over indholdsoversigten og er
-     ikke længere en del af den. Den fører væk fra rapporten og hører derfor
-     ikke sammen med oversigten over rapportens egne afsnit. Venstrekant og
-     bredde sættes af placerToc(), så de to følges ad. */
   .toc-tilbage {
     display: none;
     position: fixed;
@@ -1083,10 +1032,6 @@
     transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
   }
   .toc-tilbage.vis { display: flex; }
-  /* Hover må ikke være en halvgennemsigtig accentfarve her. Knappen ligger nu
-     direkte på siden og ikke inde i oversigten, så et gennemsigtigt lag blandes
-     med den hvide side og bliver næsten hvidt. Den lyse tekst forsvandt i det.
-     Hover er derfor et trin op i temaets egne flader, som er uigennemsigtigt. */
   .toc-tilbage:hover {
     background: var(--surface-2);
     color: var(--text);
@@ -1177,31 +1122,19 @@
   .toc-actions .sekundaer:hover { background: rgba(255,255,255,0.05); color: var(--text); }
   body.har-sidemenu .report-header .knapper { display: none; }
 
-  /* ---------- Fremhævning ved spring fra oversigten ---------- */
   .section.fremhaev { animation: fremhaev 2.2s ease-out; }
   @keyframes fremhaev {
     0%   { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-blod); }
     70%  { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-blod); }
     100% { border-color: var(--line); box-shadow: var(--skygge-1); }
   }
-  /* Visningsskift falder blødt ind i stedet for at hoppe. */
   #reportViewPerson[style*="block"], #reportViewCompany[style*="block"] { animation: indfald 320ms ease-out; }
   @keyframes indfald {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: none; }
   }
 
-  /* ---------- Print ---------- */
-  /* Rapporten skal kunne lægges i sagen og gemmes som PDF. Papir er hvidt,
-     så hele paletten vendes om her, uanset hvilket tema der er valgt på
-     skærmen. Temaet sættes som inline style på <html>, og en inline style
-     slår normalt et stylesheet. Derfor står der !important på hver variabel:
-     det er den eneste måde, en regel her kan vinde over det valgte tema.
-     Signalprikkerne beholder deres farve, for det er dem, rapporten læses på. */
   @media print {
-    /* Både :root og body, fordi temavælgeren kan skrive nogle af de samme
-       variabler på <body>. En !important-regel på :root vinder ikke over en
-       almindelig regel på body for det, der ligger inde i body. */
     :root, body {
       --bg: #ffffff !important;
       --bg-dyb: #ffffff !important;
@@ -1241,9 +1174,7 @@
       --advarsel-tekst: #7d2020 !important;
       color-scheme: light !important;
     }
-    /* Univers-temaet lægger blå farver på rapporten gennem et eget stylesheet.
-       Det ryddes her, så rapporten også bliver hvid i det tema. */
-    #reportViewPerson, #reportViewCompany, #toc, #tocTilbage {
+    #reportViewPerson, #reportViewCompany, #toc, #tocTilbage, #kortpanel {
       --nuance-1: #ffffff !important;
       --nuance-2: #ffffff !important;
       --nuance-3: #ffffff !important;
@@ -1270,11 +1201,12 @@
       --accent-ink: #ffffff !important;
     }
 
-    header, .toc, .toc-tilbage, .report-header button, .kildeknap, button.virk-soeg, #temavaelger { display: none !important; }
+    header, .toc, .toc-tilbage, .report-header button, .kildeknap, button.virk-soeg,
+    #temavaelger, #kortpanel, .kortknap, .adr-note { display: none !important; }
+    body { padding-right: 0 !important; }
     html, body { background: #ffffff !important; color: #141816 !important; }
     main { max-width: 100%; padding: 0; }
 
-    /* De få steder, hvor en farve er skrevet direkte i stedet for som variabel. */
     .section-title, .virkblok, .check-row.alt-row, .suggestions div:hover,
     tbody tr:hover td, .type-btn:hover, button.secondary:hover {
       background: transparent !important;
@@ -1282,7 +1214,6 @@
     .section { border: 1px solid #d7dbd8 !important; box-shadow: none !important; }
     .section-title { border-bottom: 1px solid #d7dbd8 !important; }
 
-    /* Prikkerne er selve signalet og skal med i farve, også på papir. */
     .signal, .toc .swatch {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
@@ -1296,7 +1227,6 @@
     .src a { border-color: #c8cecb !important; }
   }
 
-  /* ---------- Smalle skærme ---------- */
   @media (max-width: 700px) {
     header { padding: 16px 20px; }
     main { padding: 28px 16px 70px; }
@@ -1317,13 +1247,8 @@
 <nav id="toc" class="toc"></nav>
 
 <main>
-  <!-- INPUT VIEW -->
   <div id="inputView">
 
-    <!-- Overskrift, typevælger og søgeknap står på samme linje øverst.
-         Knappen lå før i en linje, der klæbede til bunden af skærmen. Den
-         står her i stedet, så den kan nås uden at scrolle, uanset hvor mange
-         områder der er slået til. -->
     <div class="side-top">
       <div class="side-top-venstre">
         <h1>Ny søgning</h1>
@@ -1347,18 +1272,13 @@
       </div>
     </div>
 
-    <!-- Forbeholdet står øverst, ligesom i rapporten, så det læses før
-         søgningen sættes i gang. -->
-    <div class="forbehold forbehold-top">
+    <div class="kladde-banner banner-input">
       Alle søgeresultater er forbundet med større eller mindre usikkerhed og bør uden
       efterprøvelse kun anvendes til foreløbig orientering.
     </div>
 
     <form id="researchForm" onsubmit="return false;">
 
-      <!-- Felterne er lagt i to rækker i stedet for fire, så blokken fylder
-           det halve. Adresse og virksomhedstilknytning deler nederste række.
-           Tilknytningsfeltet gælder kun personer og skjules af setType(). -->
       <div class="inblok blok1">
         <div id="personFields">
           <div class="row">
@@ -1413,7 +1333,7 @@
           <input type="checkbox" id="cfuzzy">
           <div>
             <div class="ctext">Lydmæssig søgning og fuzzy match</div>
-            <div class="cdesc">Finder også stavevarianter og lignende navne.</div>
+            <div class="cdesc">Finder også stavevarianter og lydmæssigt lignende navne.</div>
           </div>
         </div>
       </fieldset>
@@ -1449,53 +1369,31 @@
     </form>
   </div>
 
-  <!-- LOADING VIEW -->
   <div id="loadingView">
     <div class="spinner"></div>
     <div id="loadingText" class="step">Slår op i CVR...</div>
   </div>
 
-  <!-- REPORT VIEW: PRIVATPERSON -->
   <div id="reportViewPerson">
     <div class="card">
-      <!-- Forbeholdet står øverst, før navnet, så det læses før resultaterne og
-           ikke kan overses. Chefen bad 2026-09-01 om, at kun første sætning står.
-           De to øvrige afsnit, om at rapporten ikke er hvidvaskdokumentation og om
-           uafklaret hjemmel til modparter og tredjemænd, er derfor taget ud. Begge
-           punkter er stadig åbne, se §5 i kildelisten og CLAUDE.md. -->
       <div class="kladde-banner">
         Alle søgeresultater er forbundet med større eller mindre usikkerhed og bør uden
         efterprøvelse kun anvendes til foreløbig orientering.
       </div>
       <div class="report-header">
         <div class="venstre">
-          <!-- Er der ikke fundet et foto, står pladsen tom. Er der et, sættes
-               .portraet-wrap ind her igen med sin ubekræftet-markering. -->
           <div>
             <h1>Bjørn Kjeldsen</h1>
-            <!-- "Bopæl:" står med, fordi adressen uden mærkat kunne læses som fødested. -->
-            <div class="meta">Født: 14-03-1971 &middot; Bopæl: Kastanievej 22, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
+            <div class="meta">Født: 14-03-1971 &middot; Bopæl: Vestergade 3D, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
           </div>
         </div>
         <div class="knapper">
           <button class="secondary" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Udskriv</button>
           <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
-          <!-- Knappen fører tilbage til søgesiden med felterne, som de stod.
-               Den hed "Ny søgning", men chefen bad om, at vejen tilbage til
-               forsiden fremgår tydeligt af teksten. -->
           <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Tilbage til forsiden</button>
         </div>
       </div>
 
-      <!-- Forklaring på farveprikkerne. Står før første afsnit, så signalet kan
-           læses uden at man skal gætte.
-           Betegnelserne er chefens egne, valgt af ansvarsmæssige grunde 2026-09-01.
-           Rækkefølgen er rød, gul, grøn som en lyskurv, sådan som han listede dem.
-           Gul indgår, selv om ingen kilde i prototypen bruger den.
-           Hjælpeteksten på hver prik siger "entydigt match" og ikke "verificeret".
-           Ordet er fjernet af de samme ansvarsmæssige grunde som betegnelserne
-           ovenfor: værktøjet binder et træf til en identitetsnøgle, det verificerer
-           ikke noget. Sæt det ikke tilbage. -->
       <div class="signalforklaring">
         <span title="Fundet på navn alene, kan ikke bindes entydigt"><span class="signal roed"></span> Lav sikkerhed</span>
         <span title="Snævret ind på mere end navn, men ikke bundet entydigt"><span class="signal gul"></span> Middel sikkerhed</span>
@@ -1511,11 +1409,8 @@
           </div>
         <table>
           <tr><th>Telefon</th><td>20 XX XX XX <span class="src">(Krak.dk)</span></td></tr>
-          <tr><th>Adresse</th><td>Kastanievej 22, 8000 Aarhus C <span class="src">(Krak.dk)</span></td></tr>
+          <tr><th>Adresse</th><td>Vestergade 3D, 8000 Aarhus C <span class="src">(Krak.dk)</span><span class="adr-handling" data-adresse="Vestergade 3D, 8000 Aarhus C" data-hus="56.15728,10.20647" data-vej="56.15764,10.20652" data-skraa="574936.69,6224240"></span></td></tr>
           <tr><th>Mail</th><td><em style="color:var(--muted);">Intet fundet.</em></td></tr>
-          <!-- Virksomhederne står under hinanden og linker direkte til enhedens
-               side i CVR, så advokaten kan gå videre uden selv at søge.
-               Kilden vises som knap ligesom de øvrige kilder på siden. -->
           <tr><th>Virksomhedstilknytninger</th><td>
             <ul class="punktliste">
               <li><a class="ext" href="https://datacvr.virk.dk/enhed/virksomhed/31234567" target="_blank" rel="noopener">Kjeldsen Byggeservice ApS</a></li>
@@ -1561,7 +1456,7 @@
 
         <div class="section sec-konkurs">
           <div class="section-title">
-            <span class="tbar"><span class="tchip">Insolvens og dødsbo</span>
+            <span class="tbar"><span class="tchip">Insolvens mv.</span>
               <a class="kildeknap" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Åbn Statstidende</a>
             </span>
             <span class="signal groen" role="img" title="Høj sikkerhed: entydigt match på navn og adresse" aria-label="Høj sikkerhed: entydigt match på navn og adresse"></span>
@@ -1572,21 +1467,11 @@
             konkurs, rekonstruktion, gældssanering, dødsbo og proklama.
             <div class="src">Kilde: <a class="ext" href="https://www.statstidende.dk/" target="_blank" rel="noopener">Statstidende</a>, hentet 17-08-2026.</div>
           </div>
-          <!-- Noten om konkurskarantæne er fjernet 2026-09-01 efter chefens ønske.
-               Begrænsningen står stadig i KILDELISTE.md §1h: registret hos
-               Erhvervsstyrelsen er lukket, og feltet kan først udfyldes, hvis
-               lovforslag L 114 vedtages. -->
         </div>
       </div>
       <div class="group">
         <div class="group-title">Virksomheder</div>
 
-        <!-- Én blok pr. virksomhed. De tre tidligere tabeller (Virksomhedstilknytninger,
-             Relaterede parter og Regnskaber) er slået sammen her, fordi samme virksomhed
-             gik igen i alle tre. Øvrige parter står nu i blokken for den virksomhed, de
-             er knyttet til, i stedet for i en løs liste.
-             Kundeanmeldelser er bundet på firmanavn, ikke CVR, og har derfor rød prik
-             inde i blokken, så det verificerede og det ubekræftede ikke ser ens ud. -->
         <div class="section sec-roller">
           <div class="section-title">
             <span class="tbar"><span class="tchip">Virksomhedstilknytninger</span>
@@ -1701,14 +1586,6 @@
 
           </div>
 
-          <!-- Sætningen om, at værktøjet ikke selv vurderer interessekonflikt, er
-               fjernet 2026-09-01 efter chefens ønske. Selve beslutningen står ved
-               magt, se CLAUDE.md: værktøjet afgør ikke interessekonflikter, og
-               listen over parter er kun til manuelt opslag i sagssystemet. -->
-
-          <!-- Hver kilde er mærket med sit område. Er Økonomi eller Baggrundstjek
-               fravalgt, må linjen ikke blive ved med at påstå, at regnskaber og
-               Trustpilot er slået op. -->
           <div class="src">Kilder:
             <a class="ext" href="https://datacvr.virk.dk/" target="_blank" rel="noopener">CVR, personopslag</a>
             <span data-omraade="c4"><a class="ext" href="https://regnskaber.virk.dk/" target="_blank" rel="noopener">regnskaber.virk.dk</a></span>
@@ -1731,7 +1608,7 @@
           </div>
           <table>
             <tr><th>Adresse</th><th>Ejendomsvurdering</th><th>Seneste handel</th></tr>
-            <tr><td>Kastanievej 22, 8000 Aarhus C</td><td>3.450.000 kr. (2025)</td><td>2.ureg. 2016</td></tr>
+            <tr><td>Vestergade 3D, 8000 Aarhus C<span class="adr-handling" data-adresse="Vestergade 3D, 8000 Aarhus C" data-hus="56.15728,10.20647" data-vej="56.15764,10.20652" data-skraa="574936.69,6224240"></span></td><td>3.450.000 kr. (2025)</td><td>2.ureg. 2016</td></tr>
           </table>
           <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://ois.dk/" target="_blank" rel="noopener">OIS</a>, <a class="ext" href="https://bbr.dk/" target="_blank" rel="noopener">BBR</a>, <a class="ext" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Tinglysning.dk</a>, hentet 17-08-2026.</div>
           <div class="hint">Der er udelukkende søgt på en eventuelt indtastet adresse.</div>
@@ -1757,7 +1634,7 @@
             <span class="unverified-label">Muligt navnematch</span>
             Navnet "Bjørn Kjeldsen" optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke
             bindes entydigt til denne person, da artiklen ikke oplyser fødselsdato.
-            <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
+            <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News</div>
           </div>
         </div>
 
@@ -1777,9 +1654,6 @@
             </table>
           </div>
         </div>
-        <!-- Bred websøgning. Ligger i den ubekræftede zone, fordi et Google-træf
-             pr. definition kun er bundet på navn og aldrig kan bindes entydigt.
-             Kun links, indholdet er ikke sammenfattet af en sprogmodel. -->
         <div class="section sec-websoeg">
           <div class="section-title">
             <span class="tbar"><span class="tchip">Generel websøgning</span>
@@ -1789,17 +1663,29 @@
           </div>
           <div class="unverified-block">
             <span class="unverified-label">Bredt søgt på navn</span>
-            Der er søgt bredt på navnet kombineret med eventuel fødselsdato, adresse og
-            fundne virksomheder.
+            Der er søgt bredt på personnavnet kombineret med eventuel fødselsdato, adresse og
+            fundne virksomheder. Titel og uddrag er sidernes egne, gengivet ordret.
             <table style="margin-top:10px;">
-              <tr><th>Træf</th><th>Hvor</th></tr>
-              <tr><td>Omtalt som oplægsholder på et branchearrangement om byggeaffald</td><td><a class="ext" href="#">byggeriforum-eksempel.dk</a></td></tr>
-              <tr><td>Nævnt i en generalforsamlingsreferat fra en grundejerforening</td><td><a class="ext" href="#">kastanievej-grundejer-eksempel.dk</a></td></tr>
-              <tr><td>Optræder i et sponsorat på en lokal idrætsklubs hjemmeside</td><td><a class="ext" href="#">aarhusklub-eksempel.dk</a></td></tr>
+              <tr><th>Sidens titel</th><th>Hvor</th></tr>
+              <tr>
+                <td><a class="ext" href="#">Program: Temadag om byggeaffald og nedrivning 2024</a>
+                  <span class="uddrag">"... oplæg ved Bjørn Kjeldsen, Kjeldsen Byggeservice ApS, om sortering på pladsen ..."</span></td>
+                <td>byggeriforum-eksempel.dk</td>
+              </tr>
+              <tr>
+                <td><a class="ext" href="#">Referat af ordinær generalforsamling 2023 &ndash; Grundejerforeningen Vestergade</a>
+                  <span class="uddrag">"... Bjørn Kjeldsen, nr. 22, blev valgt som suppleant til bestyrelsen ..."</span></td>
+                <td>kastanievej-grundejer-eksempel.dk</td>
+              </tr>
+              <tr>
+                <td><a class="ext" href="#">Sponsorer og samarbejdspartnere</a>
+                  <span class="uddrag">"... Tak til vores sponsorer: Kjeldsen Byggeservice ApS, Aarhus VVS ..."</span></td>
+                <td>aarhusklub-eksempel.dk</td>
+              </tr>
             </table>
             <div class="src">Kilde:
               <a class="ext" href="https://www.google.com/" target="_blank" rel="noopener">Google</a>
-              hentet 17-08-2026. Kun links, indholdet er ikke sammenfattet.
+              hentet 17-08-2026.
             </div>
           </div>
           <div class="empty-note">
@@ -1811,14 +1697,8 @@
     </div>
   </div>
 
-  <!-- REPORT VIEW: VIRKSOMHED -->
   <div id="reportViewCompany">
     <div class="card">
-      <!-- Forbeholdet står øverst, før navnet, så det læses før resultaterne og
-           ikke kan overses. Chefen bad 2026-09-01 om, at kun første sætning står.
-           De to øvrige afsnit, om at rapporten ikke er hvidvaskdokumentation og om
-           uafklaret hjemmel til modparter og tredjemænd, er derfor taget ud. Begge
-           punkter er stadig åbne, se §5 i kildelisten og CLAUDE.md. -->
       <div class="kladde-banner">
         Alle søgeresultater er forbundet med større eller mindre usikkerhed og bør uden
         efterprøvelse kun anvendes til foreløbig orientering.
@@ -1826,27 +1706,15 @@
       <div class="report-header">
         <div>
           <h1>Nordvang Byg ApS</h1>
-          <div class="meta">CVR: 29876543 &middot; Adresse: Industrivej 8, 8210 Aarhus V &middot; Research udført 17-08-2026 kl. 14.02</div>
+          <div class="meta">CVR: 29876543 &middot; Adresse: Vestergade 3D, 8000 Aarhus C &middot; Research udført 17-08-2026 kl. 14.02</div>
         </div>
         <div class="knapper">
           <button class="secondary" onclick="window.print()"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>Udskriv</button>
           <button class="secondary" onclick="gemSomPdf()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Gem som PDF</button>
-          <!-- Knappen fører tilbage til søgesiden med felterne, som de stod.
-               Den hed "Ny søgning", men chefen bad om, at vejen tilbage til
-               forsiden fremgår tydeligt af teksten. -->
           <button class="secondary" onclick="resetDemo()"><svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Tilbage til forsiden</button>
         </div>
       </div>
 
-      <!-- Forklaring på farveprikkerne. Står før første afsnit, så signalet kan
-           læses uden at man skal gætte.
-           Betegnelserne er chefens egne, valgt af ansvarsmæssige grunde 2026-09-01.
-           Rækkefølgen er rød, gul, grøn som en lyskurv, sådan som han listede dem.
-           Gul indgår, selv om ingen kilde i prototypen bruger den.
-           Hjælpeteksten på hver prik siger "entydigt match" og ikke "verificeret".
-           Ordet er fjernet af de samme ansvarsmæssige grunde som betegnelserne
-           ovenfor: værktøjet binder et træf til en identitetsnøgle, det verificerer
-           ikke noget. Sæt det ikke tilbage. -->
       <div class="signalforklaring">
         <span title="Fundet på navn alene, kan ikke bindes entydigt"><span class="signal roed"></span> Lav sikkerhed</span>
         <span title="Snævret ind på mere end navn, men ikke bundet entydigt"><span class="signal gul"></span> Middel sikkerhed</span>
@@ -1863,7 +1731,7 @@
         <table>
           <tr><th>Telefon</th><td>87 XX XX XX <span class="src">(CVR)</span></td></tr>
           <tr><th>Mail</th><td>kontakt@nordvangbyg-eksempel.dk <span class="src">(virksomhedens hjemmeside)</span></td></tr>
-          <tr><th>Adresse</th><td>Industrivej 8, 8210 Aarhus V <span class="src">(CVR)</span></td></tr>
+          <tr><th>Adresse</th><td>Vestergade 3D, 8000 Aarhus C <span class="src">(CVR)</span><span class="adr-handling" data-adresse="Vestergade 3D, 8000 Aarhus C" data-hus="56.15728,10.20647" data-vej="56.15764,10.20652" data-skraa="574936.69,6224240"></span></td></tr>
           <tr><th>Hjemmeside</th><td><a class="ext" href="#">nordvangbyg-eksempel.dk</a></td></tr>
         </table>
       </div>
@@ -1983,7 +1851,7 @@
           </div>
           <table>
             <tr><th>Adresse</th><th>Type</th><th>Ejendomsvurdering</th></tr>
-            <tr><td>Industrivej 8, 8210 Aarhus V</td><td>Erhvervsejendom</td><td>6.200.000 kr. (2025)</td></tr>
+            <tr><td>Vestergade 3D, 8000 Aarhus C<span class="adr-handling" data-adresse="Vestergade 3D, 8000 Aarhus C" data-hus="56.15728,10.20647" data-vej="56.15764,10.20652" data-skraa="574936.69,6224240"></span></td><td>Erhvervsejendom</td><td>6.200.000 kr. (2025)</td></tr>
           </table>
           <div class="src" style="margin-top:6px;">Kilde: <a class="ext" href="https://ois.dk/" target="_blank" rel="noopener">OIS</a>, <a class="ext" href="https://bbr.dk/" target="_blank" rel="noopener">BBR</a>, <a class="ext" href="https://www.tinglysning.dk/" target="_blank" rel="noopener">Tinglysning.dk</a>, hentet 17-08-2026.</div>
           <div class="hint">Opslaget tager udgangspunkt i selskabets adresse fra CVR. Der findes ingen åben kilde,
@@ -2010,7 +1878,7 @@
             <span class="unverified-label">Muligt navnematch</span>
             Selskabsnavnet optræder i en artikel om en lokal byggesag i Aarhus. Kan ikke bindes
             entydigt uden yderligere kontekst.
-            <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News (link, ikke automatisk sammenfattet)</div>
+            <div class="src">Kilde: <a class="ext" href="#">jp.dk, 03-06-2024</a>, fundet via Google News</div>
           </div>
         </div>
 
@@ -2056,10 +1924,6 @@
 <script>
   let currentType = 'person';
 
-  // Hvert trin er mærket med de områder, det hører til. Uden mærkerne kørte
-  // loaderen alle kilder igennem, også dem advokaten havde fravalgt, så
-  // værktøjet så ud til at søge bredere, end rapporten bagefter viste.
-  // Trin uden mærke gælder altid.
   const stepsPerson = [
     { t: "Slår op i CVR..." },
     { t: "Tjekker Finanstilsynets PEP-liste...", o: ['c1'] },
@@ -2079,7 +1943,6 @@
 
   const stepsCompany = [
     { t: "Slår op i CVR..." },
-    // Reelle ejere skal hentes, før både PEP, sanktioner og parterne kan slås op.
     { t: "Henter reelle ejere...", o: ['c1', 'c2', 'c3'] },
     { t: "Tjekker Finanstilsynets PEP-liste for reelle ejere...", o: ['c1'] },
     { t: "Tjekker EU- og FN-sanktionslister...", o: ['c2'] },
@@ -2093,7 +1956,6 @@
     { t: "Samler kladde..." }
   ];
 
-  // Valgt adresse gemmes struktureret, så opslag i BBR/OIS/Tinglysning kan bruge adgangsadresseid.
   let valgtAdresse = null;
   let addrTimer = null;
 
@@ -2130,7 +1992,8 @@
     const a = item.adresse;
     valgtAdresse = {
       vejnavn: a.vejnavn, husnr: a.husnr, etage: a.etage, doer: a.dør,
-      postnr: a.postnr, by: a.postnrnavn, adgangsadresseid: a.adgangsadresseid
+      postnr: a.postnr, by: a.postnrnavn, adgangsadresseid: a.adgangsadresseid,
+      lat: a.y, lon: a.x
     };
     document.getElementById('faddress').value = item.tekst;
     document.getElementById('addressSuggestions').style.display = 'none';
@@ -2146,8 +2009,6 @@
   const DOB_MASKE = 'dd-mm-åååå';
 
   function formatDob(el, ev) {
-    // Ved sletning må bindestregen ikke sættes tilbage med det samme, ellers
-    // kan man ikke slette sig baglæns gennem feltet.
     const sletter = ev && ev.inputType && ev.inputType.indexOf('delete') === 0;
     const d = el.value.replace(/\D/g, '').slice(0, 8);
     let out = d.slice(0, 2);
@@ -2183,7 +2044,6 @@
   });
   syncAllCheckbox();
 
-  // Samme fem områder gælder begge typer, men de dækker forskellige kilder.
   const omraadeTekster = {
     person: {
       d1: 'Er personen politisk eksponeret (Finanstilsynets PEP-liste)',
@@ -2207,31 +2067,23 @@
     document.getElementById('typeBtnCompany').classList.toggle('active', type === 'company');
     document.getElementById('personFields').style.display = (type === 'person') ? 'block' : 'none';
     document.getElementById('companyFields').style.display = (type === 'company') ? 'block' : 'none';
-    /* Virksomhedstilknytning deler række med adresse og gælder kun personer. */
     document.getElementById('feltTilknytning').style.display = (type === 'person') ? 'block' : 'none';
     const t = omraadeTekster[type];
     Object.keys(t).forEach(id => { document.getElementById(id).textContent = t[id]; });
   }
   setType('person');
 
-  // Ikonerne ligger som inline SVG, så filen bliver ved med at være selvstændig.
   const IKON = {
     printer: '<svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>',
     download: '<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>',
     soeg: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>'
   };
 
-  // Hvilke afsnit hvert område i formularen dækker. Uden det ville rapporten
-  // vise alt, uanset hvad advokaten har valgt, og demoen ville være misvisende.
   const omraadeSektioner = {
     c1: ['sec-pep'],
     c2: ['sec-sanktion', 'sec-konkurs'],
     c3: ['sec-parter', 'sec-roller'],
     c4: ['sec-regnskab', 'sec-roller'],
-    // sec-roller står også her, fordi kundeanmeldelserne for personens
-    // virksomheder ligger inde i den blok og hører til Baggrundstjek. Uden den
-    // forsvandt anmeldelserne helt, hvis kun Baggrundstjek var valgt, selvom
-    // området udtrykkeligt lover dem.
     c5: ['sec-kontakt', 'sec-ejendom', 'sec-presse', 'sec-profiler', 'sec-anmeldelse', 'sec-websoeg', 'sec-roller']
   };
   const altidMed = ['sec-stamdata'];
@@ -2244,9 +2096,6 @@
         omraadeSektioner[id].forEach(c => tilladt.add(c));
       }
     });
-    // Virksomhedsblokkene samler flere områder i én blok, så de enkelte felter
-    // skal kunne slås fra hver for sig. Rolle og øvrige parter hører til
-    // Relaterede parter, regnskabet til Økonomi, anmeldelserne til Baggrundstjek.
     root.querySelectorAll('[data-omraade]').forEach(el => {
       const boks = document.getElementById(el.getAttribute('data-omraade'));
       el.style.display = (boks && boks.checked) ? '' : 'none';
@@ -2262,9 +2111,6 @@
     });
   }
 
-  // Hvert afsnit er en farvet boks med titlen på farven og indholdet i en hvid
-  // boks indeni. Wrapperen sættes på her i stedet for i markup'et, så HTML'en
-  // bliver ved med at være til at læse, og så et nyt afsnit ikke kan glemme den.
   function indpakSektioner(rootId) {
     document.getElementById(rootId).querySelectorAll('.section').forEach(sec => {
       if (sec.querySelector(':scope > .sec-body')) return;
@@ -2284,7 +2130,6 @@
   indpakSektioner('reportViewPerson');
   indpakSektioner('reportViewCompany');
 
-  // Datoerne i demoen skrives om til i dag, så rapporten ikke ser forældet ud.
   function saetDato(rootId) {
     const nu = new Date();
     const p = n => String(n).padStart(2, '0');
@@ -2303,14 +2148,9 @@
     }
   }
 
-  // Bygger indholdsoversigten ud fra den rapport, der vises. Farverne hentes fra
-  // sektionens egen --sec, så oversigt og rapport aldrig kan komme ud af trit.
   function buildToc(rootId) {
     const root = document.getElementById(rootId);
     const toc = document.getElementById('toc');
-    // Tilbageknappen ligger uden for oversigten som sit eget element, fordi den
-    // fører væk fra rapporten og ikke er et punkt i den. Teksten er ændret fra
-    // "Ny søgning" 2026-09-01, så det fremgår, at den fører til forsiden.
     document.getElementById('tocTilbage').classList.add('vis');
     toc.innerHTML = '<div class="toc-title">Indhold</div>';
     let n = 0;
@@ -2328,8 +2168,6 @@
       if (!chip) return;
       const id = rootId + '-sec-' + (n++);
       el.id = id;
-      // Prikken i oversigten er den samme som i rapporten, altså signalet, ikke
-      // afsnittets blå nuance. Afsnit uden signal får en neutral grå.
       const sig = el.querySelector('.section-title .signal');
       const farve = sig
         ? getComputedStyle(sig).backgroundColor
@@ -2352,10 +2190,6 @@
     placerToc();
   }
 
-  // Menuen placeres til venstre for rapporten. Er der ikke plads til hele
-  // bredden, skjules den, og knapperne falder tilbage til rapportens hjørne.
-  // Tilbageknappen står over menuen og får samme venstrekant og bredde, så de
-  // to læses som én søjle, selv om de er hver sin boks.
   function placerToc() {
     const toc = document.getElementById('toc');
     const tilbage = document.getElementById('tocTilbage');
@@ -2391,9 +2225,6 @@
     link.classList.add('aktiv');
   }
 
-  // En browser kan ikke gemme en PDF direkte. Den vej går gennem udskriv-dialogen,
-  // hvor man vælger "Gem som PDF" som destination. I det færdige værktøj bør filen
-  // i stedet dannes på serveren, så advokaten får den med ét klik.
   function gemSomPdf() {
     alert('Vælg "Gem som PDF" som printer i dialogen, der åbner nu.\n\n' +
           'I det færdige værktøj dannes PDF-filen direkte, uden dette mellemled.');
@@ -2416,8 +2247,6 @@
       currentType === 'company' ? 'fcompanyname' : 'fname');
     const fejl = document.getElementById('formFejl');
     if (!navnEl.value.trim()) {
-      // Kort, fordi beskeden står i linjen med knappen øverst. At navn er det
-      // eneste obligatoriske felt fremgår af stjernen ved feltet.
       fejl.textContent = 'Navn skal udfyldes.';
       navnEl.focus();
       return;
@@ -2429,8 +2258,6 @@
     fejl.textContent = '';
     document.getElementById('inputView').style.display = 'none';
     document.getElementById('loadingView').style.display = 'block';
-    // Kun de trin, der hører til et valgt område. Ellers påstod loaderen, at
-    // den slog kilder op, som rapporten bagefter slet ikke viste noget fra.
     const valgte = new Set(areaIds.filter(id => document.getElementById(id).checked));
     const steps = (currentType === 'company' ? stepsCompany : stepsPerson)
       .filter(s => !s.o || s.o.some(o => valgte.has(o)))
@@ -2455,11 +2282,229 @@
     }, 550);
   }
 
+  let aabenKortKnap = null;
+  let kortSted = null;      // seneste adresses koordinater, til genberegning
+  let kortMaal = '';        // seneste kendte mål, så resize kun rammer ved ændring
+  let kortTimer = null;
 
-  // Knappen i hver virksomhedsblok. I prototypen springer den bare til den
-  // færdige virksomhedsrapport, så flowet person -> virksomhed kan vises.
-  // I den rigtige app skal den starte en ny søgning på virksomhedens navn og
-  // CVR-nummer i en ny fane, så personrapporten bliver stående.
+  function aabnKort(knap, adresse, lat, lon) {
+    if (aabenKortKnap === knap) { lukKort(); return; }
+
+    const panel = document.getElementById('kortpanel');
+    panel.classList.add('vis');
+    panel.setAttribute('aria-hidden', 'false');
+    document.getElementById('kortAdresse').textContent = adresse;
+
+    if (aabenKortKnap) { aabenKortKnap.classList.remove('aktiv'); }
+    aabenKortKnap = knap;
+    knap.classList.add('aktiv');
+    knap.textContent = 'Skjul kort';
+
+    document.querySelectorAll('.kortknap.kortskift').forEach(function (k) {
+      if (k !== knap) { k.classList.remove('aktiv'); k.textContent = 'Åbn kort'; }
+    });
+
+    kortSted = { lat: lat, lon: lon };
+    saetKortUdsnit();
+  }
+
+  function aabnStreetView(latVej, lonVej, latHus, lonHus) {
+    const rad = Math.PI / 180;
+    const nord = (latHus - latVej) * 111320;
+    const oest = (lonHus - lonVej) * 111320 * Math.cos(latVej * rad);
+    let retning = Math.round(Math.atan2(oest, nord) / rad);
+    if (retning < 0) { retning += 360; }
+    const url = 'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' +
+      encodeURIComponent(latVej.toFixed(5) + ',' + lonVej.toFixed(5)) +
+      '&heading=' + retning + '&pitch=0';
+    window.open(url, '_blank', 'noopener');
+  }
+
+  function lukKort() {
+    const panel = document.getElementById('kortpanel');
+    panel.classList.remove('vis');
+    panel.setAttribute('aria-hidden', 'true');
+    document.getElementById('kortRamme').removeAttribute('src');
+    if (aabenKortKnap) {
+      aabenKortKnap.classList.remove('aktiv');
+      aabenKortKnap.textContent = 'Åbn kort';
+      aabenKortKnap = null;
+    }
+    kortSted = null;
+  }
+
+  function saetKortUdsnit() {
+    if (!kortSted) return;
+    const ramme = document.getElementById('kortRamme');
+    if (!ramme.clientWidth || !ramme.clientHeight) return;
+    kortMaal = ramme.clientWidth + 'x' + ramme.clientHeight;
+    const lat = kortSted.lat, lon = kortSted.lon;
+    const forhold = ramme.clientWidth / ramme.clientHeight;
+    const dLat = 0.0055;
+    const dLon = dLat * forhold / Math.cos(lat * Math.PI / 180);
+    const bbox = [lon - dLon, lat - dLat, lon + dLon, lat + dLat]
+      .map(function (n) { return n.toFixed(5); }).join(',');
+    ramme.src = 'https://www.openstreetmap.org/export/embed.html?bbox=' +
+      encodeURIComponent(bbox) + '&layer=mapnik&marker=' +
+      encodeURIComponent(lat.toFixed(5) + ',' + lon.toFixed(5));
+  }
+
+  function tjekKortStoerrelse() {
+    if (!kortSted) return;
+    const ramme = document.getElementById('kortRamme');
+    const nu = ramme.clientWidth + 'x' + ramme.clientHeight;
+    if (nu === kortMaal) return;
+    clearTimeout(kortTimer);
+    kortTimer = setTimeout(saetKortUdsnit, 150);
+  }
+
+  function overvaagKortStoerrelse() {
+    document.addEventListener('mouseup', tjekKortStoerrelse);
+    window.addEventListener('resize', tjekKortStoerrelse);
+  }
+
+  const AFSTAND_NAER = 25;
+  const AFSTAND_FJERN = 60;
+
+  function afstandIMeter(latA, lonA, latB, lonB) {
+    const rad = Math.PI / 180;
+    const nord = (latB - latA) * 111320;
+    const oest = (lonB - lonA) * 111320 * Math.cos(latA * rad);
+    return Math.sqrt(nord * nord + oest * oest);
+  }
+
+  function aabnSkraafoto(oest, nord) {
+    window.open('https://skraafoto.dataforsyningen.dk/?center=' +
+      encodeURIComponent(oest + ',' + nord), '_blank', 'noopener');
+  }
+
+  function byghandlingerForAdresser() {
+    document.querySelectorAll('.adr-handling').forEach(function (felt) {
+      if (felt.dataset.bygget) return;
+      felt.dataset.bygget = '1';
+
+      const adresse = felt.dataset.adresse;
+      const hus = felt.dataset.hus.split(',').map(Number);
+      const vej = felt.dataset.vej.split(',').map(Number);
+      const skraa = felt.dataset.skraa.split(',');
+
+      const kort = document.createElement('button');
+      kort.type = 'button';
+      kort.className = 'kortknap kortskift';
+      kort.textContent = 'Åbn kort';
+      kort.title = 'Viser adressen på et kort her på siden';
+      kort.addEventListener('click', function () {
+        aabnKort(kort, adresse, hus[0], hus[1]);
+      });
+      felt.appendChild(kort);
+
+      const gade = document.createElement('button');
+      gade.type = 'button';
+      gade.className = 'kortknap';
+      gade.textContent = 'Street View';
+      gade.title = 'Åbner Google Street View på vejen ud for adressen i en ny fane';
+      gade.addEventListener('click', function () {
+        aabnStreetView(vej[0], vej[1], hus[0], hus[1]);
+      });
+      felt.appendChild(gade);
+
+      const luft = document.createElement('button');
+      luft.type = 'button';
+      luft.className = 'kortknap';
+      luft.textContent = 'Skråfoto';
+      luft.title = 'Åbner Klimadatastyrelsens luftfoto af stedet, set skråt oppefra, i en ny fane';
+      luft.addEventListener('click', function () {
+        aabnSkraafoto(skraa[0], skraa[1]);
+      });
+      felt.appendChild(luft);
+
+      const meter = Math.round(afstandIMeter(vej[0], vej[1], hus[0], hus[1]));
+      if (meter >= AFSTAND_NAER) {
+        const note = document.createElement('span');
+        note.className = 'adr-note';
+        note.textContent = meter >= AFSTAND_FJERN
+          ? 'Ejendommen ligger ca. ' + meter + ' m fra vejen og kan sandsynligvis ikke ' +
+            'ses derfra. Knappen Skråfoto viser stedet set skråt oppefra.'
+          : 'Ejendommen ligger ca. ' + meter + ' m fra vejen, så Street View viser vejen ' +
+            'ud for adressen og ikke nødvendigvis ejendommen selv. Knappen Skråfoto viser ' +
+            'stedet set skråt oppefra.';
+        felt.appendChild(note);
+      }
+    });
+  }
+
+  function gorKortSkalerbart() {
+    const panel = document.getElementById('kortpanel');
+    const greb = panel.querySelector('.kortpanel-greb');
+    let fra = null;
+
+    greb.addEventListener('mousedown', function (e) {
+      const r = panel.getBoundingClientRect();
+      panel.style.left = r.left + 'px';
+      panel.style.top = r.top + 'px';
+      panel.style.right = 'auto';
+      fra = { x: e.clientX, y: e.clientY, b: r.width, h: r.height, v: r.left, t: r.top };
+      panel.classList.add('traekker');
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!fra) return;
+      let b = fra.b - (e.clientX - fra.x);
+      b = Math.min(Math.max(b, 260), fra.v + fra.b - 8);
+      let hoejde = fra.h + (e.clientY - fra.y);
+      hoejde = Math.min(Math.max(hoejde, 240), window.innerHeight - fra.t - 8);
+      panel.style.width = b + 'px';
+      panel.style.height = hoejde + 'px';
+      panel.style.left = (fra.v + fra.b - b) + 'px';
+    });
+
+    document.addEventListener('mouseup', function () {
+      if (!fra) return;
+      fra = null;
+      panel.classList.remove('traekker');
+    });
+  }
+
+  function gorKortTraekbart() {
+    const panel = document.getElementById('kortpanel');
+    const hoved = panel.querySelector('.kortpanel-top');
+    let fra = null;
+
+    hoved.addEventListener('mousedown', function (e) {
+      if (e.target.closest('.kortpanel-luk')) return;
+      const r = panel.getBoundingClientRect();
+      fra = { x: e.clientX - r.left, y: e.clientY - r.top };
+      panel.style.left = r.left + 'px';
+      panel.style.top = r.top + 'px';
+      panel.style.right = 'auto';
+      panel.classList.add('traekker');
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!fra) return;
+      const b = panel.offsetWidth, h = panel.offsetHeight;
+      const x = Math.min(Math.max(e.clientX - fra.x, 8), window.innerWidth - b - 8);
+      const y = Math.min(Math.max(e.clientY - fra.y, 8), window.innerHeight - h - 8);
+      panel.style.left = x + 'px';
+      panel.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', function () {
+      if (!fra) return;
+      fra = null;
+      panel.classList.remove('traekker');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    overvaagKortStoerrelse();
+    gorKortTraekbart();
+    gorKortSkalerbart();
+    byghandlingerForAdresser();
+  });
+
   function soegVirksomhed(navn, cvr) {
     document.getElementById('fcompanyname').value = navn;
     document.getElementById('fcvr').value = cvr;
@@ -2470,32 +2515,20 @@
     anvendOmraader('reportViewCompany');
     saetDato('reportViewCompany');
     buildToc('reportViewCompany');
+    lukKort();
     window.scrollTo(0, 0);
   }
   function resetDemo() {
     document.getElementById('reportViewPerson').style.display = 'none';
     document.getElementById('reportViewCompany').style.display = 'none';
     document.getElementById('inputView').style.display = 'block';
+    lukKort();
     hideToc();
     window.scrollTo(0,0);
   }
 </script>
 
-
-<!-- ============================================================
-     TEMAVÆLGER - kun til afprøvning, ikke en del af designet.
-     Hele blokken (denne style + div + script) kan slettes i ét stykke.
-
-     Til forskel fra den nuværende prototype er der kun ÉN liste her.
-     Et tema sætter både baggrund, flader og accent, og gælder både
-     inputsiden og rapporten. Signalfarverne rød, gul og grøn indgår
-     ikke i noget tema, fordi de betyder noget bestemt.
-     ============================================================ -->
 <style>
-  /* Temavælgeren er grå og står uden for temaerne. Den er værktøjets eget
-     betjeningspanel, ikke en del af rapporten, og skal se ens ud, uanset hvilket
-     farveskema den lige er ved at skifte til. Farverne er derfor faste og
-     samlet her, så de kun står ét sted. */
   #temavaelger {
     position: fixed;
     right: 18px;
@@ -2565,7 +2598,6 @@
     cursor: pointer;
   }
   #temaPanel button.valgknap:hover { background: rgba(0,0,0,0.06); color: var(--tv-tekst); }
-  /* Det valgte står hvidt og med mørk kant, så det kan ses uden en accentfarve. */
   #temaPanel button.valgknap.aktiv {
     background: #ffffff;
     border-color: var(--tv-kant-2);
@@ -2597,8 +2629,6 @@
   }
   #temaPanel .ph.skil { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--tv-kant); }
   #temaPanel .valg.raekke { flex-direction: row; flex-wrap: wrap; gap: 6px; }
-  /* Baggrundsprøverne beholder deres egne farver, for de er selve prøven.
-     Kun rammen om den valgte er lagt om til gråt. */
   #temaPanel button.bgknap {
     width: 30px; height: 30px; padding: 0;
     border-radius: 8px;
@@ -2609,6 +2639,19 @@
   #temaPanel button.bgknap.aktiv { border-color: var(--tv-tekst); box-shadow: 0 0 0 2px rgba(0,0,0,0.18); }
   @media print { #temavaelger { display: none; } }
 </style>
+
+  <aside id="kortpanel" aria-hidden="true">
+    <div class="kortpanel-top">
+      <div>
+        <div class="kortpanel-titel">Kort</div>
+        <div class="kortpanel-adresse" id="kortAdresse"></div>
+      </div>
+      <button type="button" class="kortpanel-luk" onclick="lukKort()" aria-label="Luk kortet" title="Luk kortet">&times;</button>
+    </div>
+    <div class="kortpanel-krop"><iframe id="kortRamme" title="Kort over adressen"></iframe></div>
+    <div class="kortpanel-kilde">Kort: <a class="ext" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
+    <div class="kortpanel-greb" title="Træk for at ændre størrelsen"></div>
+  </aside>
 
 <div id="temavaelger">
   <div id="temaPanel">
@@ -2636,11 +2679,6 @@
 </div>
 
 <script>
-  /* Hvert tema sætter hele fladepaletten på én gang. Fordi input og rapport
-     bruger de samme variabler, følger begge sider automatisk med. */
-  // Et tema sætter hele paletten. Feltet "vr" er valgfrit og lægger et ekstra
-  // sæt oven på rapporten og sidemenuen alene. Det bruges af Univers-temaet,
-  // hvor inputsiden er olivengrøn og rapporten blå, som i det gamle design.
   const TEMAER = [
     { id: 'skovgroen', navn: 'Skovgrøn nat', cs: 'dark',
       v: { '--bg':'#0d1411','--bg-dyb':'#080d0b','--surface':'#161f1b','--surface-2':'#1c2723','--surface-3':'#24302b',
@@ -2648,9 +2686,7 @@
            '--text':'#e9efeb','--dim':'#a1afa7','--faint':'#76847d',
            '--accent':'#9db884','--accent-lys':'#b8d0a1','--accent-blod':'rgba(157,184,132,0.14)','--accent-ink':'#101815','--felt':'#232f28','--felt-fokus':'#2a3830','--felt-tekst':'#e9efeb','--felt-faint':'#76847d','--titel':'#ffffff','--advarsel-bg':'rgba(226,105,92,0.09)','--advarsel-kant':'rgba(226,105,92,0.28)','--advarsel-tekst':'#f0c0ba' } },
 
-    // Kontorets egne farver fra FARVESKEMA.md, lagt ind i den nye struktur.
-    // Oliven og skovgrøn på inputsiden, blå på rapporten, hvide inputfelter.
-    { id: 'kontor', navn: 'Univers Advokater (gammelt farveskema)', cs: 'dark',
+    { id: 'kontor', navn: 'universadvokater (gammelt farveskema)', cs: 'dark',
       v: { '--bg':'#16211c','--bg-dyb':'#101a15','--surface':'#3b4834','--surface-2':'#46543d','--surface-3':'#55654a',
            '--line':'rgba(255,255,255,0.11)','--line-2':'rgba(255,255,255,0.22)',
            '--text':'#f4f7f0','--dim':'#ccd6c0','--faint':'#a5b199',
@@ -2674,27 +2710,22 @@
     valgtTema = t.id;
     for (const k in t.v) { document.documentElement.style.setProperty(k, t.v[k]); }
     document.documentElement.style.colorScheme = t.cs;
-    // Blokkenes dæmpede farver og linkfarven løftes, så de holder mod
-    // blokkens egen flade. Trapper blokkene, løftes de igen i saetBoksTrappe.
     const fl = t.v['--surface'], tx = t.v['--text'];
     document.documentElement.style.setProperty('--faint', loeft(t.v['--faint'], fl, tx, 3.6));
     document.documentElement.style.setProperty('--dim', loeft(t.v['--dim'], fl, tx, 4.5));
     document.documentElement.style.setProperty('--accent-lys', loeft(t.v['--accent-lys'], fl, kant(fl), 4.0));
-    // Rapport-overrides skrives som et stylesheet, så de kun rammer rapporten
-    // og sidemenuen. Uden vr ryddes reglen, så temaer uden den ikke arver.
     let rs = document.getElementById('temaRapport');
     if (!rs) { rs = document.createElement('style'); rs.id = 'temaRapport'; document.head.appendChild(rs); }
     if (t.vr) {
       let d = '';
       for (const k in t.vr) { d += k + ':' + t.vr[k] + ';'; }
-      // Samme kontrastgulv som ovenfor, men målt mod rapportens egen flade.
       if (t.vr['--surface'] && t.vr['--text']) {
         const fr = t.vr['--surface'], tr = t.vr['--text'];
         d += '--faint:' + loeft(t.vr['--faint'], fr, tr, 3.6) + ';';
         d += '--dim:' + loeft(t.vr['--dim'], fr, tr, 4.5) + ';';
         d += '--accent-lys:' + loeft(t.vr['--accent-lys'], fr, kant(fr), 4.0) + ';';
       }
-      rs.textContent = '#reportViewPerson, #reportViewCompany, #toc, #tocTilbage {' + d + '}';
+      rs.textContent = '#reportViewPerson, #reportViewCompany, #toc, #tocTilbage, #kortpanel {' + d + '}';
     } else {
       rs.textContent = '';
     }
@@ -2704,14 +2735,12 @@
     document.querySelectorAll('#temaListe .valgknap').forEach(function (k) {
       k.classList.toggle('aktiv', k.dataset.id === valgtTema);
     });
-    // Baggrunden er beregnet ud fra temaet, så den skal sættes igen efter et temaskift.
     saetNuanceTrappe(t);
     saetBaggrund(valgtBaggrund, false);
     saetFelt(valgtFelt, false);
     if (gem !== false) { gemOpsaetning(); }
   }
 
-  // Nulstil sætter tilbage til standardopsætningen, ikke til temaets egne flader.
   function nulstilTema() { saetTema('kontor', false); saetBaggrund('hvid', false); saetFelt('hvid', false); saetNuancer('ens', false); gemOpsaetning(); }
 
   function toggleTemaPanel() {
@@ -2726,7 +2755,6 @@
       b.className = 'valgknap';
       b.dataset.id = t.id;
       b.onclick = function () { saetTema(t.id); };
-      // Har temaet en egen rapportfarve, vises den som en ekstra prik.
       b.innerHTML = '<span class="swatch">' +
         '<i style="background:' + t.v['--bg'] + '"></i>' +
         '<i style="background:' + t.v['--surface-3'] + '"></i>' +
@@ -2737,14 +2765,6 @@
     });
   })();
 
-
-  /* ---------- Baggrund ----------
-     Baggrunden er nu frit valgt og ikke bundet til temaet. Hver kernefarve
-     findes i en lys og en mørk udgave, og der er hvid, lysegrå, mørkegrå og
-     sort som neutrale. For at det kan lade sig gøre, har alt det, der ligger
-     direkte på baggrunden, sin egen tekstfarve (--bg-tekst og de øvrige
-     --bg-variabler). De sættes her ud fra baggrundens lyshed, så teksten
-     aldrig kan ende hvid på hvid. */
   const BAGGRUNDE = [
     { id: 'tema',      navn: 'Temaets egen',   farve: null },
     { id: 'hvid',      navn: 'Hvid',           farve: '#ffffff' },
@@ -2752,9 +2772,6 @@
     { id: 'skovgroen', navn: 'Mørk skovgrøn',  farve: '#0e1512' }
   ];
 
-  /* ---------- Felter ----------
-     Inputfelterne kan følge temaet, være hvide, eller have samme farve som
-     blokken de ligger i, så kun rammen adskiller dem. */
   const FELTER = [
     { id: 'tema', navn: 'Temaets egen' },
     { id: 'hvid', navn: 'Hvide' },
@@ -2773,20 +2790,11 @@
     const [r, g, b] = hexTilRgb(hex);
     return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   }
-  // Blander to farver. Bruges både til nuancetrappen og til at dæmpe accenten,
-  // så den kan læses på en lys baggrund.
   function bland(a, b, del) {
     const x = hexTilRgb(a), y = hexTilRgb(b);
     return rgbTilHex(x[0] + (y[0]-x[0])*del, x[1] + (y[1]-x[1])*del, x[2] + (y[2]-x[2])*del);
   }
 
-  /* ---------- Kontrastgulv ----------
-     De dæmpede tekstfarver (--dim og --faint og deres modstykker på baggrund
-     og felt) er valgt i hånden pr. tema og holdt til den flade, temaet selv
-     havde. Nu kan flade, baggrund og felt vælges frit, og så var flere af dem
-     for svage til at læse. Derfor løftes hver dæmpet farve her mod tekstens
-     farve, indtil den når et fast kontrastforhold til den flade, den rent
-     faktisk står på. Er den allerede kraftig nok, røres den ikke. */
   function relLys(hex) {
     const f = hexTilRgb(hex).map(function (c) {
       c /= 255;
@@ -2798,9 +2806,6 @@
     const x = relLys(a), y = relLys(b);
     return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
   }
-  /* Retningen en accentfarve skal løftes i: mod sort på en lys flade, mod
-     hvid på en mørk. Så bevarer den sin kulør, i stedet for at blive grå
-     som en dæmpet tekstfarve, der løftes mod tekstfarven. */
   function kant(bund) { return lyshed(bund) > 0.5 ? '#000000' : '#ffffff'; }
   function loeft(farve, bund, mod, maal) {
     if (!farve || farve.charAt(0) !== '#' || kontrast(farve, bund) >= maal) { return farve; }
@@ -2812,15 +2817,8 @@
     return bedst;
   }
 
-  /* Trinstørrelsen i en nuancetrappe skal være mindre på en lys flade end på
-     en mørk. Ellers bliver hvide felter til grå felter, og den tekstfarve,
-     der er valgt til hvid bund, holder ikke hele vejen ned ad trappen. */
   function trin(grund) { return lyshed(grund) > 0.55 ? 0.028 : 0.045; }
 
-  /* Standardopsætningen er den, chefen valgte: kontorets gamle farveskema med
-     hvid baggrund og hvide felter. Han bekræftede 2026-09-01, at "hvid
-     baggrund" betyder selve siden, ikke et helt lyst skema, så blokkene
-     beholder temaets egne farver. */
   let valgtBaggrund = 'hvid';
   let valgtFelt = 'hvid';
   let nuanceTilstand = 'ens';
@@ -2832,11 +2830,8 @@
     const farve = b.farve || t.v['--bg'];
     const rod = document.documentElement.style;
     rod.setProperty('--bg', farve);
-    // Fejlbeskeden i søgelinjen står direkte på baggrunden og skal kunne
-    // læses på både en lys og en mørk.
     rod.setProperty('--fejl-tekst', loeft('#e2695c', farve, kant(farve), 4.0));
 
-    // Er baggrunden lys, skal teksten på den være mørk, uanset temaet.
     if (lyshed(farve) > 0.55) {
       rod.setProperty('--bg-tekst', '#16191a');
       rod.setProperty('--bg-dim', '#474d4f');
@@ -2844,9 +2839,6 @@
       rod.setProperty('--bg-line', 'rgba(0,0,0,0.14)');
       rod.setProperty('--bg-accent', bland(t.v['--accent'], '#000000', 0.42));
       rod.setProperty('--titel', '#16191a');
-      // Kladde-banneret ligger på baggrunden og har en gennemsigtig rød flade.
-      // På en lys baggrund bliver den nærmest usynlig, så den skiftes ud med
-      // den lyse udgave, ellers står lyserød tekst på lyserød bund.
       rod.setProperty('--advarsel-bg', '#fdf3f2');
       rod.setProperty('--advarsel-kant', '#e8c8c4');
       rod.setProperty('--advarsel-tekst', '#7d2020');
@@ -2861,8 +2853,6 @@
       rod.setProperty('--advarsel-kant', t.v['--advarsel-kant']);
       rod.setProperty('--advarsel-tekst', t.v['--advarsel-tekst']);
     } else {
-      // Mørk baggrund under et lyst tema. Temaets egne tekstfarver er mørke og
-      // ville forsvinde, så de erstattes af lyse. Accenten løftes tilsvarende.
       rod.setProperty('--bg-tekst', '#eef1ef');
       rod.setProperty('--bg-dim', '#b5beb9');
       rod.setProperty('--bg-faint', '#8e9792');
@@ -2910,13 +2900,10 @@
       rod.setProperty('--felt-line', t.v['--line-2']);
       rod.setProperty('--felt-accent', t.v['--accent-lys']);
     }
-    // Feltets dæmpede farve måles mod feltets midterste nuance, af samme grund
-    // som blokkenes: felterne kan også trappe.
     const fg = rod.getPropertyValue('--felt'), ft = rod.getPropertyValue('--felt-tekst');
     if (fg.charAt(0) === '#' && ft.charAt(0) === '#') {
       rod.setProperty('--felt-faint', loeft(rod.getPropertyValue('--felt-faint'), bland(fg, ft, 0.15), ft, 3.6));
     }
-    // Klassen styrer, om rapportens indhold også lægges i felter.
     document.body.classList.toggle('feltboks', valgtFelt !== 'tema');
     saetBoksTrappe(t);
     document.querySelectorAll('#feltListe .valgknap').forEach(function (k) {
@@ -2925,23 +2912,13 @@
     if (gem !== false) { gemOpsaetning(); }
   }
 
-  /* ---------- Nuancer ----------
-     Temaets tre flader ligger tæt på hinanden og var næsten ikke til at se
-     forskel på i rapporten. Trappen beregnes derfor her ved at blande
-     blokfarven mod tekstfarven, så trinnene bliver lige store og synlige,
-     uanset om temaet er mørkt eller lyst. Rapporten trapper pr. gruppe, ikke
-     pr. afsnit, så en gruppe ikke skifter farve midt i sig selv. */
   function saetNuanceTrappe(t) {
     const flade = t.v['--surface'], tekst = t.v['--text'];
     const rod = document.documentElement.style;
-    // Seks trin, så hver gruppe i rapporten kan få sin egen nuance uden at
-    // trappen skal begynde forfra midt i rapporten.
     const s = trin(flade);
     for (let i = 0; i < 6; i++) {
       rod.setProperty('--nuance-' + (i + 1), i === 0 ? flade : bland(flade, tekst, i * s * 1.2));
     }
-    // Univers-temaet har sine egne blå flader i rapporten og skal have sin
-    // egen trappe der, ellers ville rapporten trappe i grønt.
     let ns = document.getElementById('nuanceRapport');
     if (!ns) { ns = document.createElement('style'); ns.id = 'nuanceRapport'; document.head.appendChild(ns); }
     if (t.vr && t.vr['--surface']) {
@@ -2956,19 +2933,11 @@
     }
   }
 
-  /* ---------- Bannerets tone ----------
-     Navnelinjen i en virksomhedsblok er et halvgennemsigtigt lag og ikke en
-     farve. Så bliver den automatisk en lysere nuance af lige præcis den boks,
-     den ligger i, også når boksene trapper, og også når felterne er hvide.
-     Kun retningen skal afgøres her: mod hvid på en mørk flade, mod sort på en
-     lys. */
   function saetBoksTrappe(t) {
     const hvidt = valgtFelt === 'hvid';
     const grund = hvidt ? '#ffffff' : t.v['--surface'];
     const rod = document.documentElement.style;
     rod.setProperty('--banner-tone', lyshed(grund) > 0.55 ? 'rgba(0,0,0,0.045)' : 'rgba(255,255,255,0.055)');
-    // Univers-temaet har sine egne flader i rapporten, så bannerets retning
-    // skal afgøres af rapportens flade og ikke af formularens.
     let bs = document.getElementById('boksNuance');
     if (!bs) { bs = document.createElement('style'); bs.id = 'boksNuance'; document.head.appendChild(bs); }
     if (!hvidt && t.vr && t.vr['--surface']) {
@@ -2981,12 +2950,6 @@
     saetTekstGulv(t);
   }
 
-  /* ---------- Kontrastgulv når boksene trapper ----------
-     Trapper boksene, ender den dybeste af dem et godt stykke fra den flade,
-     de dæmpede farver er valgt til. Så løftes de igen, denne gang målt mod
-     netop den dybeste nuance, og skrives på <body>. Reglen på body slår den
-     nedarvede værdi fra <html>, uden at røre den, så farverne falder tilbage
-     til det dæmpede udseende, så snart nuancerne slås fra. */
   function saetTekstGulv(t) {
     let ts = document.getElementById('tekstGulv');
     if (!ts) { ts = document.createElement('style'); ts.id = 'tekstGulv'; document.head.appendChild(ts); }
@@ -2998,7 +2961,6 @@
     }
     const b = { faint: t.v['--faint'], dim: t.v['--dim'], accent: t.v['--accent-lys'] };
     let css = 'body.nuancer {' + saet(t.v['--surface'], t.v['--text'], b) + '}';
-    // Felterne har deres egen grundfarve og skal måles mod deres egen trappe.
     const rod = document.documentElement.style;
     const fg = rod.getPropertyValue('--felt'), ft = rod.getPropertyValue('--felt-tekst');
     if (valgtFelt !== 'tema' && fg.charAt(0) === '#' && ft.charAt(0) === '#') {
@@ -3011,9 +2973,6 @@
       const vb = { faint: t.vr['--faint'], dim: t.vr['--dim'], accent: t.vr['--accent-lys'] };
       css += 'body.nuancer #reportViewPerson, body.nuancer #reportViewCompany {' +
              saet(t.vr['--surface'], t.vr['--text'], vb) + '}';
-      // "Samme som blokken" betyder rapportens egen blokfarve, når temaet har
-      // en anden flade i rapporten end i formularen. Ellers ville felterne
-      // være grønne inde i en blå rapport.
       if (valgtFelt === 'blok') {
         const vs = t.vr['--surface'], vt = t.vr['--text'];
         const vdyb = bland(vs, vt, trin(vs) * 6);
@@ -3030,14 +2989,6 @@
     ts.textContent = css;
   }
 
-  /* Hver boks i rapporten får sit eget trin, så Kontaktoplysninger, PEP-tjek,
-     Sanktionslister og de øvrige kan skelnes fra hinanden. Virksomhedsblokkene
-     ligger inde i en boks: de løftes ét trin over deres egen boks og får alle
-     det samme, så listen ser samlet ud.
-     Rækkefølgen af trin kan vælges. "Trappe" tager dem i orden, så rapporten
-     glider jævnt fra mørk til lys. "Blandet" springer i trappen, så to bokse
-     ved siden af hinanden aldrig er nabotrin. Det giver større forskel fra
-     boks til boks, men ikke en retning gennem rapporten. */
   const NUANCE_ORDEN = {
     trappe:  [1, 2, 3, 4, 5, 6],
     blandet: [1, 4, 2, 6, 3, 5]
@@ -3051,14 +3002,11 @@
     root.querySelectorAll('.section').forEach(function (s) {
       const n = orden[i++ % orden.length];
       s.dataset.nuance = n;
-      // Ét trin videre i selve farvetrappen, ikke i rækkefølgen: blokken skal
-      // bare kunne skelnes fra den boks, den ligger i.
       s.querySelectorAll('.virkblok').forEach(function (v) { v.dataset.nuance = (n % 6) + 1; });
     });
   }
 
   function saetNuancer(tilstand, gem) {
-    // Tidligere gemte versioner brugte true/false.
     if (tilstand === true) { tilstand = 'trappe'; }
     if (tilstand === false) { tilstand = 'ens'; }
     nuanceTilstand = NUANCE_ORDEN[tilstand] ? tilstand : 'ens';
@@ -3071,9 +3019,6 @@
     if (gem !== false) { gemOpsaetning(); }
   }
 
-  /* Nøglen er bumpet, fordi standardopsætningen er ændret. Ellers ville en
-     browser, der havde set en tidligere udgave, blive ved med at vise den
-     gamle opsætning i stedet for den nye standard. */
   const TEMA_NOEGLE = 'uaTemaNy5';
 
   function gemOpsaetning() {
